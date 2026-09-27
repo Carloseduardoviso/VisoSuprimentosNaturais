@@ -8,8 +8,6 @@
     <input asp-for="PedidoFornecedorId" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div id="itens"></div>
-    <div class="mb-3"><label asp-for="VencimentoPagamento" class="form-label">Vencimento da compra</label>
-        <input asp-for="VencimentoPagamento" type="date" class="form-control" /></div>
     <button id="adicionar" type="button" class="btn btn-outline-primary mb-3">Adicionar suprimento</button>
     <div><button type="submit" class="btn btn-primary">Confirmar entrada</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
 </form>
@@ -23,8 +21,6 @@
         <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="text" data-money-mask class="form-control bg-body-secondary text-muted" data-campo="CustoUnitario" readonly aria-readonly="true" required /></div>
         <div class="col-md-2"><label class="form-label">Data</label><input type="datetime-local" class="form-control" data-campo="Data" required /></div>
         <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Não</option><option value="true">Sim</option></select></div>
-        <div class="col-md-3"><label class="form-label">Lote</label><input class="form-control" maxlength="80" data-campo="CodigoLote" /></div>
-        <div class="col-md-3"><label class="form-label">Validade</label><input type="date" class="form-control" data-campo="Validade" /></div>
     </div></div></div></template>
 @section Scripts {
 <script>
@@ -37,7 +33,7 @@
     function add(item = {}) {
         const card = template.content.firstElementChild.cloneNode(true);
         container.appendChild(card);
-        for (const field of ['SuprimentoId','Quantidade','CustoUnitario','Promocional','CodigoLote','Validade']) {
+        for (const field of ['SuprimentoId','Quantidade','CustoUnitario','Promocional']) {
             const el = card.querySelector(`[data-campo="${field}"]`);
             const valor = item[field] ?? (field === 'Quantidade' ? 1 : field === 'CustoUnitario' ? 0 : field === 'Promocional' ? 'false' : '');
             el.value = el.matches('[data-money-mask]')

@@ -5,7 +5,6 @@ namespace VisoERP.Web.Models.Estoque;
 public sealed class EntradaEstoqueViewModel
 {
     public Guid? PedidoFornecedorId { get; set; }
-    public DateOnly VencimentoPagamento { get; set; } = DateOnly.FromDateTime(DateTime.Today);
     public List<ItemEntradaViewModel> Itens { get; set; } = [];
 }
 
@@ -16,6 +15,4 @@ public sealed class ItemEntradaViewModel
     [Range(0, 999999999)] public decimal CustoUnitario { get; set; }
     [Required] public DateTime Data { get; set; } = DateTime.Now;
     public bool Promocional { get; set; }
-    [StringLength(80)] public string? CodigoLote { get; set; }
-    public DateOnly? Validade { get; set; }
 }

@@ -5,7 +5,7 @@ namespace VisoERP.Web.Models.Cadastros;
 public sealed class SuprimentoViewModel
 {
     public Guid? Id { get; set; }
-    [Required, StringLength(50)]
+    [StringLength(50)]
     public string CodigoInterno { get; set; } = string.Empty;
     [Required, StringLength(200)]
     public string Nome { get; set; } = string.Empty;

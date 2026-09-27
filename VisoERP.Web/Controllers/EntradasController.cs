@@ -43,7 +43,7 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
                 await entradas.ConfirmarAsync(new CriarEntradaDto(model.PedidoFornecedorId,
                     model.Itens.Select(x => new ItemEntradaDto(x.SuprimentoId!.Value, x.Quantidade,
                         x.CustoUnitario, new DateTimeOffset(x.Data), x.Promocional,
-                        x.CodigoLote, x.Validade)).ToList(), model.VencimentoPagamento), ct);
+                        null, null)).ToList()), ct);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or KeyNotFoundException)

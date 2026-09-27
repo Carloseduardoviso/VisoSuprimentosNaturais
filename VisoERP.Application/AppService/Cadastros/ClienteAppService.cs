@@ -21,7 +21,12 @@ public sealed class ClienteAppService(IRepository<Cliente> clientes,
 
     public async Task<Guid> SalvarAsync(Guid? id, SalvarClienteDto entrada, CancellationToken cancellationToken)
     {
-        var documento = entrada.Documento?.Trim();
+        var clienteExistente = id.HasValue
+            ? await clientes.ObterPorIdAsync(id.Value, cancellationToken)
+                ?? throw new KeyNotFoundException("Cliente não encontrado.")
+            : null;
+        var documento = entrada.Documento?.Trim() ?? clienteExistente?.Documento;
+        var email = entrada.Email?.Trim() ?? clienteExistente?.Email;
         if (!string.IsNullOrWhiteSpace(documento) &&
             await clientes.ExisteAsync(x => x.Documento == documento && x.Id != id, cancellationToken))
             throw new ArgumentException("Documento já cadastrado para outro cliente.", nameof(entrada));
@@ -29,14 +34,13 @@ public sealed class ClienteAppService(IRepository<Cliente> clientes,
         Cliente cliente;
         if (id.HasValue)
         {
-            cliente = await clientes.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Cliente não encontrado.");
-            cliente.Atualizar(entrada.Nome, documento, entrada.Email, entrada.Telefone, entrada.Ativo);
+            cliente = clienteExistente!;
+            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
         }
         else
         {
-            cliente = Cliente.Criar(entrada.Nome, documento, entrada.Email, entrada.Telefone);
-            cliente.Atualizar(entrada.Nome, documento, entrada.Email, entrada.Telefone, entrada.Ativo);
+            cliente = Cliente.Criar(entrada.Nome, documento, email, entrada.Telefone);
+            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
             await clientes.AdicionarAsync(cliente, cancellationToken);
         }
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);

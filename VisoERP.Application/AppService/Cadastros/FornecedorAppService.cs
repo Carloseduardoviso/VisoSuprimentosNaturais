@@ -21,7 +21,12 @@ public sealed class FornecedorAppService(IRepository<Fornecedor> fornecedores,
 
     public async Task<Guid> SalvarAsync(Guid? id, SalvarFornecedorDto entrada, CancellationToken cancellationToken)
     {
-        var documento = entrada.Documento?.Trim();
+        var fornecedorExistente = id.HasValue
+            ? await fornecedores.ObterPorIdAsync(id.Value, cancellationToken)
+                ?? throw new KeyNotFoundException("Fornecedor não encontrado.")
+            : null;
+        var documento = entrada.Documento?.Trim() ?? fornecedorExistente?.Documento;
+        var email = entrada.Email?.Trim() ?? fornecedorExistente?.Email;
         if (!string.IsNullOrWhiteSpace(documento) &&
             await fornecedores.ExisteAsync(x => x.Documento == documento && x.Id != id, cancellationToken))
             throw new ArgumentException("Documento já cadastrado para outro fornecedor.", nameof(entrada));
@@ -29,14 +34,13 @@ public sealed class FornecedorAppService(IRepository<Fornecedor> fornecedores,
         Fornecedor fornecedor;
         if (id.HasValue)
         {
-            fornecedor = await fornecedores.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Fornecedor não encontrado.");
-            fornecedor.Atualizar(entrada.Nome, documento, entrada.Email, entrada.Telefone, entrada.Ativo);
+            fornecedor = fornecedorExistente!;
+            fornecedor.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
         }
         else
         {
-            fornecedor = Fornecedor.Criar(entrada.Nome, documento, entrada.Email, entrada.Telefone);
-            fornecedor.Atualizar(entrada.Nome, documento, entrada.Email, entrada.Telefone, entrada.Ativo);
+            fornecedor = Fornecedor.Criar(entrada.Nome, documento, email, entrada.Telefone);
+            fornecedor.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
             await fornecedores.AdicionarAsync(fornecedor, cancellationToken);
         }
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
