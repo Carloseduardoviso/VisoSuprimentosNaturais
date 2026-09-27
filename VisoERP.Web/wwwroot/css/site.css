@@ -21,6 +21,7 @@ body {
   flex-direction: column;
   background: var(--viso-cream);
   color: var(--viso-ink);
+  overflow-x: hidden;
 }
 
 .app-content { flex: 1; padding-bottom: 3rem; }
@@ -196,10 +197,17 @@ a:hover { color: var(--viso-green-deep); }
 .login-leaf { width: 2.7rem; height: 2.7rem; padding: .35rem; margin-bottom: .8rem; background: var(--viso-green); border-radius: 50%; }
 
 @media (max-width: 767px) {
+  .app-content { padding-left: .75rem; padding-right: .75rem; }
+  .brand-lockup { margin-right: 0; }
+  .brand-name small { font-size: .42rem; letter-spacing: .1em; }
+  .home-hero-content { padding: 2.5rem 1rem; }
+  .home-hero h1 span { letter-spacing: .1em; }
+  .home-hero h1 small { letter-spacing: .04em; }
   .home-section-heading { display: block; }
   .home-section-heading p { margin-top: .5rem; }
   .home-hero { min-height: 305px; }
-  .table { display: block; overflow-x: auto; }
+  .table { display: block; width: 100%; overflow-x: auto; white-space: nowrap; }
+  .table-responsive { border-radius: .65rem; }
 }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .kpi-grid > .col-xl-3 { flex: 0 0 auto; width: 25%; }
