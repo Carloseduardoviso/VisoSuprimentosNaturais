@@ -12,7 +12,12 @@ namespace VisoERP.Web.Controllers;
 public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pedidos,
     IFornecedorAppService fornecedores, ISuprimentoAppService suprimentos) : Controller
 {
-    public async Task<IActionResult> Index(CancellationToken ct) => View(await pedidos.ListarAsync(ct));
+    public async Task<IActionResult> Index(CancellationToken ct)
+    {
+        ViewBag.Fornecedores = (await fornecedores.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.Nome);
+        return View(await pedidos.ListarAsync(ct));
+    }
 
     public async Task<IActionResult> Novo(CancellationToken ct)
     {
