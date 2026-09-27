@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Início";
 }
 
@@ -30,7 +30,7 @@
     <div class="row g-3">
         @if (podeEstoque)
         {
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Suprimentos" asp-action="Index"><span class="module-number">01</span><strong>Suprimentos</strong><span>Catálogo e produtos naturais</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Suprimentos" asp-action="Index"><span class="module-number">01</span><strong>Suplementos alimentares</strong><span>Catálogo e produtos naturais</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
             <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="PedidosFornecedores" asp-action="Index"><span class="module-number">02</span><strong>Pedidos</strong><span>Compras com fornecedores</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
             <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Entradas" asp-action="Index"><span class="module-number">03</span><strong>Entradas</strong><span>Recebimentos e estoque</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
         }

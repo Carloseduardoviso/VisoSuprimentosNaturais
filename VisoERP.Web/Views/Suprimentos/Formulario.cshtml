@@ -1,5 +1,5 @@
 @model VisoERP.Web.Models.Cadastros.SuprimentoViewModel
-@{ ViewData["Title"] = Model.Id.HasValue ? "Editar suprimento" : "Novo suprimento"; }
+@{ ViewData["Title"] = Model.Id.HasValue ? "Editar suplemento alimentar" : "Novo suplemento alimentar"; }
 <h1>@ViewData["Title"]</h1>
 <form asp-action="Salvar" method="post" enctype="multipart/form-data" class="row g-3">
     <input asp-for="Id" type="hidden" />

@@ -7,7 +7,7 @@
     <div class="col"><div class="card card-body">Recebido<strong>@Model.ValorRecebido.ToString("C")</strong></div></div>
     <div class="col"><div class="card card-body">A receber<strong>@((Model.Total - Model.ValorRecebido).ToString("C"))</strong></div></div>
 </div>
-<h2 class="h4">Suprimentos</h2>
+<h2 class="h4">Suplementos alimentares</h2>
 <table class="table table-striped"><thead><tr><th>Código</th><th>Quantidade</th><th>Preço</th><th>Total</th><th>Custo histórico</th></tr></thead><tbody>
 @foreach (var item in Model.Itens)
 {

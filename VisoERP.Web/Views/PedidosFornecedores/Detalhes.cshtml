@@ -4,7 +4,7 @@
 <p><strong>Situação:</strong> @Model.Situacao &nbsp; <strong>Total:</strong> @Model.Total.ToString("C")</p>
 @if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
 <table class="table table-striped">
-    <thead><tr><th>Suprimento</th><th>Quantidade</th><th>Recebida</th><th>Preço catálogo</th><th>Preço com desconto</th><th>Total</th></tr></thead>
+    <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Recebida</th><th>Preço catálogo</th><th>Preço com desconto</th><th>Total</th></tr></thead>
     <tbody>
     @foreach (var item in Model.Itens)
     {
