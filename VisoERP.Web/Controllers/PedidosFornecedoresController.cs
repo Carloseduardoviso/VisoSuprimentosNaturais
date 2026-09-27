@@ -88,9 +88,9 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     }
 
     [HttpPost]
-    public async Task<IActionResult> RegistrarFalta(Guid id, List<Guid> suplementoId, List<decimal?> quantidade, CancellationToken ct)
+    public async Task<IActionResult> RegistrarFalta(Guid id, Dictionary<Guid, decimal?> faltasInformadas, CancellationToken ct)
     {
-        var faltas = suplementoId.Zip(quantidade).Where(x => x.Second is > 0).Select(x => (x.First, Quantidade: x.Second!.Value)).ToList();
+        var faltas = faltasInformadas.Where(x => x.Value is > 0).Select(x => (x.Key, Quantidade: x.Value!.Value)).ToList();
         foreach (var falta in faltas) await pedidos.RegistrarFaltaAsync(id, falta.First, falta.Quantidade, ct);
         var pedido = await pedidos.ObterAsync(id, ct);
         var fornecedor = pedido is null ? null : await fornecedores.ObterAsync(pedido.FornecedorId, ct);
