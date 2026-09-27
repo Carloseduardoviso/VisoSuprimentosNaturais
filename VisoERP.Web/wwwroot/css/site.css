@@ -91,6 +91,37 @@ a:hover { color: var(--viso-green-deep); }
 .card { border: 1px solid #dce7da; border-radius: .75rem; box-shadow: 0 4px 16px rgba(20, 61, 43, .04); }
 .alert-info { color: #214b32; background: #e7f0e7; border-color: #cbdcc9; }
 
+.kpi-card {
+  --kpi-color: var(--viso-green);
+  --kpi-tint: #e8f0e9;
+  display: flex; align-items: center; gap: .9rem; min-height: 98px;
+  padding: 1rem 1.15rem; background: #fff;
+  border: 1px solid #dce7da; border-left: 4px solid var(--kpi-color);
+  border-radius: .75rem; box-shadow: 0 4px 14px rgba(20, 61, 43, .05);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(20, 61, 43, .1); }
+.kpi-icon {
+  display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px;
+  color: var(--kpi-color); background: var(--kpi-tint); border-radius: 14px;
+}
+.kpi-icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.kpi-copy { display: flex; flex-direction: column; gap: .25rem; min-width: 0; }
+.kpi-copy > span { color: #5e7064; font-size: .86rem; line-height: 1.25; }
+.kpi-copy > strong { color: #183f2c; font-size: 1.08rem; line-height: 1.25; font-weight: 750; font-variant-numeric: tabular-nums; }
+.kpi-sales { --kpi-color: #277448; --kpi-tint: #e7f2e9; }
+.kpi-received { --kpi-color: #247b70; --kpi-tint: #e5f2ef; }
+.kpi-purchases { --kpi-color: #9b721e; --kpi-tint: #f6f0df; }
+.kpi-cogs { --kpi-color: #986044; --kpi-tint: #f5ece5; }
+.kpi-gross { --kpi-color: #2c8052; --kpi-tint: #e6f2e9; }
+.kpi-expenses { --kpi-color: #a64e4e; --kpi-tint: #f7eaea; }
+.kpi-net { --kpi-color: #17643e; --kpi-tint: #e3f0e7; }
+.kpi-roi { --kpi-color: #98742b; --kpi-tint: #f5f0df; }
+.kpi-investment { --kpi-color: #a17b25; --kpi-tint: #f8f1dc; }
+.kpi-capital { --kpi-color: #315f42; --kpi-tint: #e8f0e8; }
+.kpi-receivable { --kpi-color: #39758c; --kpi-tint: #e7f1f4; }
+.kpi-payable { --kpi-color: #aa6a36; --kpi-tint: #f6eee5; }
+
 .table {
   background: #fff; border: 1px solid #e0e8df; border-radius: .65rem;
   overflow: hidden; vertical-align: middle;
@@ -157,6 +188,9 @@ a:hover { color: var(--viso-green-deep); }
   .home-section-heading p { margin-top: .5rem; }
   .home-hero { min-height: 305px; }
   .table { display: block; overflow-x: auto; }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .kpi-grid > .col-xl-3 { flex: 0 0 auto; width: 25%; }
 }
 @media (max-width: 575px) {
   .brand-navbar .navbar-nav { align-items: stretch; }
