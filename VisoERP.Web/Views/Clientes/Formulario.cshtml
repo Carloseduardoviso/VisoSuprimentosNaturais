@@ -13,6 +13,26 @@
     <div class="col-12"><button type="submit" class="btn btn-primary">Salvar</button> <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a></div>
 </form>
 @section Scripts { <partial name="_ValidationScriptsPartial" /><script>
-(() => { const cep = document.getElementById('Cep'), numero = document.getElementById('Numero'), endereco = document.getElementById('Endereco');
-cep?.addEventListener('blur', async () => { const codigo = cep.value.replace(/\D/g, ''); if (codigo.length !== 8) return; try { const resposta = await fetch(`https://viacep.com.br/ws/${codigo}/json/`); const dados = await resposta.json(); if (!dados.erro) { endereco.value = [dados.logradouro, dados.bairro, dados.localidade, dados.uf].filter(Boolean).join(' - '); numero.focus(); } } catch { } }); })();
+(() => {
+    const cpfCnpj = document.getElementById('CpfCnpj'), cep = document.getElementById('Cep');
+    const numero = document.getElementById('Numero'), endereco = document.getElementById('Endereco');
+    let enderecoEncontrado;
+    cpfCnpj?.addEventListener('input', () => {
+        const digitos = cpfCnpj.value.replace(/\D/g, '').slice(0, 14);
+        cpfCnpj.value = digitos.length <= 11
+            ? digitos.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+            : digitos.replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+    });
+    const preencherEndereco = () => {
+        if (!enderecoEncontrado) return;
+        const { logradouro, bairro, localidade, uf } = enderecoEncontrado;
+        endereco.value = [`${logradouro}${numero.value ? ` - ${numero.value}` : ''}`, bairro, localidade, uf].filter(Boolean).join(', ').replace(', ', ' - ');
+    };
+    cep?.addEventListener('blur', async () => {
+        const codigo = cep.value.replace(/\D/g, ''); if (codigo.length !== 8) return;
+        try { const resposta = await fetch(`https://viacep.com.br/ws/${codigo}/json/`); const dados = await resposta.json();
+            if (!dados.erro) { enderecoEncontrado = dados; numero.focus(); } } catch { }
+    });
+    numero?.addEventListener('blur', preencherEndereco);
+})();
 </script> }
