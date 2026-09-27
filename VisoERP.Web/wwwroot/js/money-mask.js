@@ -17,6 +17,22 @@
         return bruto ? Number(bruto) / (10 ** escala) : 0;
     }
 
+    function formatarValorServidor(valor, escala = 2) {
+        if (valor === null || valor === undefined || valor === '') return '';
+
+        const texto = String(valor).trim();
+        const normalizado = texto.includes(',')
+            ? texto.replace(/\./g, '').replace(',', '.')
+            : texto;
+        const numeroServidor = Number(normalizado);
+        if (!Number.isFinite(numeroServidor)) return '';
+
+        return new Intl.NumberFormat('pt-BR', {
+            minimumFractionDigits: escala,
+            maximumFractionDigits: escala
+        }).format(numeroServidor);
+    }
+
     function atualizar(campo, completo = false) {
         if (!campo?.matches('[data-money-mask]')) return;
         const anterior = campo.value;
@@ -34,5 +50,5 @@
     document.addEventListener('submit', evento =>
         evento.target.querySelectorAll('[data-money-mask]').forEach(campo => atualizar(campo, true)), true);
 
-    window.VisoMoney = { formatarPorCentavos, numero, atualizar };
+    window.VisoMoney = { formatarPorCentavos, formatarValorServidor, numero, atualizar };
 })();
