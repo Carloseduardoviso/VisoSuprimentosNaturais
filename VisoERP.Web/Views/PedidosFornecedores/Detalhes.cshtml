@@ -19,7 +19,7 @@
 }
 @if (Model.Situacao == "Pendente")
 {
-    <form asp-action="Cancelar" asp-route-id="@Model.Id" method="post" class="d-inline">
+    <form asp-action="Cancelar" asp-route-id="@Model.Id" method="post" class="d-inline" target="_blank">
         <button class="btn btn-outline-danger" type="submit">Cancelar pedido</button>
     </form>
 }
