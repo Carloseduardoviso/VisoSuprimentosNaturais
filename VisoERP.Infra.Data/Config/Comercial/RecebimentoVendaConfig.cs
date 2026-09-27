@@ -10,7 +10,7 @@ public sealed class RecebimentoVendaConfig : IEntityTypeConfiguration<Recebiment
     {
         builder.ToTable("RecebimentosVendas");
         builder.HasKey(x => x.Id);
-        builder.HasOne<Venda>().WithMany().HasForeignKey(x => x.VendaId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne<Venda>().WithMany(x => x.Recebimentos).HasForeignKey(x => x.VendaId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<ParcelaVenda>().WithMany().HasForeignKey(x => x.ParcelaVendaId).OnDelete(DeleteBehavior.Restrict);
         builder.Property(x => x.Valor).HasPrecision(18, 2);
         builder.HasIndex(x => x.Data);

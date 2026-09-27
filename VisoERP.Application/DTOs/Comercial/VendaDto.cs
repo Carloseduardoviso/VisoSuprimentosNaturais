@@ -13,6 +13,9 @@ public sealed record ItemVendaDto(Guid SuprimentoId, decimal Quantidade, decimal
 public sealed record ParcelaVendaDto(Guid Id, int Numero, DateOnly Vencimento,
     decimal Valor, decimal ValorPago, decimal Saldo, DateTimeOffset? PagoEm);
 
+public sealed record RecebimentoVendaDto(Guid? ParcelaVendaId, decimal Valor, DateTimeOffset Data);
+
 public sealed record VendaDto(Guid Id, Guid ClienteId, DateTimeOffset Data, decimal Subtotal,
     decimal Desconto, decimal Total, decimal ValorEntrada, decimal ValorRecebido,
-    decimal CustoTotal, IReadOnlyList<ItemVendaDto> Itens, IReadOnlyList<ParcelaVendaDto> Parcelas);
+    decimal CustoTotal, IReadOnlyList<ItemVendaDto> Itens, IReadOnlyList<ParcelaVendaDto> Parcelas,
+    IReadOnlyList<RecebimentoVendaDto> Recebimentos);

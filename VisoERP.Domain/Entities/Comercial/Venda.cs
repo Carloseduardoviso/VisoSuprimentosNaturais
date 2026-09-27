@@ -4,6 +4,7 @@ public sealed class Venda : EntidadeBase
 {
     private readonly List<ItemVenda> _itens = [];
     private readonly List<ParcelaVenda> _parcelas = [];
+    private readonly List<RecebimentoVenda> _recebimentos = [];
     private Venda() { }
     public Guid ClienteId { get; private set; }
     public DateTimeOffset Data { get; private set; } = DateTimeOffset.UtcNow;
@@ -14,6 +15,7 @@ public sealed class Venda : EntidadeBase
     public bool Finalizada { get; private set; }
     public IReadOnlyCollection<ItemVenda> Itens => _itens.AsReadOnly();
     public IReadOnlyCollection<ParcelaVenda> Parcelas => _parcelas.AsReadOnly();
+    public IReadOnlyCollection<RecebimentoVenda> Recebimentos => _recebimentos.AsReadOnly();
     public decimal Subtotal => _itens.Sum(x => x.Total);
     public decimal Total => Subtotal - Desconto;
     public decimal CustoTotal => _itens.Sum(x => x.CustoTotal);

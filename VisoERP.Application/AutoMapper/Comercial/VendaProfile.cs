@@ -10,6 +10,7 @@ public sealed class VendaProfile : Profile
     {
         CreateMap<ItemVenda, ItemVendaDto>();
         CreateMap<ParcelaVenda, ParcelaVendaDto>();
+        CreateMap<RecebimentoVenda, RecebimentoVendaDto>();
         CreateMap<Venda, VendaDto>();
     }
 }
