@@ -35,7 +35,7 @@ public sealed class VendasController(IVendaAppService vendas, IClienteAppService
     [HttpPost]
     public async Task<IActionResult> Registrar(VendaViewModel model, CancellationToken ct)
     {
-        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suprimento.");
+        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {
             try

@@ -26,7 +26,7 @@ public sealed class SuprimentoAppService(ISuprimentoRepository suprimentos,
     {
         var suprimentoExistente = id.HasValue
             ? await suprimentos.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Suprimento não encontrado.")
+                ?? throw new KeyNotFoundException("Suplemento alimentar não encontrado.")
             : null;
         var codigoInterno = string.IsNullOrWhiteSpace(entrada.CodigoInterno)
             ? suprimentoExistente?.CodigoInterno ?? await GerarCodigoInternoAsync(cancellationToken)

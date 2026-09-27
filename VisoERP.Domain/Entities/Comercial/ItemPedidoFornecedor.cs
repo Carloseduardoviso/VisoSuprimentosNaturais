@@ -15,7 +15,7 @@ public sealed class ItemPedidoFornecedor : EntidadeBase
     internal static ItemPedidoFornecedor Criar(Guid pedidoId, Guid suprimentoId, decimal quantidade,
         decimal precoCatalogo, decimal precoComDesconto)
     {
-        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.", nameof(suprimentoId));
+        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suplemento alimentar inválido.", nameof(suprimentoId));
         if (quantidade <= 0) throw new ArgumentOutOfRangeException(nameof(quantidade));
         if (precoCatalogo < 0) throw new ArgumentOutOfRangeException(nameof(precoCatalogo));
         if (precoComDesconto < 0)

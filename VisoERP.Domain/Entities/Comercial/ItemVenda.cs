@@ -18,7 +18,7 @@ public sealed class ItemVenda : EntidadeBase
         decimal precoCatalogo, decimal precoUnitario, bool promocional, decimal custoUnitario,
         DateTimeOffset data)
     {
-        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.");
+        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suplemento alimentar inválido.");
         if (quantidade <= 0) throw new ArgumentOutOfRangeException(nameof(quantidade));
         if (precoCatalogo < 0 || precoUnitario < 0 || precoUnitario > precoCatalogo)
             throw new ArgumentException("Preço inválido.");

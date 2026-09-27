@@ -11,7 +11,7 @@ public sealed class LoteEstoque : EntidadeBase
 
     public static LoteEstoque Criar(Guid suprimentoId, string codigo, DateOnly? validade)
     {
-        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.", nameof(suprimentoId));
+        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suplemento alimentar inválido.", nameof(suprimentoId));
         if (string.IsNullOrWhiteSpace(codigo) || codigo.Trim().Length > 80)
             throw new ArgumentException("Código do lote inválido.", nameof(codigo));
         return new LoteEstoque { SuprimentoId = suprimentoId, Codigo = codigo.Trim(), Validade = validade };

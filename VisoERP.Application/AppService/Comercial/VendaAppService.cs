@@ -20,7 +20,7 @@ public sealed class VendaAppService(IRepository<Cliente> clientes,
     public async Task<Guid> RegistrarAsync(CriarVendaDto dto, CancellationToken cancellationToken)
     {
         if (dto.Itens is null || dto.Itens.Count == 0)
-            throw new ArgumentException("Informe ao menos um suprimento.");
+            throw new ArgumentException("Informe ao menos um suplemento alimentar.");
         var venda = Venda.Criar(dto.ClienteId, dto.Desconto, dto.ValorEntrada,
             dto.NumeroParcelas, dto.PrimeiroVencimento);
         await unitOfWork.ExecutarEmTransacaoAsync(async ct =>
@@ -31,7 +31,7 @@ public sealed class VendaAppService(IRepository<Cliente> clientes,
             {
                 var produto = await suprimentos.ObterPorIdAsync(item.SuprimentoId, ct);
                 if (produto is not { Ativo: true })
-                    throw new ArgumentException("Suprimento inexistente ou inativo.");
+                    throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
                 if (item.Quantidade < produto.QuantidadeMinimaCompra)
                     throw new ArgumentException($"Quantidade inferior à compra mínima de {produto.Nome}.");
                 var saldo = await estoque.ObterSaldoAsync(item.SuprimentoId, ct)

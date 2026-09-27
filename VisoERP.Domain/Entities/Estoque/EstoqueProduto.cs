@@ -11,7 +11,7 @@ public sealed class EstoqueProduto : EntidadeBase
 
     public static EstoqueProduto Criar(Guid suprimentoId)
     {
-        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.", nameof(suprimentoId));
+        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suplemento alimentar inválido.", nameof(suprimentoId));
         return new EstoqueProduto { SuprimentoId = suprimentoId };
     }
 

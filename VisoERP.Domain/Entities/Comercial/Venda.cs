@@ -34,7 +34,7 @@ public sealed class Venda : EntidadeBase
     {
         if (Finalizada) throw new InvalidOperationException("Venda já finalizada.");
         if (_itens.Any(x => x.SuprimentoId == suprimentoId))
-            throw new InvalidOperationException("Suprimento duplicado na venda.");
+            throw new InvalidOperationException("Suplemento alimentar duplicado na venda.");
         _itens.Add(ItemVenda.Criar(Id, suprimentoId, quantidade, precoCatalogo,
             precoUnitario, promocional, custoUnitario, data ?? DateTimeOffset.UtcNow));
     }
@@ -42,7 +42,7 @@ public sealed class Venda : EntidadeBase
     public void Finalizar()
     {
         if (Finalizada) throw new InvalidOperationException("Venda já finalizada.");
-        if (_itens.Count == 0) throw new InvalidOperationException("Venda sem suprimentos.");
+        if (_itens.Count == 0) throw new InvalidOperationException("Venda sem suplementos alimentares.");
         if (Desconto > Subtotal) throw new InvalidOperationException("Desconto supera o subtotal.");
         if (ValorEntrada > Total) throw new InvalidOperationException("Entrada financeira supera o total.");
         var saldo = Total - ValorEntrada;

@@ -21,8 +21,8 @@ public sealed class EntradaEstoque : EntidadeBase
 
     public void Validar()
     {
-        if (_itens.Count == 0) throw new InvalidOperationException("Informe ao menos um suprimento.");
+        if (_itens.Count == 0) throw new InvalidOperationException("Informe ao menos um suplemento alimentar.");
         if (_itens.GroupBy(x => x.SuprimentoId).Any(x => x.Count() > 1))
-            throw new InvalidOperationException("Cada suprimento deve aparecer uma vez por entrada.");
+            throw new InvalidOperationException("Cada suplemento alimentar deve aparecer uma vez por entrada.");
     }
 }

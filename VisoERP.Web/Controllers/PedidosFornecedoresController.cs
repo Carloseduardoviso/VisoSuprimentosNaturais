@@ -29,7 +29,7 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     [HttpPost]
     public async Task<IActionResult> Salvar(PedidoFornecedorViewModel model, CancellationToken ct)
     {
-        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suprimento.");
+        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {
             try

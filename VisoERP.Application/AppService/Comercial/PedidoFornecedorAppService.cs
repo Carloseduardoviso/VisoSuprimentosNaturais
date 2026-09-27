@@ -22,7 +22,7 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         foreach (var item in entrada.Itens)
         {
             if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, cancellationToken) is not { Ativo: true })
-                throw new ArgumentException("Suprimento inexistente ou inativo.");
+                throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
             pedido.AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
         }
         await pedidos.AdicionarAsync(pedido, cancellationToken);

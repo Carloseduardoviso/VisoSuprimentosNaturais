@@ -16,7 +16,7 @@ public sealed class ItemEntradaEstoque : EntidadeBase
         decimal custoUnitario, DateTimeOffset data, bool promocional, string? codigoLote,
         DateOnly? validade)
     {
-        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.", nameof(suprimentoId));
+        if (suprimentoId == Guid.Empty) throw new ArgumentException("Suplemento alimentar inválido.", nameof(suprimentoId));
         if (quantidade <= 0) throw new ArgumentOutOfRangeException(nameof(quantidade));
         if (custoUnitario < 0) throw new ArgumentOutOfRangeException(nameof(custoUnitario));
         if (data == default) throw new ArgumentException("Data inválida.", nameof(data));

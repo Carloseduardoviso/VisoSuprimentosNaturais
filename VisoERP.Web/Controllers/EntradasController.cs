@@ -35,7 +35,7 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
     [HttpPost]
     public async Task<IActionResult> Confirmar(EntradaEstoqueViewModel model, CancellationToken ct)
     {
-        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suprimento.");
+        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {
             try

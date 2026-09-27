@@ -21,7 +21,7 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
     public async Task<Guid> ConfirmarAsync(CriarEntradaDto dto, CancellationToken cancellationToken)
     {
         if (dto.Itens is null || dto.Itens.Count == 0)
-            throw new ArgumentException("Informe ao menos um suprimento.");
+            throw new ArgumentException("Informe ao menos um suplemento alimentar.");
         var entrada = EntradaEstoque.Criar(dto.PedidoFornecedorId);
         foreach (var item in dto.Itens)
             entrada.AdicionarItem(item.SuprimentoId, item.Quantidade, item.CustoUnitario,
@@ -37,7 +37,7 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
             foreach (var item in entrada.Itens)
             {
                 if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, ct) is not { Ativo: true })
-                    throw new ArgumentException("Suprimento inexistente ou inativo.");
+                    throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
                 pedido?.Receber(item.SuprimentoId, item.Quantidade);
 
                 var saldo = await estoque.ObterSaldoAsync(item.SuprimentoId, ct);
@@ -70,7 +70,7 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
             var valorCompra = Math.Round(entrada.TotalCusto, 2, MidpointRounding.AwayFromZero);
             if (valorCompra > 0)
                 await contasPagar.AdicionarAsync(ContaPagar.Criar(entrada.Id,
-                    pedido?.FornecedorId, "Compra de suprimentos", valorCompra,
+                    pedido?.FornecedorId, "Compra de suplementos alimentares", valorCompra,
                     dto.VencimentoPagamento ?? DateOnly.FromDateTime(DateTime.Today)), ct);
         }, cancellationToken);
         return entrada.Id;
