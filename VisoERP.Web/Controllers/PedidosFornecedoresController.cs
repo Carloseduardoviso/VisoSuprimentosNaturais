@@ -91,7 +91,15 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     public async Task<IActionResult> RegistrarFalta(Guid id, Dictionary<Guid, decimal?> faltasInformadas, CancellationToken ct)
     {
         var faltas = faltasInformadas.Where(x => x.Value is > 0).Select(x => (x.Key, Quantidade: x.Value!.Value)).ToList();
-        foreach (var falta in faltas) await pedidos.RegistrarFaltaAsync(id, falta.Key, falta.Quantidade, ct);
+        try
+        {
+            foreach (var falta in faltas) await pedidos.RegistrarFaltaAsync(id, falta.Key, falta.Quantidade, ct);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            TempData["Erro"] = "A quantidade não recebida não pode ser maior que a quantidade pedida.";
+            return RedirectToAction(nameof(Detalhes), new { id });
+        }
         var pedido = await pedidos.ObterAsync(id, ct);
         var fornecedor = pedido is null ? null : await fornecedores.ObterAsync(pedido.FornecedorId, ct);
         var suplementosFaltantes = await Task.WhenAll(faltas.Select(async falta => new { falta.Quantidade, Suplemento = await suprimentos.ObterAsync(falta.Key, ct) }));
