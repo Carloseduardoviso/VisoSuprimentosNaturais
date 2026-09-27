@@ -112,7 +112,19 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     [HttpPost]
     public async Task<IActionResult> Cancelar(Guid id, CancellationToken ct)
     {
-        try { await pedidos.CancelarAsync(id, ct); }
+        try
+        {
+            await pedidos.CancelarAsync(id, ct);
+            var pedido = await pedidos.ObterAsync(id, ct);
+            var fornecedor = pedido is null ? null : await fornecedores.ObterAsync(pedido.FornecedorId, ct);
+            var telefone = fornecedor?.Telefone?.Where(char.IsDigit).ToArray() ?? [];
+            if (telefone.Length is 10 or 11)
+            {
+                var numero = "55" + new string(telefone);
+                var mensagem = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nO pedido no valor de {pedido!.Total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))} foi cancelado.\n\nPedimos desculpas pelo transtorno.");
+                return Redirect($"https://wa.me/{numero}?text={mensagem}");
+            }
+        }
         catch (Exception ex) when (ex is InvalidOperationException or KeyNotFoundException)
         {
             TempData["Erro"] = ex.Message;
