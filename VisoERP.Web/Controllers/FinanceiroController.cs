@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VisoERP.Application.Interface.Financeiro;
 using VisoERP.Web.Models.Financeiro;
+using VisoERP.Application.Interface.Comercial;
+using VisoERP.Application.Interface.Cadastros;
 
 namespace VisoERP.Web.Controllers;
 
 [Authorize(Policy = "GerenciarFinanceiro")]
-public sealed class FinanceiroController(IFinanceiroAppService financeiro) : Controller
+public sealed class FinanceiroController(IFinanceiroAppService financeiro, IVendaAppService vendas, IClienteAppService clientes) : Controller
 {
     public async Task<IActionResult> Index(DateOnly? inicio, DateOnly? fim, CancellationToken ct)
     {
@@ -14,6 +16,8 @@ public sealed class FinanceiroController(IFinanceiroAppService financeiro) : Con
         var dataInicio = inicio ?? new DateOnly(hoje.Year, hoje.Month, 1);
         var dataFim = fim ?? hoje;
         if (dataInicio > dataFim) return BadRequest("Período inválido.");
+        ViewBag.Clientes = (await clientes.ListarAsync(ct)).ToDictionary(x => x.Id, x => x.Nome);
+        ViewBag.Vendas = await vendas.ListarAsync(ct);
         return View(new FinanceiroViewModel
         {
             Inicio = dataInicio, Fim = dataFim,
@@ -22,6 +26,14 @@ public sealed class FinanceiroController(IFinanceiroAppService financeiro) : Con
             Despesas = await financeiro.ListarDespesasAsync(ct),
             ContasPagar = await financeiro.ListarContasPagarAsync(ct)
         });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ReceberParcela(Guid vendaId, Guid parcelaId, decimal valor, CancellationToken ct)
+    {
+        try { await vendas.RegistrarPagamentoAsync(vendaId, parcelaId, valor, DateTimeOffset.Now, ct); }
+        catch (Exception ex) when (ex is ArgumentException or KeyNotFoundException) { TempData["Erro"] = ex.Message; }
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
