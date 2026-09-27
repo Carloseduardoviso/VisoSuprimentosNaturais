@@ -52,7 +52,10 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
     {
         var pedido = await pedidos.ObterAsync(id, ct);
-        return pedido is null ? NotFound() : View(pedido);
+        if (pedido is null) return NotFound();
+        ViewBag.Suplementos = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.Nome);
+        return View(pedido);
     }
 
     [HttpPost]

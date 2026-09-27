@@ -8,7 +8,7 @@
     <tbody>
     @foreach (var item in Model.Itens)
     {
-        <tr><td>@item.SuprimentoId</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
+        <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
             <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
     }
     </tbody>
