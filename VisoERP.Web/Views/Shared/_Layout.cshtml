@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuracao
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Ambiente
 @{
-    var acessoLocal = Ambiente.EnvironmentName == "Development" &&
-        bool.TryParse(Configuracao["Authentication:AllowAnonymousDevelopment"], out var liberado) && liberado;
-    var podeEstoque = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Estoque");
-    var podeVendas = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Vendas");
-    var podeFinanceiro = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Financeiro");
+    var podeEstoque = User.Identity?.IsAuthenticated == true;
+    var podeVendas = User.Identity?.IsAuthenticated == true;
+    var podeFinanceiro = User.Identity?.IsAuthenticated == true;
 }
 <html lang="pt-BR">
 <head>
