@@ -25,6 +25,7 @@
     <ProjectReference Include="..\VisoERP.Infra.Data\VisoERP.Infra.Data.csproj" />
     <ProjectReference Include="..\VisoERP.Infra.Ioc\VisoERP.Infra.Ioc.csproj" />
     <ProjectReference Include="..\VisoERP.Web\VisoERP.Web.csproj" />
+    <ProjectReference Include="..\VisoERP.DatabaseMigrator\VisoERP.DatabaseMigrator.csproj" />
   </ItemGroup>
 
 </Project>

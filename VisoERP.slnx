@@ -17,4 +17,7 @@
   <Folder Name="/Testes/">
     <Project Path="VisoERP.Tests/VisoERP.Tests.csproj" />
   </Folder>
+  <Folder Name="/Operacoes/">
+    <Project Path="VisoERP.DatabaseMigrator/VisoERP.DatabaseMigrator.csproj" />
+  </Folder>
 </Solution>

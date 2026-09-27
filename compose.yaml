@@ -52,6 +52,21 @@ services:
       retries: 10
       start_period: 30s
 
+  migrate:
+    profiles: ["ops"]
+    build:
+      context: .
+      dockerfile: deploy/migrator.Dockerfile
+    environment:
+      MIGRATION_CONNECTION_STRING: ${MIGRATION_CONNECTION_STRING:?MIGRATION_CONNECTION_STRING must be set}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD must be set}
+    networks:
+      app_network:
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
 networks:
   app_network:
     driver: bridge
