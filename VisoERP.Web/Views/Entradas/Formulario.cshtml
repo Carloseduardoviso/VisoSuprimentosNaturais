@@ -20,7 +20,7 @@
         @foreach (var produto in ViewBag.Suprimentos) { <option value="@produto.Id" data-custo="@produto.Custo.ToString(CultureInfo.InvariantCulture)">@produto.Nome</option> }
         </select></div>
         <div class="col-md-2"><label class="form-label">Quantidade</label><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
-        <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="text" inputmode="decimal" data-money-mask class="form-control" data-campo="CustoUnitario" required /></div>
+        <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="text" data-money-mask class="form-control bg-body-secondary text-muted" data-campo="CustoUnitario" readonly aria-readonly="true" required /></div>
         <div class="col-md-2"><label class="form-label">Data</label><input type="datetime-local" class="form-control" data-campo="Data" required /></div>
         <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Não</option><option value="true">Sim</option></select></div>
         <div class="col-md-3"><label class="form-label">Lote</label><input class="form-control" maxlength="80" data-campo="CodigoLote" /></div>
@@ -39,14 +39,15 @@
         container.appendChild(card);
         for (const field of ['SuprimentoId','Quantidade','CustoUnitario','Promocional','CodigoLote','Validade']) {
             const el = card.querySelector(`[data-campo="${field}"]`);
-            el.value = item[field] ?? (field === 'Quantidade' ? 1 : field === 'CustoUnitario' ? 0 : field === 'Promocional' ? 'false' : '');
-            if (el.matches('[data-money-mask]')) window.VisoMoney.atualizar(el, true);
+            const valor = item[field] ?? (field === 'Quantidade' ? 1 : field === 'CustoUnitario' ? 0 : field === 'Promocional' ? 'false' : '');
+            el.value = el.matches('[data-money-mask]')
+                ? window.VisoMoney.formatarValorServidor(valor)
+                : valor;
         }
         card.querySelector('[data-campo="Data"]').value = item.Data ? item.Data.slice(0,16) : now();
         card.querySelector('.produto').addEventListener('change', e => {
             const custo = card.querySelector('[data-campo="CustoUnitario"]');
-            custo.value = e.target.selectedOptions[0]?.dataset.custo || 0;
-            window.VisoMoney.atualizar(custo, true);
+            custo.value = window.VisoMoney.formatarValorServidor(e.target.selectedOptions[0]?.dataset.custo || 0);
         });
         card.querySelector('.remover').addEventListener('click', () => { card.remove(); reindex(); });
         reindex();

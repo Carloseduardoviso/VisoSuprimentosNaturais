@@ -14,4 +14,20 @@ assert.equal(context.window.VisoMoney.numero('8.300,00'), 8300);
 assert.equal(context.window.VisoMoney.formatarValorServidor('69.90'), '69,90');
 assert.equal(context.window.VisoMoney.formatarValorServidor('8300.00'), '8.300,00');
 
+const formularioEntrada = await fs.readFile(
+    new URL('../VisoERP.Web/Views/Entradas/Formulario.cshtml', import.meta.url), 'utf8');
+assert.match(formularioEntrada,
+    /data-campo="CustoUnitario" readonly aria-readonly="true"/);
+assert.match(formularioEntrada,
+    /custo\.value = window\.VisoMoney\.formatarValorServidor\(e\.target\.selectedOptions\[0\]\?\.dataset\.custo \|\| 0\);/);
+
+const formularioVenda = await fs.readFile(
+    new URL('../VisoERP.Web/Views/Vendas/Formulario.cshtml', import.meta.url), 'utf8');
+assert.match(formularioVenda,
+    /data-campo="PrecoCatalogo" readonly aria-readonly="true"/);
+assert.match(formularioVenda,
+    /data-campo="PrecoUnitario" readonly aria-readonly="true"/);
+assert.match(formularioVenda,
+    /precoVenda\.value = window\.VisoMoney\.formatarValorServidor\(option\?\.dataset\.precoVenda \|\| 0\);/);
+
 console.log('Máscara monetária por centavos validada.');

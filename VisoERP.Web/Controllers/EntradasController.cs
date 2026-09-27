@@ -57,9 +57,8 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
 
     private async Task PrepararOpcoes(CancellationToken ct)
     {
-        var saldos = (await entradas.ListarSaldosAsync(ct)).ToDictionary(x => x.SuprimentoId);
         ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo)
-            .Select(x => new { x.Id, x.Nome, Custo = saldos.TryGetValue(x.Id, out var s) ? s.CustoMedio : 0m })
+            .Select(x => new { x.Id, x.Nome, Custo = x.PrecoComDesconto })
             .ToList();
     }
 }
