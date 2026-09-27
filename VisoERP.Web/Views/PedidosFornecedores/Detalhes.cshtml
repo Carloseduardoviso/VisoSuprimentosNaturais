@@ -14,6 +14,7 @@
     }
     </tbody>
 </table>
+<div class="d-flex flex-wrap align-items-center gap-2">
 @if (Model.Situacao == "Pendente") { <form id="faltas-form" asp-action="RegistrarFalta" method="post" target="_blank"><input type="hidden" name="id" value="@Model.Id" /><button class="btn btn-outline-primary">Registrar faltas e avisar fornecedor</button></form> }
 @if (Model.Situacao is "Pendente" or "Parcial")
 {
@@ -26,3 +27,4 @@
     </form>
 }
 <a class="btn btn-link" asp-action="Index">Voltar</a>
+</div>
