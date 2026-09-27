@@ -8,6 +8,7 @@ public sealed class ItemPedidoFornecedor : EntidadeBase
     public Guid SuprimentoId { get; private set; }
     public decimal Quantidade { get; private set; }
     public decimal QuantidadeRecebida { get; private set; }
+    public decimal QuantidadeNaoRecebida { get; private set; }
     public decimal PrecoCatalogo { get; private set; }
     public decimal PrecoComDesconto { get; private set; }
     public decimal Total => Quantidade * PrecoComDesconto;
@@ -33,5 +34,12 @@ public sealed class ItemPedidoFornecedor : EntidadeBase
         if (QuantidadeRecebida + quantidade > Quantidade)
             throw new InvalidOperationException("Recebimento excede a quantidade pedida.");
         QuantidadeRecebida += quantidade;
+    }
+
+    internal void RegistrarFalta(decimal quantidade)
+    {
+        if (quantidade < 0 || QuantidadeRecebida + quantidade > Quantidade)
+            throw new ArgumentOutOfRangeException(nameof(quantidade));
+        QuantidadeNaoRecebida = quantidade;
     }
 }

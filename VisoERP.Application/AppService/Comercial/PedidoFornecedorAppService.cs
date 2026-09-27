@@ -46,4 +46,11 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         pedido.Cancelar();
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }
+
+    public async Task RegistrarFaltaAsync(Guid id, Guid suplementoId, decimal quantidade, CancellationToken cancellationToken)
+    {
+        var pedido = await consulta.ObterComItensAsync(id, cancellationToken) ?? throw new KeyNotFoundException();
+        pedido.RegistrarFalta(suplementoId, quantidade);
+        await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
+    }
 }

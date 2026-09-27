@@ -10,6 +10,7 @@
     {
         <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
             <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
+        @if (Model.Situacao == "Pendente") { <tr><td colspan="6"><form asp-action="RegistrarFalta" method="post" target="_blank" class="d-flex gap-2 align-items-center"><input type="hidden" name="id" value="@Model.Id" /><input type="hidden" name="suplementoId" value="@item.SuprimentoId" /><span>Não chegou:</span><input name="quantidade" type="number" min="1" step="1" class="form-control form-control-sm" style="max-width:100px" required /><button class="btn btn-sm btn-outline-warning">Registrar falta e avisar fornecedor</button></form></td></tr> }
     }
     </tbody>
 </table>

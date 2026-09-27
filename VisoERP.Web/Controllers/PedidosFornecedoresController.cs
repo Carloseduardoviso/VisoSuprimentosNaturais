@@ -88,6 +88,22 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     }
 
     [HttpPost]
+    public async Task<IActionResult> RegistrarFalta(Guid id, Guid suplementoId, decimal quantidade, CancellationToken ct)
+    {
+        await pedidos.RegistrarFaltaAsync(id, suplementoId, quantidade, ct);
+        var pedido = await pedidos.ObterAsync(id, ct);
+        var fornecedor = pedido is null ? null : await fornecedores.ObterAsync(pedido.FornecedorId, ct);
+        var suplemento = await suprimentos.ObterAsync(suplementoId, ct);
+        var telefone = fornecedor?.Telefone?.Where(char.IsDigit).ToArray() ?? [];
+        if (telefone.Length is 10 or 11)
+        {
+            var texto = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nNo pedido realizado, não recebemos {quantidade:0} unidade(s) de {suplemento?.Nome ?? "suplemento alimentar"}.\n\nPoderia verificar, por favor?");
+            return Redirect($"https://wa.me/55{new string(telefone)}?text={texto}");
+        }
+        return RedirectToAction(nameof(Detalhes), new { id });
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Salvar(PedidoFornecedorViewModel model, CancellationToken ct)
     {
         if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");

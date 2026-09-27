@@ -39,6 +39,9 @@ public sealed class PedidoFornecedor : EntidadeBase
             ? SituacaoPedido.Recebido : SituacaoPedido.Parcial;
     }
 
+    public void RegistrarFalta(Guid suprimentoId, decimal quantidade) =>
+        (_itens.SingleOrDefault(x => x.SuprimentoId == suprimentoId) ?? throw new KeyNotFoundException()).RegistrarFalta(quantidade);
+
     public void Cancelar()
     {
         if (_itens.Any(x => x.QuantidadeRecebida > 0))
