@@ -8,7 +8,7 @@
     <tbody>
     @foreach (var item in Model.Itens)
     {
-        <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
+        <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade.ToString("0")</td><td>@item.QuantidadeRecebida.ToString("0")</td>
             <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
         @if (Model.Situacao == "Pendente") { <tr><td colspan="6"><div class="d-flex gap-2 align-items-center"><span>Não chegou:</span><input form="faltas-form" name="faltasInformadas[@item.SuprimentoId]" type="number" min="0" max="@item.Quantidade" step="1" class="form-control form-control-sm" style="max-width:100px" /></div></td></tr> }
     }
