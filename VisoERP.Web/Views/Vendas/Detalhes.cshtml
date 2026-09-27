@@ -27,7 +27,7 @@
             {
                 <form asp-action="Pagar" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
                     <input type="hidden" name="parcelaId" value="@parcela.Id" />
-                    <input type="number" name="valor" min="0.01" max="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" step="0.01" value="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor recebido" />
+                    <input type="text" name="valor" inputmode="decimal" data-money-mask value="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor recebido" />
                     <button type="submit" class="btn btn-sm btn-outline-primary">Receber</button>
                 </form>
             }

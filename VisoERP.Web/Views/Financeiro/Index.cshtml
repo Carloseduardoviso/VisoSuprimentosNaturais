@@ -27,14 +27,14 @@
     <section class="col-md-6"><div class="card"><div class="card-body"><h2 class="h4">Registrar investimento</h2>
         <form asp-action="Investir" method="post" class="row g-2">
             <div class="col-12"><label class="form-label">Descrição</label><input name="Descricao" maxlength="200" required class="form-control" /></div>
-            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="number" min="0.01" step="0.01" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="text" inputmode="decimal" data-money-mask required class="form-control" /></div>
             <div class="col-6"><label class="form-label">Data</label><input name="Data" type="date" value="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" required class="form-control" /></div>
             <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
         </form></div></div></section>
     <section class="col-md-6"><div class="card"><div class="card-body"><h2 class="h4">Registrar despesa</h2>
         <form asp-action="Despesa" method="post" class="row g-2">
             <div class="col-12"><label class="form-label">Descrição</label><input name="Descricao" maxlength="200" required class="form-control" /></div>
-            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="number" min="0.01" step="0.01" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="text" inputmode="decimal" data-money-mask required class="form-control" /></div>
             <div class="col-6"><label class="form-label">Competência</label><input name="Data" type="date" value="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" required class="form-control" /></div>
             <div class="col-12"><label><input name="Paga" type="checkbox" value="true" /> Já foi paga</label></div>
             <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
@@ -49,7 +49,7 @@
         @if (conta.Saldo > 0)
         {
             <form asp-action="PagarConta" asp-route-id="@conta.Id" method="post" class="d-flex gap-2">
-                <input type="number" name="valor" min="0.01" max="@conta.Saldo.ToString(CultureInfo.InvariantCulture)" step="0.01" value="@conta.Saldo.ToString(CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor pago" />
+                <input type="text" name="valor" inputmode="decimal" data-money-mask value="@conta.Saldo.ToString(CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor pago" />
                 <button type="submit" class="btn btn-sm btn-outline-primary">Pagar</button>
             </form>
         }</td></tr>
