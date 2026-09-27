@@ -1,0 +1,25 @@
+@model VisoERP.Application.DTOs.Estoque.EntradaEstoqueDto
+@{ ViewData["Title"] = "Detalhes da entrada de estoque"; }
+<h1>Detalhes da entrada de estoque</h1>
+<p><strong>Data:</strong> @Model.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+<p><strong>Itens:</strong> @Model.Itens.Count <span class="mx-2">|</span> <strong>Custo total:</strong> @Model.TotalCusto.ToString("C")</p>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Custo unitário</th><th>Total</th><th>Data</th><th>Promocional</th></tr></thead>
+        <tbody>
+        @foreach (var item in Model.Itens)
+        {
+            var nome = ((IReadOnlyDictionary<Guid, string>)ViewBag.Suprimentos).TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
+            <tr>
+                <td>@nome</td>
+                <td>@item.Quantidade</td>
+                <td>@item.CustoUnitario.ToString("C")</td>
+                <td>@((item.Quantidade * item.CustoUnitario).ToString("C"))</td>
+                <td>@item.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@(item.Promocional ? "Sim" : "Não")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<a asp-action="Index" class="btn btn-link">Voltar</a>

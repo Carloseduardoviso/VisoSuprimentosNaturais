@@ -14,6 +14,15 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
 {
     public async Task<IActionResult> Index(CancellationToken ct) => View(await entradas.ListarAsync(ct));
 
+    public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
+    {
+        var entrada = (await entradas.ListarAsync(ct)).SingleOrDefault(x => x.Id == id);
+        if (entrada is null) return NotFound();
+        ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.Nome);
+        return View(entrada);
+    }
+
     public async Task<IActionResult> Nova(Guid? pedidoFornecedorId, CancellationToken ct)
     {
         await PrepararOpcoes(ct);
