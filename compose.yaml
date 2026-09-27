@@ -33,7 +33,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__VisoERP: ${APP_CONNECTION_STRING:?APP_CONNECTION_STRING must be set}
-      AutoMapper__LicenseKey: ${AUTOMAPPER_LICENSE_KEY:?AUTOMAPPER_LICENSE_KEY must be set}
+      AutoMapper__LicenseKey: ${AUTOMAPPER_LICENSE_KEY-}
       AdminBootstrap__Email: ${ADMIN_BOOTSTRAP_EMAIL:-}
       AdminBootstrap__Password: ${ADMIN_BOOTSTRAP_PASSWORD:-}
       FORWARDED_PROXY_IP: ${FORWARDED_PROXY_IP:?FORWARDED_PROXY_IP must be set}
