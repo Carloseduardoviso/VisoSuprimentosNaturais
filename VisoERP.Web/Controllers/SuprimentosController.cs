@@ -42,8 +42,6 @@ public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
     [HttpPost, RequestSizeLimit(3 * 1024 * 1024)]
     public async Task<IActionResult> Salvar(SuprimentoViewModel model, CancellationToken cancellationToken)
     {
-        if (model.PrecoComDesconto > model.PrecoCatalogo)
-            ModelState.AddModelError(nameof(model.PrecoComDesconto), "Desconto não pode superar o preço de catálogo.");
         if (!ModelState.IsValid)
         {
             await CarregarCategoriasAsync(cancellationToken);

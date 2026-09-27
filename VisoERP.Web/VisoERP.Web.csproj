@@ -4,6 +4,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12" PrivateAssets="all" />
     <ProjectReference Include="..\VisoERP.Application\VisoERP.Application.csproj" />
     <ProjectReference Include="..\VisoERP.Infra.Ioc\VisoERP.Infra.Ioc.csproj" />
+    <ProjectReference Include="..\VisoERP.Infra.Helper\VisoERP.Infra.Helper.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

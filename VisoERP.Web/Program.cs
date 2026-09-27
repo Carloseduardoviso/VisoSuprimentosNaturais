@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using VisoERP.Web.ModelBinders;
 using VisoERP.Infra.Ioc;
 using VisoERP.Web.Services.Cadastros;
 
@@ -6,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
-    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute()));
+{
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+    options.ModelBinderProviders.Insert(0, new DecimalPtBrModelBinderProvider());
+});
 var acessoAnonimoDesenvolvimento = builder.Environment.IsDevelopment() &&
     builder.Configuration.GetValue<bool>("Authentication:AllowAnonymousDevelopment");
 var autorizacao = builder.Services.AddAuthorizationBuilder()

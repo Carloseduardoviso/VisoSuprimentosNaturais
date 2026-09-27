@@ -55,6 +55,40 @@
         }</td></tr>
 }
 </tbody></table>
+@section Scripts {
+<script>
+(() => {
+    const explicacoes = {
+        'kpi-sales': 'Soma o valor das vendas registradas no período, mesmo que parte ainda não tenha sido recebida.',
+        'kpi-received': 'Soma os pagamentos recebidos no período, incluindo entradas e parcelas pagas.',
+        'kpi-purchases': 'Soma o custo das entradas de estoque registradas no período, independentemente do pagamento.',
+        'kpi-cogs': 'Custo histórico dos produtos vendidos no período, apurado pelo custo médio registrado na saída.',
+        'kpi-gross': 'Vendas realizadas menos o custo histórico dos produtos vendidos.',
+        'kpi-expenses': 'Soma as despesas cuja competência está dentro do período selecionado.',
+        'kpi-net': 'Lucro bruto menos as despesas por competência. É uma estimativa do resultado líquido.',
+        'kpi-roi': 'Lucro líquido estimado dividido pelo capital investido acumulado até o fim do período.',
+        'kpi-investment': 'Soma dos investimentos registrados dentro do período selecionado.',
+        'kpi-capital': 'Total acumulado de investimentos registrados até o fim do período.',
+        'kpi-receivable': 'Saldo das vendas realizadas até o fim do período que ainda não foi recebido.',
+        'kpi-payable': 'Saldo das compras de estoque realizadas até o fim do período que ainda não foi pago.'
+    };
+    document.querySelectorAll('.kpi-card').forEach(card => {
+        const classe = [...card.classList].find(nome => explicacoes[nome]);
+        if (!classe) return;
+        const ajuda = document.createElement('button');
+        ajuda.type = 'button';
+        ajuda.className = 'kpi-help';
+        ajuda.textContent = '?';
+        ajuda.title = explicacoes[classe];
+        ajuda.setAttribute('aria-label', `Ajuda: ${explicacoes[classe]}`);
+        ajuda.dataset.bsToggle = 'tooltip';
+        ajuda.dataset.bsPlacement = 'top';
+        card.prepend(ajuda);
+        bootstrap.Tooltip.getOrCreateInstance(ajuda, { trigger: 'hover focus' });
+    });
+})();
+</script>
+}
 <h2 class="h4">Despesas</h2>
 <table class="table table-striped"><thead><tr><th>Competência</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody>
 @foreach (var despesa in Model.Despesas.OrderByDescending(x => x.DataCompetencia))

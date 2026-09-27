@@ -35,7 +35,7 @@ public sealed class Suprimento : EntidadeBase
         if (string.IsNullOrWhiteSpace(nome) || nome.Trim().Length > 200)
             throw new ArgumentException("Nome deve ter de 1 a 200 caracteres.", nameof(nome));
         if (precoCatalogo < 0) throw new ArgumentOutOfRangeException(nameof(precoCatalogo));
-        if (precoComDesconto < 0 || precoComDesconto > precoCatalogo)
+        if (precoComDesconto < 0)
             throw new ArgumentOutOfRangeException(nameof(precoComDesconto));
         if (quantidadeMinimaCompra < 1) throw new ArgumentOutOfRangeException(nameof(quantidadeMinimaCompra));
         if (estoqueMinimo < 0) throw new ArgumentOutOfRangeException(nameof(estoqueMinimo));

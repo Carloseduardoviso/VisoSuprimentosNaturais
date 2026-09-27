@@ -18,7 +18,7 @@ public sealed class ItemPedidoFornecedor : EntidadeBase
         if (suprimentoId == Guid.Empty) throw new ArgumentException("Suprimento inválido.", nameof(suprimentoId));
         if (quantidade <= 0) throw new ArgumentOutOfRangeException(nameof(quantidade));
         if (precoCatalogo < 0) throw new ArgumentOutOfRangeException(nameof(precoCatalogo));
-        if (precoComDesconto < 0 || precoComDesconto > precoCatalogo)
+        if (precoComDesconto < 0)
             throw new ArgumentOutOfRangeException(nameof(precoComDesconto));
         return new ItemPedidoFornecedor
         {

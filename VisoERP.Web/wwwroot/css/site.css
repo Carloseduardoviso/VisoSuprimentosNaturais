@@ -94,12 +94,21 @@ a:hover { color: var(--viso-green-deep); }
 .kpi-card {
   --kpi-color: var(--viso-green);
   --kpi-tint: #e8f0e9;
+  position: relative;
   display: flex; align-items: center; gap: .9rem; min-height: 98px;
   padding: 1rem 1.15rem; background: #fff;
   border: 1px solid #dce7da; border-left: 4px solid var(--kpi-color);
   border-radius: .75rem; box-shadow: 0 4px 14px rgba(20, 61, 43, .05);
   transition: transform .15s ease, box-shadow .15s ease;
 }
+.kpi-help {
+  position: absolute; top: .45rem; right: .5rem; z-index: 1;
+  display: grid; place-items: center; width: 1.35rem; height: 1.35rem; padding: 0;
+  color: var(--kpi-color); background: #fff; border: 1px solid currentColor;
+  border-radius: 50%; font-size: .78rem; font-weight: 750; line-height: 1;
+  cursor: help;
+}
+.kpi-help:hover, .kpi-help:focus-visible { color: #fff; background: var(--kpi-color); outline: 2px solid var(--kpi-tint); }
 .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(20, 61, 43, .1); }
 .kpi-icon {
   display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px;
