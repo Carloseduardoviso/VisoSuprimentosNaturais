@@ -64,7 +64,7 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         var linhas = pedido.Itens.Select(item =>
         {
             var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
-            return $"• {nome}\n  Quantidade: {item.Quantidade}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+            return $"• {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
         });
         var mensagem = $"Olá, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmação. Obrigado!";
         return Content(mensagem, "text/plain; charset=utf-8");
