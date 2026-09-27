@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using VisoERP.Domain.Entities.Cadastros;
 using VisoERP.Domain.Entities.Comercial;
 using VisoERP.Domain.Entities.Estoque;
+using VisoERP.Domain.Entities.Financeiro;
 using VisoERP.Infra.Data.Config.Cadastros;
 using VisoERP.Infra.Data.Config.Comercial;
 using VisoERP.Infra.Data.Config.Estoque;
+using VisoERP.Infra.Data.Config.Financeiro;
 
 namespace VisoERP.Infra.Data.Context;
 
@@ -27,6 +29,10 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
     public DbSet<ItemVenda> ItensVendas => Set<ItemVenda>();
     public DbSet<ParcelaVenda> ParcelasVendas => Set<ParcelaVenda>();
     public DbSet<RecebimentoVenda> RecebimentosVendas => Set<RecebimentoVenda>();
+    public DbSet<Investimento> Investimentos => Set<Investimento>();
+    public DbSet<Despesa> Despesas => Set<Despesa>();
+    public DbSet<ContaPagar> ContasPagar => Set<ContaPagar>();
+    public DbSet<PagamentoContaPagar> PagamentosContasPagar => Set<PagamentoContaPagar>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +51,10 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
         modelBuilder.ApplyConfiguration(new ItemVendaConfig());
         modelBuilder.ApplyConfiguration(new ParcelaVendaConfig());
         modelBuilder.ApplyConfiguration(new RecebimentoVendaConfig());
+        modelBuilder.ApplyConfiguration(new InvestimentoConfig());
+        modelBuilder.ApplyConfiguration(new DespesaConfig());
+        modelBuilder.ApplyConfiguration(new ContaPagarConfig());
+        modelBuilder.ApplyConfiguration(new PagamentoContaPagarConfig());
         base.OnModelCreating(modelBuilder);
     }
 }

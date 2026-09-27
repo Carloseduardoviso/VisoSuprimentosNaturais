@@ -5,6 +5,7 @@ using VisoERP.Application.DTOs.Comercial;
 using VisoERP.Application.DTOs.Estoque;
 using VisoERP.Application.Interface.Comercial;
 using VisoERP.Application.Interface.Estoque;
+using VisoERP.Application.Interface.Financeiro;
 using VisoERP.Domain.Entities.Cadastros;
 using VisoERP.Infra.Data.Context;
 using VisoERP.Infra.Ioc;
@@ -86,6 +87,23 @@ public sealed class PedidoEntradaIntegracaoTests
                 CancellationToken.None));
             Assert.Equal(3m, await db.EstoquesProdutos.AsNoTracking()
                 .Where(x => x.SuprimentoId == produto.Id).Select(x => x.Quantidade).SingleAsync());
+
+            var financeiro = scope.ServiceProvider.GetRequiredService<IFinanceiroAppService>();
+            var hoje = DateOnly.FromDateTime(DateTime.Today);
+            await financeiro.RegistrarInvestimentoAsync("Capital inicial", 1000m, hoje, CancellationToken.None);
+            await financeiro.RegistrarDespesaAsync("Frete", 5m, hoje, true, CancellationToken.None);
+            var contas = await financeiro.ListarContasPagarAsync(CancellationToken.None);
+            Assert.Equal(2, contas.Count);
+            Assert.Equal(56m, contas.Sum(x => x.Valor));
+            await financeiro.PagarContaAsync(contas[0].Id, 10m, CancellationToken.None);
+            var resumo = await financeiro.ResumirAsync(hoje.AddDays(-1), hoje.AddDays(1), CancellationToken.None);
+            Assert.Equal(40m, resumo.Faturamento);
+            Assert.Equal(5m + parcela.Valor, resumo.Recebido);
+            Assert.Equal(56m, resumo.Compras);
+            Assert.Equal(22.4m, resumo.CustoProdutosVendidos);
+            Assert.Equal(12.6m, resumo.LucroLiquido);
+            Assert.Equal(46m, resumo.ContasPagar);
+            Assert.Equal(1.26m, resumo.RetornoSobreInvestimentoPercentual);
         }
         finally
         {

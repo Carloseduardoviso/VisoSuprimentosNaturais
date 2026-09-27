@@ -46,8 +46,11 @@ Inicie a aplicação uma vez. O usuário é criado com a função `Administrador
 - Etapa 3: categorias, clientes e fornecedores, com telas de listagem/edição e migration `ClientesEFornecedores`.
 - Etapa 4: pedidos a fornecedores, recebimento parcial, entradas diretas com cartões dinâmicos, lote, validade, custo médio móvel, saldo e movimentações. A confirmação usa transação serializável e `rowversion` no saldo/lote. Migration `PedidosEEntradas`.
 - Etapa 5: vendas com múltiplos itens, baixa transacional do estoque por lote válido, custo histórico, entrada financeira, parcelamento de até 12 vezes e recebimentos parciais de parcelas. Migration `VendasEParcelas`.
-- Etapas 6 a 8: pendentes.
+- Etapa 6: investimentos, despesas por competência, contas a pagar geradas na confirmação das entradas, pagamentos parciais e resumo financeiro por período. Migration `FinanceiroEInvestimentos` inclui contas das entradas anteriores à etapa.
+- Etapas 7 e 8: pendentes (dashboard e relatórios com exportação; auditoria e preparo de publicação).
 
 As migrations ficam em `VisoERP.Infra.Data/Migrations` e devem ser revisadas antes de aplicação em outros ambientes. O banco LocalDB é apenas para desenvolvimento.
 
 O teste de integração `PedidoEntradaIntegracaoTests` cria um banco LocalDB temporário com nome exclusivo, aplica as migrations, confirma recebimentos parciais e remove somente esse banco de teste ao terminar. Execute-o em um contexto com acesso ao LocalDB.
+
+O resumo financeiro separa vendas realizadas de recebimentos. O custo dos produtos vendidos usa o custo médio registrado na venda. O lucro líquido exibido é uma estimativa de vendas menos CPV e despesas cadastradas; tributos, devoluções e outras provisões ainda não estão modelados. O ROI divide esse lucro pelo capital investido acumulado até o fim do período, quando houver capital cadastrado.

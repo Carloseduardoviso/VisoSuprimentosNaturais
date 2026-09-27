@@ -8,6 +8,8 @@
     <input asp-for="PedidoFornecedorId" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div id="itens"></div>
+    <div class="mb-3"><label asp-for="VencimentoPagamento" class="form-label">Vencimento da compra</label>
+        <input asp-for="VencimentoPagamento" type="date" class="form-control" /></div>
     <button id="adicionar" type="button" class="btn btn-outline-primary mb-3">Adicionar suprimento</button>
     <div><button type="submit" class="btn btn-primary">Confirmar entrada</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
 </form>

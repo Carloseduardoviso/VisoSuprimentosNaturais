@@ -5,6 +5,7 @@ namespace VisoERP.Web.Models.Estoque;
 public sealed class EntradaEstoqueViewModel
 {
     public Guid? PedidoFornecedorId { get; set; }
+    public DateOnly VencimentoPagamento { get; set; } = DateOnly.FromDateTime(DateTime.Today);
     public List<ItemEntradaViewModel> Itens { get; set; } = [];
 }
 

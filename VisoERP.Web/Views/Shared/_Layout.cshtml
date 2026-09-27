@@ -1,6 +1,13 @@
 ﻿<!DOCTYPE html>
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuracao
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Ambiente
+@{
+    var acessoLocal = Ambiente.EnvironmentName == "Development" &&
+        bool.TryParse(Configuracao["Authentication:AllowAnonymousDevelopment"], out var liberado) && liberado;
+    var podeEstoque = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Estoque");
+    var podeVendas = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Vendas");
+    var podeFinanceiro = acessoLocal || User.IsInRole("Administrador") || User.IsInRole("Financeiro");
+}
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
@@ -25,18 +32,41 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Início</a>
                         </li>
-                        @if ((Ambiente.EnvironmentName == "Development" && Configuracao["Authentication:AllowAnonymousDevelopment"] == "true") || User.IsInRole("Administrador") || User.IsInRole("Estoque"))
+                        @if (podeEstoque || podeVendas)
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Suprimentos" asp-action="Index">Suprimentos</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Categorias" asp-action="Index">Categorias</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Fornecedores" asp-action="Index">Fornecedores</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="PedidosFornecedores" asp-action="Index">Pedidos</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Entradas" asp-action="Index">Entradas</a></li>
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">Cadastros</button>
+                                <ul class="dropdown-menu">
+                                    @if (podeEstoque)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Suprimentos" asp-action="Index">Suprimentos</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Categorias" asp-action="Index">Categorias</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Fornecedores" asp-action="Index">Fornecedores</a></li>
+                                    }
+                                    @if (podeVendas)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                                    }
+                                </ul>
+                            </li>
                         }
-                        @if ((Ambiente.EnvironmentName == "Development" && Configuracao["Authentication:AllowAnonymousDevelopment"] == "true") || User.IsInRole("Administrador") || User.IsInRole("Vendas"))
+                        @if (podeEstoque)
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle btn btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">Estoque</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="PedidosFornecedores" asp-action="Index">Pedidos a fornecedores</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Entradas" asp-action="Index">Entradas</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (podeVendas)
+                        {
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Vendas" asp-action="Index">Vendas</a></li>
+                        }
+                        @if (podeFinanceiro)
+                        {
+                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Financeiro" asp-action="Index">Financeiro</a></li>
                         }
                     </ul>
                     @if (User.Identity?.IsAuthenticated == true)

@@ -1,0 +1,76 @@
+@model VisoERP.Web.Models.Financeiro.FinanceiroViewModel
+@using System.Globalization
+@{ ViewData["Title"] = "Financeiro"; var resumo = Model.Resumo!; }
+<h1>Financeiro</h1>
+@if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
+<form method="get" class="row g-2 align-items-end mb-4">
+    <div class="col-auto"><label for="inicio" class="form-label">De</label><input id="inicio" name="inicio" type="date" value="@Model.Inicio.ToString("yyyy-MM-dd")" class="form-control" /></div>
+    <div class="col-auto"><label for="fim" class="form-label">Até</label><input id="fim" name="fim" type="date" value="@Model.Fim.ToString("yyyy-MM-dd")" class="form-control" /></div>
+    <div class="col-auto"><button class="btn btn-primary" type="submit">Filtrar</button></div>
+</form>
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+    <div class="col"><div class="card card-body">Vendas realizadas<strong>@resumo.Faturamento.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Dinheiro recebido<strong>@resumo.Recebido.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Compras de estoque<strong>@resumo.Compras.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">CPV histórico<strong>@resumo.CustoProdutosVendidos.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Lucro bruto<strong>@resumo.LucroBruto.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Despesas do período<strong>@resumo.Despesas.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Lucro líquido estimado<strong>@resumo.LucroLiquido.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">ROI estimado<strong>@(resumo.RetornoSobreInvestimentoPercentual.HasValue ? resumo.RetornoSobreInvestimentoPercentual.Value.ToString("N2") + "%" : "—")</strong></div></div>
+    <div class="col"><div class="card card-body">Investido no período<strong>@resumo.InvestimentoPeriodo.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Capital investido até o fim<strong>@resumo.CapitalInvestidoAteFim.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Contas a receber<strong>@resumo.ContasReceber.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Contas a pagar<strong>@resumo.ContasPagar.ToString("C")</strong></div></div>
+</div>
+<p class="text-muted">Lucro líquido estimado = vendas − custo histórico dos produtos vendidos − despesas por competência. Compras de estoque e investimentos são apresentados separadamente.</p>
+<div class="row g-4 mb-4">
+    <section class="col-md-6"><div class="card"><div class="card-body"><h2 class="h4">Registrar investimento</h2>
+        <form asp-action="Investir" method="post" class="row g-2">
+            <div class="col-12"><label class="form-label">Descrição</label><input name="Descricao" maxlength="200" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="number" min="0.01" step="0.01" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Data</label><input name="Data" type="date" value="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" required class="form-control" /></div>
+            <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
+        </form></div></div></section>
+    <section class="col-md-6"><div class="card"><div class="card-body"><h2 class="h4">Registrar despesa</h2>
+        <form asp-action="Despesa" method="post" class="row g-2">
+            <div class="col-12"><label class="form-label">Descrição</label><input name="Descricao" maxlength="200" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Valor</label><input name="Valor" type="number" min="0.01" step="0.01" required class="form-control" /></div>
+            <div class="col-6"><label class="form-label">Competência</label><input name="Data" type="date" value="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" required class="form-control" /></div>
+            <div class="col-12"><label><input name="Paga" type="checkbox" value="true" /> Já foi paga</label></div>
+            <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
+        </form></div></div></section>
+</div>
+<h2 class="h4">Contas a pagar por compras</h2>
+<table class="table table-striped"><thead><tr><th>Compra</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Saldo</th><th></th></tr></thead><tbody>
+@foreach (var conta in Model.ContasPagar.OrderBy(x => x.Vencimento))
+{
+    <tr><td>@conta.EntradaEstoqueId</td><td>@conta.Vencimento.ToString("dd/MM/yyyy")</td>
+        <td>@conta.Valor.ToString("C")</td><td>@conta.ValorPago.ToString("C")</td><td>@conta.Saldo.ToString("C")</td><td>
+        @if (conta.Saldo > 0)
+        {
+            <form asp-action="PagarConta" asp-route-id="@conta.Id" method="post" class="d-flex gap-2">
+                <input type="number" name="valor" min="0.01" max="@conta.Saldo.ToString(CultureInfo.InvariantCulture)" step="0.01" value="@conta.Saldo.ToString(CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor pago" />
+                <button type="submit" class="btn btn-sm btn-outline-primary">Pagar</button>
+            </form>
+        }</td></tr>
+}
+</tbody></table>
+<h2 class="h4">Despesas</h2>
+<table class="table table-striped"><thead><tr><th>Competência</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+@foreach (var despesa in Model.Despesas.OrderByDescending(x => x.DataCompetencia))
+{
+    <tr><td>@despesa.DataCompetencia.ToString("dd/MM/yyyy")</td><td>@despesa.Descricao</td><td>@despesa.Valor.ToString("C")</td>
+        <td>@(despesa.PagaEm.HasValue ? "Paga" : "Em aberto")</td><td>
+        @if (!despesa.PagaEm.HasValue)
+        {
+            <form asp-action="PagarDespesa" asp-route-id="@despesa.Id" method="post"><button class="btn btn-sm btn-outline-primary" type="submit">Marcar paga</button></form>
+        }</td></tr>
+}
+</tbody></table>
+<h2 class="h4">Investimentos</h2>
+<table class="table table-striped"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
+@foreach (var investimento in Model.Investimentos.OrderByDescending(x => x.Data))
+{
+    <tr><td>@investimento.Data.ToString("dd/MM/yyyy")</td><td>@investimento.Descricao</td><td>@investimento.Valor.ToString("C")</td></tr>
+}
+</tbody></table>

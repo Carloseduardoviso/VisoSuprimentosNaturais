@@ -3,6 +3,7 @@ using VisoERP.Application.DTOs.Estoque;
 using VisoERP.Application.Interface.Estoque;
 using VisoERP.Domain.Entities.Cadastros;
 using VisoERP.Domain.Entities.Estoque;
+using VisoERP.Domain.Entities.Financeiro;
 using VisoERP.Domain.Enums;
 using VisoERP.Domain.Interfaces.Repositories;
 using VisoERP.Domain.Interfaces.Repositories.Comercial;
@@ -13,6 +14,7 @@ namespace VisoERP.Application.AppService.Estoque;
 public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos,
     IRepository<EntradaEstoque> entradas, IRepository<EstoqueProduto> saldos,
     IRepository<LoteEstoque> lotes, IRepository<MovimentacaoEstoque> movimentacoes,
+    IRepository<ContaPagar> contasPagar,
     IEstoqueRepository estoque, IPedidoFornecedorRepository pedidos,
     IUnitOfWork unitOfWork, IMapper mapper) : IEntradaEstoqueAppService
 {
@@ -65,6 +67,11 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
                     item.CustoUnitario, item.Data), ct);
             }
             await entradas.AdicionarAsync(entrada, ct);
+            var valorCompra = Math.Round(entrada.TotalCusto, 2, MidpointRounding.AwayFromZero);
+            if (valorCompra > 0)
+                await contasPagar.AdicionarAsync(ContaPagar.Criar(entrada.Id,
+                    pedido?.FornecedorId, "Compra de suprimentos", valorCompra,
+                    dto.VencimentoPagamento ?? DateOnly.FromDateTime(DateTime.Today)), ct);
         }, cancellationToken);
         return entrada.Id;
     }

@@ -8,6 +8,8 @@ using VisoERP.Application.AppService.Comercial;
 using VisoERP.Application.AppService.Estoque;
 using VisoERP.Application.Interface.Comercial;
 using VisoERP.Application.Interface.Estoque;
+using VisoERP.Application.AppService.Financeiro;
+using VisoERP.Application.Interface.Financeiro;
 
 namespace VisoERP.Application.DependencyInjection;
 
@@ -23,6 +25,7 @@ public static class ModuloApplication
         services.AddScoped<IPedidoFornecedorAppService, PedidoFornecedorAppService>();
         services.AddScoped<IEntradaEstoqueAppService, EntradaEstoqueAppService>();
         services.AddScoped<IVendaAppService, VendaAppService>();
+        services.AddScoped<IFinanceiroAppService, FinanceiroAppService>();
         services.AddAutoMapper(config =>
         {
             if (!string.IsNullOrWhiteSpace(autoMapperLicenseKey))
