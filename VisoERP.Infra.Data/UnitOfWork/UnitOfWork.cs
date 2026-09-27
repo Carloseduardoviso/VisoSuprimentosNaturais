@@ -1,5 +1,7 @@
 using VisoERP.Domain.Interfaces.Repositories;
 using VisoERP.Infra.Data.Context;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace VisoERP.Infra.Data.UnitOfWork;
 
@@ -11,7 +13,7 @@ public sealed class UnitOfWork(VisoErpDbContext context) : IUnitOfWork
     public async Task ExecutarEmTransacaoAsync(Func<CancellationToken, Task> operacao,
         CancellationToken cancellationToken = default)
     {
-        await using var transacao = await context.Database.BeginTransactionAsync(cancellationToken);
+        await using var transacao = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
         await operacao(cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         await transacao.CommitAsync(cancellationToken);

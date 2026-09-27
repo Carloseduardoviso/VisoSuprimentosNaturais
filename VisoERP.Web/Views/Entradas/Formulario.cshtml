@@ -1,0 +1,53 @@
+@model VisoERP.Web.Models.Estoque.EntradaEstoqueViewModel
+@using System.Text.Json
+@using System.Globalization
+@{ ViewData["Title"] = "Entrada de estoque"; }
+<h1>Entrada de estoque</h1>
+@if (Model.PedidoFornecedorId.HasValue) { <p>Recebimento do pedido @Model.PedidoFornecedorId</p> }
+<form asp-action="Confirmar" method="post">
+    <input asp-for="PedidoFornecedorId" type="hidden" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div id="itens"></div>
+    <button id="adicionar" type="button" class="btn btn-outline-primary mb-3">Adicionar suprimento</button>
+    <div><button type="submit" class="btn btn-primary">Confirmar entrada</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
+</form>
+<template id="item-template"><div class="card mb-3 item-card"><div class="card-body">
+    <div class="d-flex justify-content-between"><h2 class="h5">Suprimento</h2><button type="button" class="btn btn-sm btn-outline-danger remover">Excluir</button></div>
+    <div class="row g-2">
+        <div class="col-md-4"><label class="form-label">Suprimento</label><select class="form-select produto" data-campo="SuprimentoId" required><option value="">Selecione</option>
+        @foreach (var produto in ViewBag.Suprimentos) { <option value="@produto.Id" data-custo="@produto.Custo.ToString(CultureInfo.InvariantCulture)">@produto.Nome</option> }
+        </select></div>
+        <div class="col-md-2"><label class="form-label">Quantidade</label><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
+        <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="number" min="0" step="0.0001" class="form-control" data-campo="CustoUnitario" required /></div>
+        <div class="col-md-2"><label class="form-label">Data</label><input type="datetime-local" class="form-control" data-campo="Data" required /></div>
+        <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Não</option><option value="true">Sim</option></select></div>
+        <div class="col-md-3"><label class="form-label">Lote</label><input class="form-control" maxlength="80" data-campo="CodigoLote" /></div>
+        <div class="col-md-3"><label class="form-label">Validade</label><input type="date" class="form-control" data-campo="Validade" /></div>
+    </div></div></div></template>
+@section Scripts {
+<script>
+(() => {
+    const container = document.getElementById('itens');
+    const template = document.getElementById('item-template');
+    const now = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16); };
+    function reindex() { container.querySelectorAll('.item-card').forEach((card, i) =>
+        card.querySelectorAll('[data-campo]').forEach(el => el.name = `Itens[${i}].${el.dataset.campo}`)); }
+    function add(item = {}) {
+        const card = template.content.firstElementChild.cloneNode(true);
+        container.appendChild(card);
+        for (const field of ['SuprimentoId','Quantidade','CustoUnitario','Promocional','CodigoLote','Validade']) {
+            const el = card.querySelector(`[data-campo="${field}"]`);
+            el.value = item[field] ?? (field === 'Quantidade' ? 1 : field === 'CustoUnitario' ? 0 : field === 'Promocional' ? 'false' : '');
+        }
+        card.querySelector('[data-campo="Data"]').value = item.Data ? item.Data.slice(0,16) : now();
+        card.querySelector('.produto').addEventListener('change', e =>
+            card.querySelector('[data-campo="CustoUnitario"]').value = e.target.selectedOptions[0]?.dataset.custo || 0);
+        card.querySelector('.remover').addEventListener('click', () => { card.remove(); reindex(); });
+        reindex();
+    }
+    document.getElementById('adicionar').addEventListener('click', () => add());
+    const initial = @Html.Raw(JsonSerializer.Serialize(Model.Itens));
+    initial.forEach(add);
+})();
+</script>
+}

@@ -1,0 +1,18 @@
+@model IReadOnlyList<VisoERP.Application.DTOs.Comercial.PedidoFornecedorDto>
+@{ ViewData["Title"] = "Pedidos a fornecedores"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Pedidos a fornecedores</h1>
+    <a class="btn btn-primary" asp-action="Novo">Novo pedido</a>
+</div>
+<table class="table table-striped">
+    <thead><tr><th>Data</th><th>Fornecedor</th><th>Situação</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var pedido in Model)
+    {
+        <tr><td>@pedido.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</td>
+            <td>@pedido.FornecedorId</td><td>@pedido.Situacao</td>
+            <td>@pedido.Total.ToString("C")</td>
+            <td><a asp-action="Detalhes" asp-route-id="@pedido.Id">Detalhes</a></td></tr>
+    }
+    </tbody>
+</table>

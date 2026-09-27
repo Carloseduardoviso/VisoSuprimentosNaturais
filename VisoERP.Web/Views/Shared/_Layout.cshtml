@@ -30,6 +30,8 @@
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Suprimentos" asp-action="Index">Suprimentos</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Categorias" asp-action="Index">Categorias</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Fornecedores" asp-action="Index">Fornecedores</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="PedidosFornecedores" asp-action="Index">Pedidos</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Entradas" asp-action="Index">Entradas</a></li>
                         }
                         @if ((Ambiente.EnvironmentName == "Development" && Configuracao["Authentication:AllowAnonymousDevelopment"] == "true") || User.IsInRole("Administrador") || User.IsInRole("Vendas"))
                         {

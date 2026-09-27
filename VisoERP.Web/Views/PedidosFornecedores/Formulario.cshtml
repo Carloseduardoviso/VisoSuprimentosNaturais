@@ -1,0 +1,50 @@
+@model VisoERP.Web.Models.Comercial.PedidoFornecedorViewModel
+@using System.Text.Json
+@using System.Globalization
+@{ ViewData["Title"] = "Novo pedido"; }
+<h1>Novo pedido a fornecedor</h1>
+<form asp-action="Salvar" method="post" id="pedido-form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3"><label asp-for="FornecedorId" class="form-label">Fornecedor</label>
+        <select asp-for="FornecedorId" asp-items="ViewBag.Fornecedores" class="form-select"><option value="">Selecione</option></select></div>
+    <div id="itens"></div>
+    <button type="button" id="adicionar" class="btn btn-outline-primary mb-3">Adicionar suprimento</button>
+    <div><button type="submit" class="btn btn-primary">Criar pedido</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
+</form>
+<template id="item-template"><div class="card mb-3 item-card"><div class="card-body">
+    <div class="d-flex justify-content-between"><h2 class="h5">Suprimento</h2><button type="button" class="btn btn-sm btn-outline-danger remover">Excluir</button></div>
+    <div class="row g-2">
+        <div class="col-md-4"><label class="form-label">Suprimento</label><select class="form-select produto" data-campo="SuprimentoId" required><option value="">Selecione</option>
+        @foreach (var produto in ViewBag.Suprimentos) { <option value="@produto.Id" data-catalogo="@produto.PrecoCatalogo.ToString(CultureInfo.InvariantCulture)" data-desconto="@produto.PrecoComDesconto.ToString(CultureInfo.InvariantCulture)">@produto.Nome</option> }
+        </select></div>
+        <div class="col-md-2"><label class="form-label">Quantidade</label><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
+        <div class="col-md-3"><label class="form-label">Preço catálogo</label><input type="number" min="0" step="0.01" class="form-control" data-campo="PrecoCatalogo" required /></div>
+        <div class="col-md-3"><label class="form-label">Preço com desconto</label><input type="number" min="0" step="0.01" class="form-control" data-campo="PrecoComDesconto" required /></div>
+    </div></div></div></template>
+@section Scripts {
+<script>
+(() => {
+    const container = document.getElementById('itens');
+    const template = document.getElementById('item-template');
+    function reindex() { container.querySelectorAll('.item-card').forEach((card, i) =>
+        card.querySelectorAll('[data-campo]').forEach(el => el.name = `Itens[${i}].${el.dataset.campo}`)); }
+    function add(item = {}) {
+        const card = template.content.firstElementChild.cloneNode(true);
+        container.appendChild(card);
+        card.querySelector('.produto').value = item.SuprimentoId || '';
+        for (const field of ['Quantidade','PrecoCatalogo','PrecoComDesconto'])
+            card.querySelector(`[data-campo="${field}"]`).value = item[field] ?? (field === 'Quantidade' ? 1 : 0);
+        card.querySelector('.produto').addEventListener('change', e => {
+            const option = e.target.selectedOptions[0];
+            card.querySelector('[data-campo="PrecoCatalogo"]').value = option?.dataset.catalogo || 0;
+            card.querySelector('[data-campo="PrecoComDesconto"]').value = option?.dataset.desconto || 0;
+        });
+        card.querySelector('.remover').addEventListener('click', () => { card.remove(); reindex(); });
+        reindex();
+    }
+    document.getElementById('adicionar').addEventListener('click', () => add());
+    const initial = @Html.Raw(JsonSerializer.Serialize(Model.Itens));
+    initial.forEach(add);
+})();
+</script>
+}

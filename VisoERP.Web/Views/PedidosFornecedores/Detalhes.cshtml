@@ -1,0 +1,26 @@
+@model VisoERP.Application.DTOs.Comercial.PedidoFornecedorDto
+@{ ViewData["Title"] = "Pedido"; }
+<h1>Pedido a fornecedor</h1>
+<p><strong>Situação:</strong> @Model.Situacao &nbsp; <strong>Total:</strong> @Model.Total.ToString("C")</p>
+@if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
+<table class="table table-striped">
+    <thead><tr><th>Suprimento</th><th>Quantidade</th><th>Recebida</th><th>Preço catálogo</th><th>Preço com desconto</th><th>Total</th></tr></thead>
+    <tbody>
+    @foreach (var item in Model.Itens)
+    {
+        <tr><td>@item.SuprimentoId</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
+            <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
+    }
+    </tbody>
+</table>
+@if (Model.Situacao is "Pendente" or "Parcial")
+{
+    <a class="btn btn-primary" asp-controller="Entradas" asp-action="Nova" asp-route-pedidoFornecedorId="@Model.Id">Confirmar recebimento</a>
+}
+@if (Model.Situacao == "Pendente")
+{
+    <form asp-action="Cancelar" asp-route-id="@Model.Id" method="post" class="d-inline">
+        <button class="btn btn-outline-danger" type="submit">Cancelar pedido</button>
+    </form>
+}
+<a class="btn btn-link" asp-action="Index">Voltar</a>

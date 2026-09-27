@@ -44,6 +44,9 @@ Inicie a aplicação uma vez. O usuário é criado com a função `Administrador
 - Etapa 1: solução, referências, persistência, DI e migration inicial.
 - Etapa 2: Identity, login, funções, cadastro de suprimentos e migration `IdentidadeESuprimentos`.
 - Etapa 3: categorias, clientes e fornecedores, com telas de listagem/edição e migration `ClientesEFornecedores`.
-- Etapas 4 a 8: pendentes.
+- Etapa 4: pedidos a fornecedores, recebimento parcial, entradas diretas com cartões dinâmicos, lote, validade, custo médio móvel, saldo e movimentações. A confirmação usa transação serializável e `rowversion` no saldo/lote. Migration `PedidosEEntradas`.
+- Etapas 5 a 8: pendentes.
 
 As migrations ficam em `VisoERP.Infra.Data/Migrations` e devem ser revisadas antes de aplicação em outros ambientes. O banco LocalDB é apenas para desenvolvimento.
+
+O teste de integração `PedidoEntradaIntegracaoTests` cria um banco LocalDB temporário com nome exclusivo, aplica as migrations, confirma recebimentos parciais e remove somente esse banco de teste ao terminar. Execute-o em um contexto com acesso ao LocalDB.
