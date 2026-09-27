@@ -17,15 +17,4 @@
     <div class="col-md-4 align-self-end"><div class="form-check"><input asp-for="Ativo" class="form-check-input" /><label asp-for="Ativo" class="form-check-label">Ativo</label></div></div>
     <div class="col-12"><button class="btn btn-primary" type="submit">Salvar</button> <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a></div>
 </form>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        (() => {
-            const ptBr = /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/;
-            const invariant = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/;
-            $.validator.methods.number = function (value, element) {
-                return this.optional(element) || ptBr.test(value) || invariant.test(value);
-            };
-        })();
-    </script>
-}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
