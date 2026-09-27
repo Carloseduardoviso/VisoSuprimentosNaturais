@@ -43,6 +43,7 @@ Inicie a aplicação uma vez. O usuário é criado com a função `Administrador
 
 - Etapa 1: solução, referências, persistência, DI e migration inicial.
 - Etapa 2: Identity, login, funções, cadastro de suprimentos e migration `IdentidadeESuprimentos`.
-- Etapas 3 a 8: pendentes.
+- Etapa 3: categorias, clientes e fornecedores, com telas de listagem/edição e migration `ClientesEFornecedores`.
+- Etapas 4 a 8: pendentes.
 
 As migrations ficam em `VisoERP.Infra.Data/Migrations` e devem ser revisadas antes de aplicação em outros ambientes. O banco LocalDB é apenas para desenvolvimento.

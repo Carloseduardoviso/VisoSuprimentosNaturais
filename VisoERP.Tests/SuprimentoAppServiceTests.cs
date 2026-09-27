@@ -55,6 +55,8 @@ public class SuprimentoAppServiceTests
         public Task<Categoria?> ObterPorIdAsync(Guid id, CancellationToken ct = default) => Task.FromResult<Categoria?>(null);
         public Task<IReadOnlyList<Categoria>> ListarAsync(CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<Categoria>>([]);
+        public Task<bool> ExisteAsync(System.Linq.Expressions.Expression<Func<Categoria, bool>> criterio,
+            CancellationToken ct = default) => Task.FromResult(false);
         public Task AdicionarAsync(Categoria item, CancellationToken ct = default) => Task.CompletedTask;
         public void Atualizar(Categoria item) { }
     }

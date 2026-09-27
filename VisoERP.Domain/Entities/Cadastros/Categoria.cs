@@ -9,8 +9,16 @@ public sealed class Categoria : EntidadeBase
 
     public static Categoria Criar(string nome)
     {
+        var categoria = new Categoria();
+        categoria.Atualizar(nome, true);
+        return categoria;
+    }
+
+    public void Atualizar(string nome, bool ativa)
+    {
         if (string.IsNullOrWhiteSpace(nome) || nome.Trim().Length > 120)
             throw new ArgumentException("O nome da categoria deve ter de 1 a 120 caracteres.", nameof(nome));
-        return new Categoria { Nome = nome.Trim() };
+        Nome = nome.Trim();
+        Ativa = ativa;
     }
 }

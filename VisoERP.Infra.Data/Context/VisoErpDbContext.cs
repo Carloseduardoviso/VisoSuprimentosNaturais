@@ -10,11 +10,15 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
 {
     public DbSet<Categoria> Categorias => Set<Categoria>();
     public DbSet<Suprimento> Suprimentos => Set<Suprimento>();
+    public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<Fornecedor> Fornecedores => Set<Fornecedor>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CategoriaConfig());
         modelBuilder.ApplyConfiguration(new SuprimentoConfig());
+        modelBuilder.ApplyConfiguration(new ClienteConfig());
+        modelBuilder.ApplyConfiguration(new FornecedorConfig());
         base.OnModelCreating(modelBuilder);
     }
 }

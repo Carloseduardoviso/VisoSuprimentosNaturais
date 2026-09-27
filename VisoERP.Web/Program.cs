@@ -11,6 +11,12 @@ var acessoAnonimoDesenvolvimento = builder.Environment.IsDevelopment() &&
     builder.Configuration.GetValue<bool>("Authentication:AllowAnonymousDevelopment");
 var autorizacao = builder.Services.AddAuthorizationBuilder()
     .AddPolicy("GerenciarSuprimentos", policy => policy.RequireAssertion(context =>
+        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
+    .AddPolicy("GerenciarClientes", policy => policy.RequireAssertion(context =>
+        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Vendas")))
+    .AddPolicy("GerenciarFornecedores", policy => policy.RequireAssertion(context =>
+        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
+    .AddPolicy("GerenciarCategorias", policy => policy.RequireAssertion(context =>
         acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")));
 if (!acessoAnonimoDesenvolvimento)
     autorizacao.SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
