@@ -39,14 +39,6 @@
             <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
         </form></div></div></section>
 </div>
-<h2 class="h4">Contas a receber de clientes</h2>
-<table class="table table-striped"><thead><tr><th>Cliente</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Valor a receber</th><th>Pagamentos registrados</th></tr></thead><tbody>
-@foreach (var venda in (IReadOnlyList<VisoERP.Application.DTOs.Comercial.VendaDto>)ViewBag.Vendas)
-@foreach (var parcela in venda.Parcelas.OrderBy(x => x.Vencimento))
-{
-    <tr><td>@(((IReadOnlyDictionary<Guid,string>)ViewBag.Clientes).TryGetValue(venda.ClienteId, out var cliente) ? cliente : "Cliente")</td><td>@parcela.Vencimento.ToString("dd/MM/yyyy")</td><td>@parcela.Valor.ToString("C")</td><td>@parcela.ValorPago.ToString("C")</td><td>@parcela.Saldo.ToString("C")</td><td>@foreach (var recebimento in venda.Recebimentos.Where(x => x.ParcelaVendaId == parcela.Id).OrderBy(x => x.Data)) { <div>@recebimento.Valor.ToString("C") em @recebimento.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div> }</td></tr>
-}
-</tbody></table>
 @section Scripts {
 <script>
 (() => {
