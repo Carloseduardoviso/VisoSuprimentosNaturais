@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Início";
+}
+
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuracao
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Ambiente
+<div class="py-4">
+    <h1 class="display-5">VISO ERP</h1>
+    <p class="lead">Gestão comercial da VISO SUPRIMENTOS NATURAIS</p>
+    @if ((Ambiente.EnvironmentName == "Development" && Configuracao["Authentication:AllowAnonymousDevelopment"] == "true") || User.IsInRole("Administrador") || User.IsInRole("Estoque"))
+    {
+        <a asp-controller="Suprimentos" asp-action="Index" class="btn btn-primary">Abrir suprimentos</a>
+    }
+</div>

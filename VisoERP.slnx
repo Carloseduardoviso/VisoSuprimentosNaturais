@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Web/">
+    <Project Path="VisoERP.Web/VisoERP.Web.csproj" />
+  </Folder>
+  <Folder Name="/Application/">
+    <Project Path="VisoERP.Application/VisoERP.Application.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="VisoERP.Domain/VisoERP.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infra/">
+    <Project Path="VisoERP.Infra.Auth/VisoERP.Infra.Auth.csproj" />
+    <Project Path="VisoERP.Infra.Data/VisoERP.Infra.Data.csproj" />
+    <Project Path="VisoERP.Infra.Helper/VisoERP.Infra.Helper.csproj" />
+    <Project Path="VisoERP.Infra.Ioc/VisoERP.Infra.Ioc.csproj" />
+  </Folder>
+  <Folder Name="/Testes/">
+    <Project Path="VisoERP.Tests/VisoERP.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,20 @@
+@model VisoERP.Web.Models.Cadastros.SuprimentoViewModel
+@{ ViewData["Title"] = Model.Id.HasValue ? "Editar suprimento" : "Novo suprimento"; }
+<h1>@ViewData["Title"]</h1>
+<form asp-action="Salvar" method="post" enctype="multipart/form-data" class="row g-3">
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-4"><label asp-for="CodigoInterno" class="form-label">Código interno</label><input asp-for="CodigoInterno" class="form-control" /><span asp-validation-for="CodigoInterno" class="text-danger"></span></div>
+    <div class="col-md-8"><label asp-for="Nome" class="form-label"></label><input asp-for="Nome" class="form-control" /><span asp-validation-for="Nome" class="text-danger"></span></div>
+    <div class="col-md-4"><label asp-for="PrecoCatalogo" class="form-label">Preço de catálogo</label><input asp-for="PrecoCatalogo" class="form-control" /><span asp-validation-for="PrecoCatalogo" class="text-danger"></span></div>
+    <div class="col-md-4"><label asp-for="PrecoComDesconto" class="form-label">Preço com desconto</label><input asp-for="PrecoComDesconto" class="form-control" /><span asp-validation-for="PrecoComDesconto" class="text-danger"></span></div>
+    <div class="col-md-4"><label asp-for="CategoriaId" class="form-label">Categoria</label><select asp-for="CategoriaId" asp-items="ViewBag.Categorias" class="form-select"><option value="">Sem categoria</option></select></div>
+    <div class="col-md-6"><label asp-for="QuantidadeMinimaCompra" class="form-label">Compra mínima</label><input asp-for="QuantidadeMinimaCompra" class="form-control" /><span asp-validation-for="QuantidadeMinimaCompra" class="text-danger"></span></div>
+    <div class="col-md-6"><label asp-for="EstoqueMinimo" class="form-label">Estoque mínimo</label><input asp-for="EstoqueMinimo" class="form-control" /><span asp-validation-for="EstoqueMinimo" class="text-danger"></span></div>
+    <div class="col-12"><label asp-for="Descricao" class="form-label">Descrição</label><textarea asp-for="Descricao" class="form-control" rows="3"></textarea></div>
+    <div class="col-12"><label asp-for="FormaDeUso" class="form-label">Forma de tomar ou usar</label><textarea asp-for="FormaDeUso" class="form-control" rows="3"></textarea></div>
+    <div class="col-md-8"><label asp-for="Imagem" class="form-label">Imagem (JPG, PNG ou WebP até 2 MB)</label><input asp-for="Imagem" class="form-control" type="file" accept=".jpg,.jpeg,.png,.webp" /></div>
+    <div class="col-md-4 align-self-end"><div class="form-check"><input asp-for="Ativo" class="form-check-input" /><label asp-for="Ativo" class="form-check-label">Ativo</label></div></div>
+    <div class="col-12"><button class="btn btn-primary" type="submit">Salvar</button> <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
