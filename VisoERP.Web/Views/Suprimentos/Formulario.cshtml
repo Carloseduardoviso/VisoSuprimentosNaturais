@@ -8,12 +8,32 @@
     <div class="col-md-4"><label asp-for="PrecoCatalogo" class="form-label">Preço de catálogo (venda)</label><input asp-for="PrecoCatalogo" type="text" inputmode="decimal" data-money-mask class="form-control" /><span asp-validation-for="PrecoCatalogo" class="text-danger"></span></div>
     <div class="col-md-4"><label asp-for="PrecoComDesconto" class="form-label">Preço com desconto (compra do fornecedor)</label><input asp-for="PrecoComDesconto" type="text" inputmode="decimal" data-money-mask class="form-control" /><span asp-validation-for="PrecoComDesconto" class="text-danger"></span></div>
     <div class="col-md-4"><label asp-for="CategoriaId" class="form-label">Categoria</label><select asp-for="CategoriaId" asp-items="ViewBag.Categorias" class="form-select"><option value="">Sem categoria</option></select></div>
-    <div class="col-md-6"><label asp-for="QuantidadeMinimaCompra" class="form-label">Compra mínima</label><input asp-for="QuantidadeMinimaCompra" class="form-control" /><span asp-validation-for="QuantidadeMinimaCompra" class="text-danger"></span></div>
     <div class="col-md-6"><label asp-for="EstoqueMinimo" class="form-label">Estoque mínimo</label><input asp-for="EstoqueMinimo" class="form-control" /><span asp-validation-for="EstoqueMinimo" class="text-danger"></span></div>
-    <div class="col-12"><label asp-for="Descricao" class="form-label">Descrição</label><textarea asp-for="Descricao" class="form-control" rows="3"></textarea></div>
-    <div class="col-12"><label asp-for="FormaDeUso" class="form-label">Forma de tomar ou usar</label><textarea asp-for="FormaDeUso" class="form-control" rows="3"></textarea></div>
+    <div class="col-12"><div class="d-flex justify-content-between align-items-center"><label asp-for="Descricao" class="form-label">Descrição</label><button type="button" class="btn btn-sm btn-outline-secondary" data-copy-field="Descricao">Copiar</button></div><textarea asp-for="Descricao" class="form-control" rows="3"></textarea></div>
+    <div class="col-12"><div class="d-flex justify-content-between align-items-center"><label asp-for="FormaDeUso" class="form-label">Forma de tomar ou usar</label><button type="button" class="btn btn-sm btn-outline-secondary" data-copy-field="FormaDeUso">Copiar</button></div><textarea asp-for="FormaDeUso" class="form-control" rows="3"></textarea></div>
     <div class="col-md-8"><label asp-for="Imagem" class="form-label">Imagem (JPG, PNG ou WebP até 2 MB)</label><input asp-for="Imagem" class="form-control" type="file" accept=".jpg,.jpeg,.png,.webp" /></div>
     <div class="col-md-4 align-self-end"><div class="form-check"><input asp-for="Ativo" class="form-check-input" /><label asp-for="Ativo" class="form-check-label">Ativo</label></div></div>
     <div class="col-12"><button class="btn btn-primary" type="submit">Salvar</button> <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a></div>
 </form>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('[data-copy-field]').forEach(botao => {
+            botao.addEventListener('click', async () => {
+                const campo = document.getElementById(botao.dataset.copyField);
+                if (!campo || !campo.value) return;
+
+                try {
+                    await navigator.clipboard.writeText(campo.value);
+                    const textoOriginal = botao.textContent;
+                    botao.textContent = 'Copiado';
+                    window.setTimeout(() => botao.textContent = textoOriginal, 1500);
+                } catch {
+                    campo.select();
+                    document.execCommand('copy');
+                    campo.setSelectionRange(campo.value.length, campo.value.length);
+                }
+            });
+        });
+    </script>
+}

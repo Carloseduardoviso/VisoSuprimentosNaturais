@@ -12,7 +12,7 @@
             var nome = ((IReadOnlyDictionary<Guid, string>)ViewBag.Suprimentos).TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
             <tr>
                 <td>@nome</td>
-                <td>@item.Quantidade</td>
+                <td>@item.Quantidade.ToString("0.###")</td>
                 <td>@item.CustoUnitario.ToString("C")</td>
                 <td>@((item.Quantidade * item.CustoUnitario).ToString("C"))</td>
                 <td>@item.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>

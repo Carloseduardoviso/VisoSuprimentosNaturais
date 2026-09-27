@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using VisoERP.Application.DTOs.Comercial;
 using VisoERP.Application.Interface.Cadastros;
 using VisoERP.Application.Interface.Comercial;
+using VisoERP.Application.Interface.Estoque;
 using VisoERP.Web.Models.Comercial;
 
 namespace VisoERP.Web.Controllers;
 
 [Authorize(Policy = "GerenciarVendas")]
 public sealed class VendasController(IVendaAppService vendas, IClienteAppService clientes,
-    ISuprimentoAppService suprimentos) : Controller
+    ISuprimentoAppService suprimentos, IEntradaEstoqueAppService entradas) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -69,10 +70,13 @@ public sealed class VendasController(IVendaAppService vendas, IClienteAppService
 
     private async Task PrepararOpcoes(CancellationToken ct)
     {
+        var saldos = (await entradas.ListarSaldosAsync(ct))
+            .ToDictionary(x => x.SuprimentoId, x => x.Quantidade);
         ViewBag.Clientes = (await clientes.ListarAsync(ct)).Where(x => x.Ativo)
             .Select(x => new SelectListItem(x.Nome, x.Id.ToString())).ToList();
         ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo)
             .Select(x => new { x.Id, x.Nome, x.PrecoCatalogo, x.PrecoComDesconto,
+                Estoque = saldos.GetValueOrDefault(x.Id),
             }).ToList();
     }
 }
