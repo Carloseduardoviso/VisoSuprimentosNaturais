@@ -1,0 +1,11 @@
+{
+    email {$CADDY_EMAIL}
+}
+
+www.visosuplementosnaturais.com.br {
+    redir https://visosuplementosnaturais.com.br{uri} permanent
+}
+
+visosuplementosnaturais.com.br {
+    reverse_proxy 127.0.0.1:8080
+}

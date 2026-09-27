@@ -1,0 +1,75 @@
+.git
+.superpowers
+.worktrees
+.vs
+.idea
+**/bin
+**/obj
+**/TestResults
+**/*.user
+**/*.suo
+**/*.db
+**/*.mdf
+**/*.ldf
+**/*.bak
+.env
+.env.*
+!deploy/.env.example
+backups
+*** Add File: C:/Users/Carlos Eduardo/source/repos/VisoSuprimentosNaturais/compose.yaml
+name: visoerp
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?MSSQL_SA_PASSWORD must be set}
+    volumes:
+      - sql_data:/var/opt/mssql
+      - ${BACKUP_DIRECTORY:?BACKUP_DIRECTORY must be set}:/var/opt/mssql/backup
+    networks:
+      app_network:
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" >/dev/null 2>&1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__VisoERP: ${APP_CONNECTION_STRING:?APP_CONNECTION_STRING must be set}
+      AutoMapper__LicenseKey: ${AUTOMAPPER_LICENSE_KEY:?AUTOMAPPER_LICENSE_KEY must be set}
+      AdminBootstrap__Email: ${ADMIN_BOOTSTRAP_EMAIL:-}
+      AdminBootstrap__Password: ${ADMIN_BOOTSTRAP_PASSWORD:-}
+      FORWARDED_PROXY_IP: ${FORWARDED_PROXY_IP:?FORWARDED_PROXY_IP must be set}
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      app_network:
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
+volumes:
+  sql_data:
