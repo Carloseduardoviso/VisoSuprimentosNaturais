@@ -10,10 +10,11 @@
     {
         <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade</td><td>@item.QuantidadeRecebida</td>
             <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
-        @if (Model.Situacao == "Pendente") { <tr><td colspan="6"><form asp-action="RegistrarFalta" method="post" target="_blank" class="d-flex gap-2 align-items-center"><input type="hidden" name="id" value="@Model.Id" /><input type="hidden" name="suplementoId" value="@item.SuprimentoId" /><span>Não chegou:</span><input name="quantidade" type="number" min="1" step="1" class="form-control form-control-sm" style="max-width:100px" required /><button class="btn btn-sm btn-outline-primary">Registrar falta e avisar fornecedor</button></form></td></tr> }
+        @if (Model.Situacao == "Pendente") { <tr><td colspan="6"><div class="d-flex gap-2 align-items-center"><input type="hidden" form="faltas-form" name="suplementoId" value="@item.SuprimentoId" /><span>Não chegou:</span><input form="faltas-form" name="quantidade" type="number" min="0" step="1" value="0" class="form-control form-control-sm" style="max-width:100px" /></div></td></tr> }
     }
     </tbody>
 </table>
+@if (Model.Situacao == "Pendente") { <form id="faltas-form" asp-action="RegistrarFalta" method="post" target="_blank"><input type="hidden" name="id" value="@Model.Id" /><button class="btn btn-outline-primary">Registrar faltas e avisar fornecedor</button></form> }
 @if (Model.Situacao is "Pendente" or "Parcial")
 {
     <a class="btn btn-primary" asp-controller="Entradas" asp-action="Nova" asp-route-pedidoFornecedorId="@Model.Id">Confirmar recebimento</a>

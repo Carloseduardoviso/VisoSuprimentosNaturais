@@ -88,16 +88,18 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     }
 
     [HttpPost]
-    public async Task<IActionResult> RegistrarFalta(Guid id, Guid suplementoId, decimal quantidade, CancellationToken ct)
+    public async Task<IActionResult> RegistrarFalta(Guid id, List<Guid> suplementoId, List<decimal> quantidade, CancellationToken ct)
     {
-        await pedidos.RegistrarFaltaAsync(id, suplementoId, quantidade, ct);
+        var faltas = suplementoId.Zip(quantidade).Where(x => x.Second > 0).ToList();
+        foreach (var falta in faltas) await pedidos.RegistrarFaltaAsync(id, falta.First, falta.Second, ct);
         var pedido = await pedidos.ObterAsync(id, ct);
         var fornecedor = pedido is null ? null : await fornecedores.ObterAsync(pedido.FornecedorId, ct);
-        var suplemento = await suprimentos.ObterAsync(suplementoId, ct);
+        var suplementosFaltantes = await Task.WhenAll(faltas.Select(async falta => new { falta.Second, Suplemento = await suprimentos.ObterAsync(falta.First, ct) }));
         var telefone = fornecedor?.Telefone?.Where(char.IsDigit).ToArray() ?? [];
         if (telefone.Length is 10 or 11)
         {
-            var texto = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nNo pedido realizado, não recebemos {quantidade:0} unidade(s) de {suplemento?.Nome ?? "suplemento alimentar"}.\n\nPoderia verificar, por favor?");
+            var itens = string.Join("\n", suplementosFaltantes.Select(x => $"• {x.Suplemento?.Nome ?? "Suplemento alimentar"}: {x.Second:0} unidade(s)"));
+            var texto = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nNo pedido realizado, não recebemos:\n{itens}\n\nPoderia verificar, por favor?");
             return Redirect($"https://wa.me/55{new string(telefone)}?text={texto}");
         }
         return RedirectToAction(nameof(Detalhes), new { id });
