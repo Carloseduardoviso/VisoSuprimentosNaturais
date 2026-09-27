@@ -50,8 +50,8 @@
         const cents = Math.round(saldo * 100);
         const base = n ? Math.floor(cents / n) : 0;
         const extra = n ? cents - base * n : 0;
-        document.getElementById('resumo').textContent = `Subtotal: ${moeda(subtotal)} · Total: ${moeda(total)} · Recebido na entrada: ${moeda(entrada)} · Saldo: ${moeda(saldo)} · ${n} parcela(s)` +
-            (n ? `: ${Array.from({length:n}, (_,i) => moeda((base + (i < extra ? 1 : 0))/100)).join(', ')}` : '');
+        document.getElementById('resumo').textContent = `Total da venda: ${moeda(total)} | Saldo a receber: ${moeda(saldo)}` +
+            (n ? ` em ${n} parcela(s)` : '');
     }
     function add(item = {}) {
         const card = template.content.firstElementChild.cloneNode(true);

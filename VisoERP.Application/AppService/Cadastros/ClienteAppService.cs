@@ -35,12 +35,12 @@ public sealed class ClienteAppService(IRepository<Cliente> clientes,
         if (id.HasValue)
         {
             cliente = clienteExistente!;
-            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
+            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo, entrada.Cep, entrada.Numero, entrada.Endereco);
         }
         else
         {
             cliente = Cliente.Criar(entrada.Nome, documento, email, entrada.Telefone);
-            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo);
+            cliente.Atualizar(entrada.Nome, documento, email, entrada.Telefone, entrada.Ativo, entrada.Cep, entrada.Numero, entrada.Endereco);
             await clientes.AdicionarAsync(cliente, cancellationToken);
         }
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);

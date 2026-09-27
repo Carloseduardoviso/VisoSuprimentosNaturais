@@ -7,6 +7,10 @@ public sealed class ClienteViewModel
     public Guid? Id { get; set; }
     [Required, StringLength(200)]
     public string Nome { get; set; } = string.Empty;
+    [StringLength(20)] public string? CpfCnpj { get; set; }
+    [StringLength(9)] public string? Cep { get; set; }
+    [StringLength(20)] public string? Numero { get; set; }
+    [StringLength(300)] public string? Endereco { get; set; }
     [StringLength(20)]
     public string? Documento { get; set; }
     [EmailAddress, StringLength(256)]

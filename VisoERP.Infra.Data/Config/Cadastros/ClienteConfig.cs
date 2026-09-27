@@ -14,6 +14,9 @@ public sealed class ClienteConfig : IEntityTypeConfiguration<Cliente>
         builder.Property(x => x.Documento).HasMaxLength(20);
         builder.Property(x => x.Email).HasMaxLength(256);
         builder.Property(x => x.Telefone).HasMaxLength(30);
+        builder.Property(x => x.Cep).HasMaxLength(9);
+        builder.Property(x => x.Numero).HasMaxLength(20);
+        builder.Property(x => x.Endereco).HasMaxLength(300);
         builder.HasIndex(x => x.Nome);
         builder.HasIndex(x => x.Documento).IsUnique().HasFilter("[Documento] IS NOT NULL");
     }
