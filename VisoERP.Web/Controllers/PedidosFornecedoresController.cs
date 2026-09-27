@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using VisoERP.Application.DTOs.Comercial;
 using VisoERP.Application.Interface.Cadastros;
 using VisoERP.Application.Interface.Comercial;
+using VisoERP.Application.Interface.Estoque;
+using VisoERP.Application.DTOs.Estoque;
 using VisoERP.Web.Models.Comercial;
 
 namespace VisoERP.Web.Controllers;
 
 [Authorize(Policy = "GerenciarEstoque")]
 public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pedidos,
-    IFornecedorAppService fornecedores, ISuprimentoAppService suprimentos) : Controller
+    IFornecedorAppService fornecedores, ISuprimentoAppService suprimentos, IEntradaEstoqueAppService entradas) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -85,6 +87,19 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         ViewBag.Suplementos = (await suprimentos.ListarAsync(ct))
             .ToDictionary(x => x.Id, x => x.Nome);
         return View(pedido);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RegistrarRecebimento(Guid id, Dictionary<Guid, decimal?> recebidos, CancellationToken ct)
+    {
+        var pedido = await pedidos.ObterAsync(id, ct);
+        if (pedido is null) return NotFound();
+        var itens = pedido.Itens.Where(item => recebidos.TryGetValue(item.SuprimentoId, out var quantidade) && quantidade is > 0)
+            .Select(item => new ItemEntradaDto(item.SuprimentoId, recebidos[item.SuprimentoId]!.Value,
+                item.PrecoComDesconto, DateTimeOffset.Now, false, null, null)).ToList();
+        if (itens.Count == 0) { TempData["Erro"] = "Informe ao menos uma quantidade recebida."; return RedirectToAction(nameof(Detalhes), new { id }); }
+        await entradas.ConfirmarAsync(new CriarEntradaDto(id, itens), ct);
+        return RedirectToAction(nameof(Detalhes), new { id });
     }
 
     [HttpPost]
