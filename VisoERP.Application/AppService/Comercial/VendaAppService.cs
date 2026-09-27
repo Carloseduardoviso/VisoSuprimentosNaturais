@@ -32,8 +32,6 @@ public sealed class VendaAppService(IRepository<Cliente> clientes,
                 var produto = await suprimentos.ObterPorIdAsync(item.SuprimentoId, ct);
                 if (produto is not { Ativo: true })
                     throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
-                if (item.Quantidade < produto.QuantidadeMinimaCompra)
-                    throw new ArgumentException($"Quantidade inferior à compra mínima de {produto.Nome}.");
                 var saldo = await estoque.ObterSaldoAsync(item.SuprimentoId, ct)
                     ?? throw new InvalidOperationException($"Sem estoque de {produto.Nome}.");
                 var lotes = await estoque.ListarLotesDisponiveisAsync(item.SuprimentoId, ct);

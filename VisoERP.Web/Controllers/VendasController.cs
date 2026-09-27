@@ -73,6 +73,6 @@ public sealed class VendasController(IVendaAppService vendas, IClienteAppService
             .Select(x => new SelectListItem(x.Nome, x.Id.ToString())).ToList();
         ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo)
             .Select(x => new { x.Id, x.Nome, x.PrecoCatalogo, x.PrecoComDesconto,
-                x.QuantidadeMinimaCompra }).ToList();
+            }).ToList();
     }
 }
