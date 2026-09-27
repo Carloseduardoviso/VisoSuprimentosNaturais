@@ -19,4 +19,9 @@ public sealed class EstoqueRepository(VisoErpDbContext context) : IEstoqueReposi
     public async Task<IReadOnlyList<EntradaEstoque>> ListarEntradasComItensAsync(CancellationToken cancellationToken) =>
         await context.EntradasEstoque.AsNoTracking().Include(x => x.Itens)
             .OrderByDescending(x => x.CriadaEm).ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<LoteEstoque>> ListarLotesDisponiveisAsync(Guid suprimentoId, CancellationToken cancellationToken) =>
+        await context.LotesEstoque.Where(x => x.SuprimentoId == suprimentoId && x.Quantidade > 0)
+            .OrderBy(x => x.Validade == null).ThenBy(x => x.Validade).ThenBy(x => x.Codigo)
+            .ToListAsync(cancellationToken);
 }

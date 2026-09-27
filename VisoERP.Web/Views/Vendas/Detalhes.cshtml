@@ -1,0 +1,38 @@
+@model VisoERP.Application.DTOs.Comercial.VendaDto
+@{ ViewData["Title"] = "Venda"; }
+<h1>Venda</h1>
+<p><strong>Cliente:</strong> @ViewBag.Cliente<br /><strong>Data:</strong> @Model.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+<div class="row mb-3">
+    <div class="col"><div class="card card-body">Faturamento<strong>@Model.Total.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">Recebido<strong>@Model.ValorRecebido.ToString("C")</strong></div></div>
+    <div class="col"><div class="card card-body">A receber<strong>@((Model.Total - Model.ValorRecebido).ToString("C"))</strong></div></div>
+</div>
+<h2 class="h4">Suprimentos</h2>
+<table class="table table-striped"><thead><tr><th>Código</th><th>Quantidade</th><th>Preço</th><th>Total</th><th>Custo histórico</th></tr></thead><tbody>
+@foreach (var item in Model.Itens)
+{
+    <tr><td>@item.SuprimentoId</td><td>@item.Quantidade</td><td>@item.PrecoUnitario.ToString("C")</td>
+        <td>@item.Total.ToString("C")</td><td>@item.CustoTotal.ToString("C")</td></tr>
+}
+</tbody></table>
+<p>Subtotal: @Model.Subtotal.ToString("C") · Desconto: @Model.Desconto.ToString("C") · Entrada recebida: @Model.ValorEntrada.ToString("C")</p>
+<h2 class="h4">Parcelas</h2>
+@if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
+<table class="table table-striped"><thead><tr><th>Nº</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Saldo</th><th>Pagamento</th></tr></thead><tbody>
+@foreach (var parcela in Model.Parcelas)
+{
+    <tr><td>@parcela.Numero</td><td>@parcela.Vencimento.ToString("dd/MM/yyyy")</td><td>@parcela.Valor.ToString("C")</td>
+        <td>@parcela.ValorPago.ToString("C")</td><td>@parcela.Saldo.ToString("C")</td><td>
+            @if (parcela.Saldo > 0)
+            {
+                <form asp-action="Pagar" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
+                    <input type="hidden" name="parcelaId" value="@parcela.Id" />
+                    <input type="number" name="valor" min="0.01" max="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" step="0.01" value="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" class="form-control form-control-sm" aria-label="Valor recebido" />
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Receber</button>
+                </form>
+            }
+            else { <span>Quitada</span> }
+        </td></tr>
+}
+</tbody></table>
+<a asp-action="Index" class="btn btn-link">Voltar</a>

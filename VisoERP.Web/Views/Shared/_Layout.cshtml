@@ -36,6 +36,7 @@
                         @if ((Ambiente.EnvironmentName == "Development" && Configuracao["Authentication:AllowAnonymousDevelopment"] == "true") || User.IsInRole("Administrador") || User.IsInRole("Vendas"))
                         {
                             <li class="nav-item"><a class="nav-link text-dark" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Vendas" asp-action="Index">Vendas</a></li>
                         }
                     </ul>
                     @if (User.Identity?.IsAuthenticated == true)

@@ -8,4 +8,5 @@ public interface IEstoqueRepository
     Task<LoteEstoque?> ObterLoteAsync(Guid suprimentoId, string codigo, CancellationToken cancellationToken);
     Task<IReadOnlyList<EstoqueProduto>> ListarSaldosAsync(CancellationToken cancellationToken);
     Task<IReadOnlyList<EntradaEstoque>> ListarEntradasComItensAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<LoteEstoque>> ListarLotesDisponiveisAsync(Guid suprimentoId, CancellationToken cancellationToken);
 }

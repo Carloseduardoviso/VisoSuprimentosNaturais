@@ -19,7 +19,9 @@ var autorizacao = builder.Services.AddAuthorizationBuilder()
     .AddPolicy("GerenciarCategorias", policy => policy.RequireAssertion(context =>
         acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
     .AddPolicy("GerenciarEstoque", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")));
+        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
+    .AddPolicy("GerenciarVendas", policy => policy.RequireAssertion(context =>
+        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Vendas")));
 if (!acessoAnonimoDesenvolvimento)
     autorizacao.SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 Modulo.RegistrarServicos(builder.Services, builder.Configuration);

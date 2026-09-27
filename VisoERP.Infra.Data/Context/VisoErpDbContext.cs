@@ -23,6 +23,10 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
     public DbSet<EstoqueProduto> EstoquesProdutos => Set<EstoqueProduto>();
     public DbSet<LoteEstoque> LotesEstoque => Set<LoteEstoque>();
     public DbSet<MovimentacaoEstoque> MovimentacoesEstoque => Set<MovimentacaoEstoque>();
+    public DbSet<Venda> Vendas => Set<Venda>();
+    public DbSet<ItemVenda> ItensVendas => Set<ItemVenda>();
+    public DbSet<ParcelaVenda> ParcelasVendas => Set<ParcelaVenda>();
+    public DbSet<RecebimentoVenda> RecebimentosVendas => Set<RecebimentoVenda>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +41,10 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
         modelBuilder.ApplyConfiguration(new EstoqueProdutoConfig());
         modelBuilder.ApplyConfiguration(new LoteEstoqueConfig());
         modelBuilder.ApplyConfiguration(new MovimentacaoEstoqueConfig());
+        modelBuilder.ApplyConfiguration(new VendaConfig());
+        modelBuilder.ApplyConfiguration(new ItemVendaConfig());
+        modelBuilder.ApplyConfiguration(new ParcelaVendaConfig());
+        modelBuilder.ApplyConfiguration(new RecebimentoVendaConfig());
         base.OnModelCreating(modelBuilder);
     }
 }

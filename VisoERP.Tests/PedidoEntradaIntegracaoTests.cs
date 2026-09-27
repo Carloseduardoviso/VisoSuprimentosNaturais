@@ -33,8 +33,10 @@ public sealed class PedidoEntradaIntegracaoTests
         {
             await db.Database.MigrateAsync();
             var fornecedor = Fornecedor.Criar("Fornecedor teste", null, null, null);
+            var cliente = Cliente.Criar("Cliente teste", null, null, null);
             var produto = Suprimento.Criar("TEST-" + Guid.NewGuid().ToString("N"), "Produto teste", 20, 18, 1);
             db.Fornecedores.Add(fornecedor);
+            db.Clientes.Add(cliente);
             db.Suprimentos.Add(produto);
             await db.SaveChangesAsync();
 
@@ -57,6 +59,33 @@ public sealed class PedidoEntradaIntegracaoTests
             saldo = Assert.Single(await entradas.ListarSaldosAsync(CancellationToken.None));
             Assert.Equal(5, saldo.Quantidade);
             Assert.Equal(11.2m, saldo.CustoMedio);
+
+            var vendas = scope.ServiceProvider.GetRequiredService<IVendaAppService>();
+            var vendaId = await vendas.RegistrarAsync(new CriarVendaDto(cliente.Id, 0, 5, 3,
+                DateOnly.FromDateTime(DateTime.Today.AddMonths(1)),
+                [new CriarItemVendaDto(produto.Id, 2, 20, 20, false, DateTimeOffset.UtcNow)]),
+                CancellationToken.None);
+            var venda = (await vendas.ObterAsync(vendaId, CancellationToken.None))!;
+            Assert.Equal(40m, venda.Total);
+            Assert.Equal(5m, venda.ValorRecebido);
+            Assert.Equal(22.4m, venda.CustoTotal);
+            Assert.Equal(35m, venda.Parcelas.Sum(x => x.Valor));
+            Assert.Equal(3m, Assert.Single(await entradas.ListarSaldosAsync(CancellationToken.None)).Quantidade);
+
+            var parcela = venda.Parcelas.First();
+            await vendas.RegistrarPagamentoAsync(vendaId, parcela.Id, parcela.Valor,
+                DateTimeOffset.UtcNow, CancellationToken.None);
+            venda = (await vendas.ObterAsync(vendaId, CancellationToken.None))!;
+            Assert.Equal(5m + parcela.Valor, venda.ValorRecebido);
+            Assert.Equal(2, await db.RecebimentosVendas.CountAsync());
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => vendas.RegistrarAsync(
+                new CriarVendaDto(cliente.Id, 0, 0, 1,
+                    DateOnly.FromDateTime(DateTime.Today.AddMonths(1)),
+                    [new CriarItemVendaDto(produto.Id, 4, 20, 20, false, DateTimeOffset.UtcNow)]),
+                CancellationToken.None));
+            Assert.Equal(3m, await db.EstoquesProdutos.AsNoTracking()
+                .Where(x => x.SuprimentoId == produto.Id).Select(x => x.Quantidade).SingleAsync());
         }
         finally
         {

@@ -49,6 +49,7 @@ public static class Modulo
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<ISuprimentoRepository, SuprimentoRepository>();
         services.AddScoped<IPedidoFornecedorRepository, PedidoFornecedorRepository>();
+        services.AddScoped<IVendaRepository, VendaRepository>();
         services.AddScoped<IEstoqueRepository, EstoqueRepository>();
         services.AddScoped<IUnitOfWork, VisoERP.Infra.Data.UnitOfWork.UnitOfWork>();
         services.RegistrarApplication(configuration["AutoMapper:LicenseKey"]);

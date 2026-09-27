@@ -1,0 +1,13 @@
+@model IReadOnlyList<VisoERP.Application.DTOs.Comercial.VendaDto>
+@{ ViewData["Title"] = "Vendas"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Vendas</h1><a class="btn btn-primary" asp-action="Nova">Nova venda</a></div>
+<table class="table table-striped"><thead><tr><th>Data</th><th>Cliente</th><th>Total vendido</th><th>Recebido</th><th></th></tr></thead><tbody>
+@foreach (var venda in Model)
+{
+    var nomes = (Dictionary<Guid, string>)ViewBag.Clientes;
+    <tr><td>@venda.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+        <td>@(nomes.TryGetValue(venda.ClienteId, out var nome) ? nome : venda.ClienteId.ToString())</td>
+        <td>@venda.Total.ToString("C")</td><td>@venda.ValorRecebido.ToString("C")</td>
+        <td><a asp-action="Detalhes" asp-route-id="@venda.Id">Detalhes</a></td></tr>
+}
+</tbody></table>

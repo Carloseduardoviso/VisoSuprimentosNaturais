@@ -22,6 +22,7 @@ public static class ModuloApplication
         services.AddScoped<IFornecedorAppService, FornecedorAppService>();
         services.AddScoped<IPedidoFornecedorAppService, PedidoFornecedorAppService>();
         services.AddScoped<IEntradaEstoqueAppService, EntradaEstoqueAppService>();
+        services.AddScoped<IVendaAppService, VendaAppService>();
         services.AddAutoMapper(config =>
         {
             if (!string.IsNullOrWhiteSpace(autoMapperLicenseKey))
