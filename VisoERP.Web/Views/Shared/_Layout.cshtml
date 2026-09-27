@@ -12,17 +12,20 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VISO ERP</title>
+    <meta name="theme-color" content="#143d2b" />
+    <title>@ViewData["Title"] - VISO Suprimentos Naturais</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VisoERP.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VISO ERP</a>
+        <nav class="navbar navbar-expand-sm navbar-dark brand-navbar mb-4" aria-label="Navegação principal">
+            <div class="container-fluid px-3 px-lg-4">
+                <a class="navbar-brand brand-lockup" asp-area="" asp-controller="Home" asp-action="Index" aria-label="VISO Suprimentos Naturais, início">
+                    <span class="brand-mark"><img src="~/images/viso-leaf.svg" alt="" /></span>
+                    <span class="brand-name"><strong>VISO</strong><small>SUPRIMENTOS NATURAIS</small></span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,12 +33,12 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Início</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Início</a>
                         </li>
                         @if (podeEstoque || podeVendas)
                         {
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">Cadastros</button>
+                                <button class="nav-link dropdown-toggle brand-menu-trigger" type="button" data-bs-toggle="dropdown" aria-expanded="false">Cadastros</button>
                                 <ul class="dropdown-menu">
                                     @if (podeEstoque)
                                     {
@@ -53,7 +56,7 @@
                         @if (podeEstoque)
                         {
                             <li class="nav-item dropdown">
-                                <button class="nav-link dropdown-toggle btn btn-link text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">Estoque</button>
+                                <button class="nav-link dropdown-toggle brand-menu-trigger" type="button" data-bs-toggle="dropdown" aria-expanded="false">Estoque</button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="PedidosFornecedores" asp-action="Index">Pedidos a fornecedores</a></li>
                                     <li><a class="dropdown-item" asp-controller="Entradas" asp-action="Index">Entradas</a></li>
@@ -62,33 +65,34 @@
                         }
                         @if (podeVendas)
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Vendas" asp-action="Index">Vendas</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Vendas" asp-action="Index">Vendas</a></li>
                         }
                         @if (podeFinanceiro)
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Financeiro" asp-action="Index">Financeiro</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Financeiro" asp-action="Index">Financeiro</a></li>
                         }
                     </ul>
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <form asp-controller="Conta" asp-action="Sair" method="post" class="d-flex align-items-center gap-2">
-                            <span class="small text-muted">@User.Identity.Name</span>
-                            <button class="btn btn-outline-secondary btn-sm" type="submit">Sair</button>
+                            <span class="small text-white-50">@User.Identity.Name</span>
+                            <button class="btn btn-outline-light btn-sm" type="submit">Sair</button>
                         </form>
                     }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-xl app-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - VISO SUPRIMENTOS NATURAIS
+    <footer class="brand-footer">
+        <div class="container-xl d-flex flex-wrap justify-content-between gap-2">
+            <span>&copy; 2026 VISO Suprimentos Naturais</span>
+            <span>O melhor da natureza para você.</span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

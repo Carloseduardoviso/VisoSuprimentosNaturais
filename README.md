@@ -2,6 +2,10 @@
 
 Sistema comercial da VISO SUPRIMENTOS NATURAIS em .NET 10, ASP.NET Core MVC, EF Core 10 e SQL Server.
 
+## Identidade visual
+
+O tema usa verde escuro `#143d2b`, dourado `#c8a963` e branco. As cores e os componentes compartilhados ficam em `VisoERP.Web/wwwroot/css/site.css`. O símbolo da folha é um SVG local em `wwwroot/images/viso-leaf.svg`; a página inicial e o acesso exibem a marca VISO Suprimentos Naturais. Slogan: “O melhor da natureza para você.”
+
 ## Solução
 
 Abra `VisoERP.slnx`. As pastas aparecem nesta ordem: `Web`, `Application`, `Domain`, `Infra` e `Testes`. O projeto `VisoSuprimentosNaturais.slnx` preexistente permanece fora da nova solução. O sistema não inclui API.
