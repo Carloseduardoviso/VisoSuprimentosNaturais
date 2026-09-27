@@ -1,5 +1,4 @@
 @model VisoERP.Web.Models.Financeiro.FinanceiroViewModel
-@using System.Globalization
 @{ ViewData["Title"] = "Financeiro"; var resumo = Model.Resumo!; }
 <h1>Financeiro</h1>
 @if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
@@ -41,11 +40,11 @@
         </form></div></div></section>
 </div>
 <h2 class="h4">Contas a receber de clientes</h2>
-<table class="table table-striped"><thead><tr><th>Cliente</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Valor a receber</th><th>Pagamentos registrados</th><th></th></tr></thead><tbody>
+<table class="table table-striped"><thead><tr><th>Cliente</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Valor a receber</th><th>Pagamentos registrados</th></tr></thead><tbody>
 @foreach (var venda in (IReadOnlyList<VisoERP.Application.DTOs.Comercial.VendaDto>)ViewBag.Vendas)
 @foreach (var parcela in venda.Parcelas.OrderBy(x => x.Vencimento))
 {
-    <tr><td>@(((IReadOnlyDictionary<Guid,string>)ViewBag.Clientes).TryGetValue(venda.ClienteId, out var cliente) ? cliente : "Cliente")</td><td>@parcela.Vencimento.ToString("dd/MM/yyyy")</td><td>@parcela.Valor.ToString("C")</td><td>@parcela.ValorPago.ToString("C")</td><td>@parcela.Saldo.ToString("C")</td><td>@foreach (var recebimento in venda.Recebimentos.Where(x => x.ParcelaVendaId == parcela.Id).OrderBy(x => x.Data)) { <div>@recebimento.Valor.ToString("C") em @recebimento.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div> }</td><td>@if (parcela.Saldo > 0) { <form asp-action="ReceberParcela" method="post" class="d-flex gap-2"><input type="hidden" name="vendaId" value="@venda.Id" /><input type="hidden" name="parcelaId" value="@parcela.Id" /><input type="text" name="valor" data-money-mask value="@parcela.Saldo.ToString(CultureInfo.InvariantCulture)" class="form-control form-control-sm" /><button class="btn btn-sm btn-outline-primary">Registrar pagamento</button></form> }</td></tr>
+    <tr><td>@(((IReadOnlyDictionary<Guid,string>)ViewBag.Clientes).TryGetValue(venda.ClienteId, out var cliente) ? cliente : "Cliente")</td><td>@parcela.Vencimento.ToString("dd/MM/yyyy")</td><td>@parcela.Valor.ToString("C")</td><td>@parcela.ValorPago.ToString("C")</td><td>@parcela.Saldo.ToString("C")</td><td>@foreach (var recebimento in venda.Recebimentos.Where(x => x.ParcelaVendaId == parcela.Id).OrderBy(x => x.Data)) { <div>@recebimento.Valor.ToString("C") em @recebimento.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div> }</td></tr>
 }
 </tbody></table>
 @section Scripts {
