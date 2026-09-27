@@ -16,6 +16,4 @@ public sealed class CadastroUsuarioViewModel
     [Required, Compare(nameof(Senha)), DataType(DataType.Password), Display(Name = "Confirmar senha")]
     public string ConfirmacaoSenha { get; set; } = string.Empty;
 
-    [Required, DataType(DataType.Password), Display(Name = "Chave de cadastro")]
-    public string Chave { get; set; } = string.Empty;
 }

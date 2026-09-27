@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 using VisoERP.Application.Interface.Auth;
 using VisoERP.Domain.Entities;
 using VisoERP.Infra.Data.Context;
@@ -12,7 +10,7 @@ using VisoERP.Web.Models.Auth;
 namespace VisoERP.Web.Controllers;
 
 public sealed class ContaController(IContaAppService conta, VisoErpDbContext db,
-    IPasswordHasher<Usuario> hasher, IConfiguration configuration) : Controller
+    IPasswordHasher<Usuario> hasher) : Controller
 {
     [AllowAnonymous, HttpGet]
     public IActionResult Entrar(string? returnUrl = null)
@@ -51,15 +49,6 @@ public sealed class ContaController(IContaAppService conta, VisoErpDbContext db,
     public async Task<IActionResult> CadastroInterno(CadastroUsuarioViewModel model, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return View(model);
-        var chaveConfigurada = configuration["USER_REGISTRATION_KEY"] ?? string.Empty;
-        var esperado = Encoding.UTF8.GetBytes(chaveConfigurada);
-        var recebido = Encoding.UTF8.GetBytes(model.Chave);
-        if (esperado.Length == 0 || !CryptographicOperations.FixedTimeEquals(esperado, recebido))
-        {
-            ModelState.AddModelError(nameof(model.Chave), "Chave de cadastro inválida.");
-            return View(model);
-        }
-
         var cpf = Usuario.NormalizarCpf(model.Cpf);
         if (cpf.Length != 11 || !cpf.All(char.IsDigit))
         {
