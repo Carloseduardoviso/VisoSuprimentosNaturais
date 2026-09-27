@@ -34,6 +34,7 @@ services:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__VisoERP: ${APP_CONNECTION_STRING:?APP_CONNECTION_STRING must be set}
       AutoMapper__LicenseKey: ${AUTOMAPPER_LICENSE_KEY-}
+      USER_REGISTRATION_KEY: ${USER_REGISTRATION_KEY:?USER_REGISTRATION_KEY must be set}
       AdminBootstrap__Email: ${ADMIN_BOOTSTRAP_EMAIL:-}
       AdminBootstrap__Password: ${ADMIN_BOOTSTRAP_PASSWORD:-}
       FORWARDED_PROXY_IP: ${FORWARDED_PROXY_IP:?FORWARDED_PROXY_IP must be set}

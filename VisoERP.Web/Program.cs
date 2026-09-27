@@ -16,20 +16,13 @@ builder.Services.AddControllersWithViews(options =>
 var acessoAnonimoDesenvolvimento = builder.Environment.IsDevelopment() &&
     builder.Configuration.GetValue<bool>("Authentication:AllowAnonymousDevelopment");
 var autorizacao = builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("GerenciarSuprimentos", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
-    .AddPolicy("GerenciarClientes", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Vendas")))
-    .AddPolicy("GerenciarFornecedores", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
-    .AddPolicy("GerenciarCategorias", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
-    .AddPolicy("GerenciarEstoque", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Estoque")))
-    .AddPolicy("GerenciarVendas", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Vendas")))
-    .AddPolicy("GerenciarFinanceiro", policy => policy.RequireAssertion(context =>
-        acessoAnonimoDesenvolvimento || context.User.IsInRole("Administrador") || context.User.IsInRole("Financeiro")));
+    .AddPolicy("GerenciarSuprimentos", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarClientes", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarFornecedores", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarCategorias", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarEstoque", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarVendas", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("GerenciarFinanceiro", policy => policy.RequireAuthenticatedUser());
 if (!acessoAnonimoDesenvolvimento)
     autorizacao.SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 Modulo.RegistrarServicos(builder.Services, builder.Configuration);
@@ -66,7 +59,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
-await Modulo.InicializarIdentidadeAsync(app.Services, app.Configuration);
 
 app.Run();

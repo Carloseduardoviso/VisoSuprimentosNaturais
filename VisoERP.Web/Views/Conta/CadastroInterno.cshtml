@@ -1,0 +1,15 @@
+@model VisoERP.Web.Models.Auth.CadastroUsuarioViewModel
+@{ ViewData["Title"] = "Cadastro interno"; }
+<div class="row justify-content-center mt-5"><div class="col-md-6 col-lg-5">
+<div class="card login-card"><div class="card-body p-4 p-md-5">
+<h1 class="h3 mb-4">Cadastro de usuário</h1>
+<form asp-action="CadastroInterno" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3"><label asp-for="NomeCompleto" class="form-label"></label><input asp-for="NomeCompleto" class="form-control" /><span asp-validation-for="NomeCompleto" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Cpf" class="form-label"></label><input asp-for="Cpf" class="form-control" inputmode="numeric" /><span asp-validation-for="Cpf" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Senha" class="form-label"></label><input asp-for="Senha" class="form-control" /><span asp-validation-for="Senha" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="ConfirmacaoSenha" class="form-label"></label><input asp-for="ConfirmacaoSenha" class="form-control" /><span asp-validation-for="ConfirmacaoSenha" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Chave" class="form-label"></label><input asp-for="Chave" class="form-control" /><span asp-validation-for="Chave" class="text-danger"></span></div>
+    <button class="btn btn-primary w-100" type="submit">Cadastrar</button>
+</form></div></div></div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

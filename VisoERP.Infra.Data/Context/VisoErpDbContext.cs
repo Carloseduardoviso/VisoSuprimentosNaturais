@@ -5,6 +5,7 @@ using VisoERP.Domain.Entities.Cadastros;
 using VisoERP.Domain.Entities.Comercial;
 using VisoERP.Domain.Entities.Estoque;
 using VisoERP.Domain.Entities.Financeiro;
+using VisoERP.Domain.Entities;
 using VisoERP.Infra.Data.Config.Cadastros;
 using VisoERP.Infra.Data.Config.Comercial;
 using VisoERP.Infra.Data.Config.Estoque;
@@ -33,6 +34,7 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
     public DbSet<Despesa> Despesas => Set<Despesa>();
     public DbSet<ContaPagar> ContasPagar => Set<ContaPagar>();
     public DbSet<PagamentoContaPagar> PagamentosContasPagar => Set<PagamentoContaPagar>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -55,6 +57,15 @@ public sealed class VisoErpDbContext(DbContextOptions<VisoErpDbContext> options)
         modelBuilder.ApplyConfiguration(new DespesaConfig());
         modelBuilder.ApplyConfiguration(new ContaPagarConfig());
         modelBuilder.ApplyConfiguration(new PagamentoContaPagarConfig());
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.ToTable("Usuario");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.NomeCompleto).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Cpf).HasMaxLength(11).IsRequired();
+            entity.Property(x => x.SenhaHash).HasMaxLength(500).IsRequired();
+            entity.HasIndex(x => x.Cpf).IsUnique();
+        });
         base.OnModelCreating(modelBuilder);
     }
 }
