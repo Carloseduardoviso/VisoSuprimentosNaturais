@@ -54,6 +54,22 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         return Redirect($"https://wa.me/{numero}?text={mensagem}");
     }
 
+    public async Task<IActionResult> Mensagem(Guid id, CancellationToken ct)
+    {
+        var pedido = await pedidos.ObterAsync(id, ct);
+        if (pedido is null) return NotFound();
+        var fornecedor = await fornecedores.ObterAsync(pedido.FornecedorId, ct);
+        var nomes = (await suprimentos.ListarAsync(ct)).ToDictionary(x => x.Id, x => x.Nome);
+        var cultura = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+        var linhas = pedido.Itens.Select(item =>
+        {
+            var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
+            return $"• {nome}\n  Quantidade: {item.Quantidade}\n  Recebida: {item.QuantidadeRecebida}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+        });
+        var mensagem = $"Olá, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido com a VISO Suplementos Alimentares Naturais:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmação. Obrigado!";
+        return Content(mensagem, "text/plain; charset=utf-8");
+    }
+
     public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
     {
         var pedido = await pedidos.ObterAsync(id, ct);
