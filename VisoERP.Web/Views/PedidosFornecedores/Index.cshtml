@@ -12,7 +12,7 @@
         <tr><td>@pedido.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</td>
             <td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Fornecedores).TryGetValue(pedido.FornecedorId, out var fornecedor) ? fornecedor : "Fornecedor não encontrado")</td><td>@pedido.Situacao</td>
             <td>@pedido.Total.ToString("C")</td>
-            <td class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-action="Detalhes" asp-route-id="@pedido.Id">Ver detalhes</a><button type="button" class="btn btn-sm btn-outline-secondary copiar-pedido" data-mensagem-url="@Url.Action("Mensagem", new { id = pedido.Id })">Copiar</button><a class="btn btn-sm btn-success" asp-action="WhatsApp" asp-route-id="@pedido.Id" target="_blank" rel="noopener" aria-label="Enviar pedido pelo WhatsApp">WhatsApp</a></td></tr>
+            <td class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-action="Detalhes" asp-route-id="@pedido.Id">Ver detalhes</a>@if (pedido.Situacao == "Pendente") { <button type="button" class="btn btn-sm btn-outline-secondary copiar-pedido" data-mensagem-url="@Url.Action("Mensagem", new { id = pedido.Id })">Copiar</button><a class="btn btn-sm btn-success" asp-action="WhatsApp" asp-route-id="@pedido.Id" target="_blank" rel="noopener" aria-label="Enviar pedido pelo WhatsApp">WhatsApp</a> } else { <button type="button" class="btn btn-sm btn-outline-secondary" disabled>Copiar</button><button type="button" class="btn btn-sm btn-success" disabled>WhatsApp</button> }</td></tr>
     }
     </tbody>
 </table>
