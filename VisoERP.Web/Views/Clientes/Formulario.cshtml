@@ -14,7 +14,7 @@
 </form>
 @section Scripts { <partial name="_ValidationScriptsPartial" /><script>
 (() => {
-    const cpfCnpj = document.getElementById('CpfCnpj'), cep = document.getElementById('Cep');
+    const cpfCnpj = document.getElementById('CpfCnpj'), telefone = document.getElementById('Telefone'), cep = document.getElementById('Cep');
     const numero = document.getElementById('Numero'), endereco = document.getElementById('Endereco');
     let enderecoEncontrado;
     cpfCnpj?.addEventListener('input', () => {
@@ -22,6 +22,12 @@
         cpfCnpj.value = digitos.length <= 11
             ? digitos.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')
             : digitos.replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+    });
+    telefone?.addEventListener('input', () => {
+        const digitos = telefone.value.replace(/\D/g, '').slice(0, 11);
+        telefone.value = digitos.length <= 10
+            ? digitos.replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2')
+            : digitos.replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
     });
     const preencherEndereco = () => {
         if (!enderecoEncontrado) return;
