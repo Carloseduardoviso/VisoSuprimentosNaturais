@@ -4,7 +4,7 @@
 <form asp-action="Salvar" method="post" class="row g-3">
     <input asp-for="Id" type="hidden" /><div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-md-8"><label asp-for="Nome" class="form-label"></label><input asp-for="Nome" class="form-control" /><span asp-validation-for="Nome" class="text-danger"></span></div>
-    <div class="col-md-4"><label asp-for="CpfCnpj" class="form-label">CPF/CNPJ</label><input asp-for="CpfCnpj" class="form-control" /></div>
+    <div class="col-md-4"><label asp-for="Cpf" class="form-label">CPF</label><input asp-for="Cpf" class="form-control" inputmode="numeric" /></div>
     <div class="col-md-3"><label asp-for="Cep" class="form-label">CEP</label><input asp-for="Cep" class="form-control" inputmode="numeric" placeholder="00000-000" /></div>
     <div class="col-md-2"><label asp-for="Numero" class="form-label">Número</label><input asp-for="Numero" class="form-control" /></div>
     <div class="col-md-7"><label asp-for="Endereco" class="form-label">Endereço</label><input asp-for="Endereco" class="form-control" /></div>
@@ -14,14 +14,12 @@
 </form>
 @section Scripts { <partial name="_ValidationScriptsPartial" /><script>
 (() => {
-    const cpfCnpj = document.getElementById('CpfCnpj'), telefone = document.getElementById('Telefone'), cep = document.getElementById('Cep');
+    const cpf = document.getElementById('Cpf'), telefone = document.getElementById('Telefone'), cep = document.getElementById('Cep');
     const numero = document.getElementById('Numero'), endereco = document.getElementById('Endereco');
     let enderecoEncontrado;
-    cpfCnpj?.addEventListener('input', () => {
-        const digitos = cpfCnpj.value.replace(/\D/g, '').slice(0, 14);
-        cpfCnpj.value = digitos.length <= 11
-            ? digitos.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-            : digitos.replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+    cpf?.addEventListener('input', () => {
+        const digitos = cpf.value.replace(/\D/g, '').slice(0, 11);
+        cpf.value = digitos.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     });
     telefone?.addEventListener('input', () => {
         const digitos = telefone.value.replace(/\D/g, '').slice(0, 11);

@@ -23,7 +23,7 @@ public sealed class ClientesController(IClienteAppService clientes) : Controller
         return cliente is null ? NotFound() : View("Formulario", new ClienteViewModel
         {
             Id = cliente.Id, Nome = cliente.Nome, Documento = cliente.Documento,
-            CpfCnpj = cliente.Documento, Cep = cliente.Cep, Numero = cliente.Numero, Endereco = cliente.Endereco,
+            Cpf = cliente.Documento, Cep = cliente.Cep, Numero = cliente.Numero, Endereco = cliente.Endereco,
             Email = cliente.Email, Telefone = cliente.Telefone, Ativo = cliente.Ativo
         });
     }
@@ -35,7 +35,7 @@ public sealed class ClientesController(IClienteAppService clientes) : Controller
         try
         {
             await clientes.SalvarAsync(model.Id,
-                new SalvarClienteDto(model.Nome, model.CpfCnpj, model.Email,
+                new SalvarClienteDto(model.Nome, model.Cpf, model.Email,
                     model.Telefone, model.Ativo, model.Cep, model.Numero, model.Endereco), cancellationToken);
             return RedirectToAction(nameof(Index));
         }
