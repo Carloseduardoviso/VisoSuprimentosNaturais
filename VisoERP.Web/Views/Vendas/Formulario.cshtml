@@ -70,7 +70,6 @@
             const precoVenda = card.querySelector('[data-campo="PrecoUnitario"]');
             precoCatalogo.value = window.VisoMoney.formatarValorServidor(option?.dataset.catalogo || 0);
             precoVenda.value = window.VisoMoney.formatarValorServidor(option?.dataset.precoVenda || 0);
-            card.querySelector('[data-campo="Quantidade"]').min = option?.dataset.minimo || 1;
             calcular();
         });
         card.addEventListener('input', calcular);

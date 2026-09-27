@@ -12,7 +12,7 @@
         <tr><td>@pedido.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</td>
             <td>@pedido.FornecedorId</td><td>@pedido.Situacao</td>
             <td>@pedido.Total.ToString("C")</td>
-            <td><a asp-action="Detalhes" asp-route-id="@pedido.Id">Detalhes</a></td></tr>
+            <td class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-action="Detalhes" asp-route-id="@pedido.Id">Ver detalhes</a><a class="btn btn-sm btn-outline-secondary" asp-action="Copiar" asp-route-id="@pedido.Id">Copiar</a><a class="btn btn-sm btn-success" asp-action="WhatsApp" asp-route-id="@pedido.Id" aria-label="Enviar pedido pelo WhatsApp">WhatsApp</a></td></tr>
     }
     </tbody>
 </table>

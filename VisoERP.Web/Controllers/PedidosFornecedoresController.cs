@@ -20,6 +20,35 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         return View("Formulario", new PedidoFornecedorViewModel());
     }
 
+    public async Task<IActionResult> Copiar(Guid id, CancellationToken ct)
+    {
+        var pedido = await pedidos.ObterAsync(id, ct);
+        if (pedido is null) return NotFound();
+        await PrepararOpcoes(ct);
+        return View("Formulario", new PedidoFornecedorViewModel
+        {
+            FornecedorId = pedido.FornecedorId,
+            Itens = pedido.Itens.Select(x => new ItemPedidoViewModel
+            {
+                SuprimentoId = x.SuprimentoId, Quantidade = x.Quantidade,
+                PrecoCatalogo = x.PrecoCatalogo, PrecoComDesconto = x.PrecoComDesconto
+            }).ToList()
+        });
+    }
+
+    public async Task<IActionResult> WhatsApp(Guid id, CancellationToken ct)
+    {
+        var pedido = await pedidos.ObterAsync(id, ct);
+        if (pedido is null) return NotFound();
+        var fornecedor = await fornecedores.ObterAsync(pedido.FornecedorId, ct);
+        var telefone = fornecedor?.Telefone?.Where(char.IsDigit).ToArray() ?? [];
+        if (telefone.Length is < 10 or > 13) return RedirectToAction(nameof(Detalhes), new { id });
+        var numero = new string(telefone);
+        if (numero.Length is 10 or 11) numero = "55" + numero;
+        var mensagem = Uri.EscapeDataString($"Pedido VISO ERP\nTotal: {pedido.Total:C}\nItens: {pedido.Itens.Count}");
+        return Redirect($"https://wa.me/{numero}?text={mensagem}");
+    }
+
     public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
     {
         var pedido = await pedidos.ObterAsync(id, ct);
