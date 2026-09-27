@@ -121,7 +121,15 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
             if (telefone.Length is 10 or 11)
             {
                 var numero = "55" + new string(telefone);
-                var mensagem = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nO pedido no valor de {pedido!.Total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))} foi cancelado.\n\nPedimos desculpas pelo transtorno.");
+                var cultura = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+                var nomes = (await suprimentos.ListarAsync(ct)).ToDictionary(x => x.Id, x => x.Nome);
+                var itens = pedido!.Itens.Select(item =>
+                {
+                    var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
+                    return $"• {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+                });
+                var texto = $"Olá, {fornecedor!.Nome}!\n\nInformamos que o pedido abaixo foi cancelado:\n\n{string.Join("\n\n", itens)}\n\nTotal do pedido cancelado: {pedido.Total.ToString("C", cultura)}\n\nPedimos desculpas pelo transtorno e agradecemos a compreensão.";
+                var mensagem = Uri.EscapeDataString(texto);
                 return Redirect($"https://wa.me/{numero}?text={mensagem}");
             }
         }
