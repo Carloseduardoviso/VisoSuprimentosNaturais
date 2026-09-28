@@ -39,6 +39,8 @@ services:
       FORWARDED_PROXY_IP: ${FORWARDED_PROXY_IP:?FORWARDED_PROXY_IP must be set}
     ports:
       - "127.0.0.1:8080:8080"
+    volumes:
+      - app_data:/app/App_Data
     networks:
       app_network:
     depends_on:
@@ -76,3 +78,4 @@ networks:
 
 volumes:
   sql_data:
+  app_data:

@@ -10,7 +10,7 @@ namespace VisoERP.Web.Controllers;
 
 [Authorize(Policy = "GerenciarSuprimentos")]
 public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
-    ImagemSuprimentoService imagens) : Controller
+    ImagemSuprimentoService imagens, ILogger<SuprimentosController> logger) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken) =>
@@ -66,9 +66,10 @@ public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
             await CarregarCategoriasAsync(cancellationToken);
             return View("Formulario", model);
         }
-        catch
+        catch (Exception ex)
         {
             if (imagemNova is not null) imagens.Excluir(imagemNova);
+            logger.LogError(ex, "Erro ao salvar suplemento alimentar. Id: {SuprimentoId}", model.Id);
             throw;
         }
     }

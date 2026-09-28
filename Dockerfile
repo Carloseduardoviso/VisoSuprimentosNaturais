@@ -21,6 +21,8 @@ RUN apt-get update \
 
 WORKDIR /app
 COPY --from=build /app/publish .
+RUN mkdir -p /app/App_Data/Suprimentos \
+    && chown -R app:app /app/App_Data
 USER app
 
 ENV ASPNETCORE_ENVIRONMENT=Production \
