@@ -25,6 +25,10 @@ body {
 }
 
 .app-content { flex: 1; padding-bottom: 3rem; }
+.page-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.page-heading h1 { margin: 0; }
+.table-shell { width: 100%; overflow-x: auto; border: 1px solid #e0e8df; border-radius: .65rem; background: #fff; -webkit-overflow-scrolling: touch; }
+.table-shell .table { min-width: max-content; margin-bottom: 0; border: 0; border-radius: 0; }
 h1, h2, h3, h4, h5 { color: var(--viso-green); font-weight: 650; }
 a { color: #205b40; }
 a:hover { color: var(--viso-green-deep); }
@@ -198,6 +202,13 @@ a:hover { color: var(--viso-green-deep); }
 
 @media (max-width: 767px) {
   .app-content { padding-left: .75rem; padding-right: .75rem; }
+  .app-content main > .d-flex.justify-content-between.align-items-center {
+    align-items: stretch !important;
+    flex-direction: column;
+    gap: .75rem;
+  }
+  .app-content main > .d-flex.justify-content-between.align-items-center h1 { margin-bottom: 0; }
+  .app-content main > .d-flex.justify-content-between.align-items-center .btn { align-self: flex-start; }
   .brand-lockup { margin-right: 0; }
   .brand-name small { font-size: .42rem; letter-spacing: .1em; }
   .home-hero-content { padding: 2.5rem 1rem; }
@@ -206,8 +217,9 @@ a:hover { color: var(--viso-green-deep); }
   .home-section-heading { display: block; }
   .home-section-heading p { margin-top: .5rem; }
   .home-hero { min-height: 305px; }
-  .table { display: block; width: 100%; overflow-x: auto; white-space: nowrap; }
-  .table-responsive { border-radius: .65rem; }
+  .page-heading { align-items: stretch; flex-direction: column; gap: .75rem; }
+  .page-heading .btn { align-self: flex-start; }
+  .table { white-space: nowrap; }
 }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .kpi-grid > .col-xl-3 { flex: 0 0 auto; width: 25%; }
