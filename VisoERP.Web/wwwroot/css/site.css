@@ -287,18 +287,20 @@ a:hover { color: var(--viso-green-deep); }
   .suprimentos-table-shell .table { display: block; min-width: 0; white-space: normal; background: transparent; border: 0; }
   .suprimentos-table-shell thead { display: none; }
   .suprimentos-table-shell tbody { display: grid; gap: .85rem; }
-  .suprimentos-table-shell .suprimentos-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; padding: .9rem; background: #fff; border: 1px solid #dfe9df; border-radius: .75rem; box-shadow: 0 5px 16px rgba(20, 61, 43, .07); }
-  .suprimentos-table-shell .suprimentos-row > td { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: .2rem; min-width: 0; padding: .55rem .6rem; border: 0; border-radius: .35rem; background: #f7faf6; color: var(--viso-ink); font-size: .83rem; line-height: 1.2; }
-  .suprimentos-table-shell .suprimentos-row > td::before { content: attr(data-label); color: #718075; font-size: .63rem; font-weight: 700; line-height: 1.1; }
-  .suprimentos-table-shell .suprimentos-row > td:first-child { grid-column: 1; grid-row: 1 / span 2; flex-direction: row; justify-content: flex-start; gap: .8rem; padding: .35rem; background: #f4f8f3; }
+  .suprimentos-table-shell .suprimentos-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto auto auto auto auto; gap: .7rem; padding: .9rem; background: #fff; border: 1px solid #dfe9df; border-radius: .75rem; box-shadow: 0 5px 16px rgba(20, 61, 43, .07); }
+  .suprimentos-table-shell .suprimentos-row > td { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: .2rem; width: auto !important; min-width: 0; padding: .55rem .6rem; border: 0; border-radius: .35rem; background: #f7faf6; color: var(--viso-ink); font-size: .83rem; line-height: 1.2; }
+  .suprimentos-table-shell .suprimentos-row > td { overflow-wrap: normal; word-break: normal; }
+  .suprimentos-table-shell .suprimentos-row > td::before { content: attr(data-label); color: #718075; font-size: .63rem; font-weight: 700; line-height: 1.1; overflow-wrap: normal; word-break: normal; }
+  .suprimentos-table-shell .suprimentos-row > td:first-child { grid-column: 2; grid-row: 1; flex-direction: column; justify-content: center; gap: .3rem; padding: .35rem; background: #f4f8f3; text-align: center; }
   .suprimentos-table-shell .suprimentos-row > td:first-child img { width: 62px; height: 62px; padding: .25rem; border: 1px solid #e0e9e0; border-radius: .55rem; background: #f7faf6; }
-  .suprimentos-table-shell .suprimentos-row > td:first-child::before { display: none; }
-  .suprimentos-table-shell .suprimentos-row > td:nth-child(2) { grid-column: 2; grid-row: 2; flex-direction: row; align-items: baseline; gap: .5rem; padding: .05rem .1rem 0; background: transparent; }
-  .suprimentos-table-shell .suprimentos-row > td:nth-child(3) { grid-column: 2; grid-row: 1; display: block; align-self: end; padding: .1rem .1rem .15rem; background: transparent; color: var(--viso-green); font-size: 1.05rem; font-weight: 800; }
-  .suprimentos-table-shell .suprimentos-row > td:nth-child(3)::before { display: none; }
-  .suprimentos-table-shell .suprimentos-row > td:nth-child(4), .suprimentos-table-shell .suprimentos-row > td:nth-child(5) { background: #eef5ee; }
-  .suprimentos-table-shell .suprimentos-row > td:nth-child(6), .suprimentos-table-shell .suprimentos-row > td:nth-child(7) { background: #fbfcfa; border: 1px solid #edf2ed; }
-  .suprimentos-table-shell .suprimentos-row > td:last-child { grid-column: 1 / -1; flex-direction: row; justify-content: flex-end; padding: .55rem .1rem 0; border-top: 1px solid #edf2ed; background: transparent; }
+  .suprimentos-table-shell .suprimentos-row > td:first-child::before { display: block; content: "Imagem"; order: -1; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(2) { grid-column: 1 / -1 !important; grid-row: 2; width: 100%; box-sizing: border-box; flex-direction: column; align-items: flex-start; gap: .2rem; padding: .55rem .6rem !important; background: #f7faf6; white-space: normal; overflow: visible; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(3) { grid-column: 1; grid-row: 1; display: block; align-self: center; padding: .1rem .1rem .15rem; background: transparent; color: var(--viso-green); font-size: 1.05rem; font-weight: 800; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(3)::before { display: block; content: "Nome do suplemento"; margin-bottom: .2rem; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(4) { grid-column: 1 / -1; grid-row: 3; background: #eef5ee; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(5) { grid-column: 1 / -1; grid-row: 4; background: #eef5ee; }
+  .suprimentos-table-shell .suprimentos-row > td:nth-child(6), .suprimentos-table-shell .suprimentos-row > td:nth-child(7) { grid-row: 5; background: #fbfcfa; border: 1px solid #edf2ed; }
+  .suprimentos-table-shell .suprimentos-row > td:last-child { grid-column: 1 / -1; grid-row: 6; flex-direction: row; justify-content: flex-end; padding: .55rem .1rem 0; border-top: 1px solid #edf2ed; background: transparent; }
   .suprimentos-table-shell .suprimentos-row > td:last-child::before { display: none; }
   .suprimentos-table-shell .suprimentos-row > td:last-child a { padding: .35rem .75rem; background: #f1f7f1; border: 1px solid #b7cfbc; border-radius: .4rem; font-size: .78rem; font-weight: 700; text-decoration: none; }
   .table tbody td:last-child > .btn { margin: .15rem .15rem .15rem 0; }
@@ -334,6 +336,7 @@ a:hover { color: var(--viso-green-deep); }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(1)::before { content: "Informação"; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(2)::before { content: "Detalhe"; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(3)::before { content: "Situação / valor"; }
+  .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td[data-label]::before { content: attr(data-label); }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:last-child { grid-column: 1 / -1; background: transparent; padding: .35rem .1rem 0; text-align: right; border-top: 1px solid #edf2ed; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:last-child::before { display: none; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:last-child form { display: inline; }

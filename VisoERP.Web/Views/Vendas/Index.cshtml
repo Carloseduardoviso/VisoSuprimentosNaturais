@@ -5,9 +5,9 @@
 @foreach (var venda in Model)
 {
     var nomes = (Dictionary<Guid, string>)ViewBag.Clientes;
-    <tr><td>@venda.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-        <td>@(nomes.TryGetValue(venda.ClienteId, out var nome) ? nome : venda.ClienteId.ToString())</td>
-        <td>@venda.Total.ToString("C")</td><td>@venda.ValorRecebido.ToString("C")</td>
-        <td><a asp-action="Detalhes" asp-route-id="@venda.Id">Detalhes</a></td></tr>
+    <tr><td data-label="Data">@venda.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+        <td data-label="Cliente">@(nomes.TryGetValue(venda.ClienteId, out var nome) ? nome : venda.ClienteId.ToString())</td>
+        <td data-label="Total vendido">@venda.Total.ToString("C")</td><td data-label="Recebido">@venda.ValorRecebido.ToString("C")</td>
+        <td data-label="Ações"><a asp-action="Detalhes" asp-route-id="@venda.Id">Detalhes</a></td></tr>
 }
 </tbody></table>

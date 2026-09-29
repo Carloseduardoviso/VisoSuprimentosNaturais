@@ -4,8 +4,8 @@
 <table class="table table-striped"><thead><tr><th>Data</th><th>Itens</th><th>Custo total</th><th>Ações</th></tr></thead><tbody>
 @foreach (var entrada in Model)
 {
-    <tr><td>@entrada.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-        <td>@entrada.Itens.Count</td><td>@entrada.TotalCusto.ToString("C")</td>
-        <td><a asp-action="Detalhes" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-primary">Ver detalhes</a></td></tr>
+    <tr><td data-label="Data">@entrada.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+        <td data-label="Itens">@entrada.Itens.Count</td><td data-label="Custo total">@entrada.TotalCusto.ToString("C")</td>
+        <td data-label="Ações"><a asp-action="Detalhes" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-primary">Ver detalhes</a></td></tr>
 }
 </tbody></table>
