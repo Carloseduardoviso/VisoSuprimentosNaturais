@@ -1,8 +1,10 @@
 @model IReadOnlyList<VisoERP.Application.DTOs.Cadastros.SuprimentoDto>
 @{ ViewData["Title"] = "Suplementos alimentares"; }
-<div class="d-flex justify-content-between align-items-center mb-3"><h1>Suplementos alimentares</h1><a asp-action="Novo" class="btn btn-primary">Novo suplemento alimentar</a></div>
-<table class="table table-striped align-middle"><thead><tr><th>Imagem</th><th>Código</th><th>Nome</th><th>Preço de catálogo (venda)</th><th>Preço com desconto (compra)</th><th>Compra mínima</th><th>Situação</th><th></th></tr></thead><tbody>
+<div class="suprimentos-heading d-flex justify-content-between align-items-center mb-3"><div><span class="section-kicker">Catálogo</span><h1>Suplementos alimentares</h1><p>Gerencie seus produtos naturais e condições de compra.</p></div><a asp-action="Novo" class="btn btn-primary">+ Novo suplemento</a></div>
+<div class="table-shell suprimentos-table-shell">
+<table class="table table-striped align-middle"><thead><tr><th>Imagem</th><th>Código</th><th>Nome</th><th>Preço de catálogo (venda)</th><th>Preço com desconto (compra)</th><th>Compra mínima</th><th>Situação</th><th>Ações</th></tr></thead><tbody>
 @foreach (var item in Model) {
-<tr><td>@if (item.ImagemCaminho is not null) { <img src="@Url.Action("Imagem", new { id = item.Id })" alt="" width="48" height="48" style="object-fit:cover" /> }</td><td>@item.CodigoInterno</td><td>@item.Nome</td><td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.QuantidadeMinimaCompra</td><td>@(item.Ativo ? "Ativo" : "Inativo")</td><td><a asp-action="Editar" asp-route-id="@item.Id">Editar</a></td></tr>
+<tr class="suprimentos-row"><td data-label="Imagem">@if (item.ImagemCaminho is not null) { <img src="@Url.Action("Imagem", new { id = item.Id })" alt="@item.Nome" width="48" height="48" style="object-fit:cover" /> }</td><td data-label="Código">@item.CodigoInterno</td><td data-label="Nome">@item.Nome</td><td data-label="Preço de catálogo (venda)">@item.PrecoCatalogo.ToString("C")</td><td data-label="Preço com desconto (compra)">@item.PrecoComDesconto.ToString("C")</td><td data-label="Compra mínima">@item.QuantidadeMinimaCompra</td><td data-label="Situação">@(item.Ativo ? "Ativo" : "Inativo")</td><td data-label="Ações"><a asp-action="Editar" asp-route-id="@item.Id">Editar</a></td></tr>
 }
 </tbody></table>
+</div>

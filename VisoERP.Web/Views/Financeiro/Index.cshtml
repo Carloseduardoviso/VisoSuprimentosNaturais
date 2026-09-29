@@ -74,7 +74,7 @@
 </script>
 }
 <h2 class="h4">Despesas</h2>
-<table class="table table-striped"><thead><tr><th>Competência</th><th>Descrição</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+<table class="table table-striped"><thead><tr><th>Competência</th><th>Descrição</th><th>Valor</th><th>Situação</th><th>Ações</th></tr></thead><tbody>
 @foreach (var despesa in Model.Despesas.OrderByDescending(x => x.DataCompetencia))
 {
     <tr><td>@despesa.DataCompetencia.ToString("dd/MM/yyyy")</td><td>@despesa.Descricao</td><td>@despesa.Valor.ToString("C")</td>
