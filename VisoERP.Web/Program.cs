@@ -1,11 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Globalization;
 using VisoERP.Web.ModelBinders;
 using VisoERP.Infra.Ioc;
 using VisoERP.Web.Services.Cadastros;
 using VisoERP.Web.Health;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Garante formatacao brasileira tambem em producao/Linux (R$, virgula decimal etc.).
+var culturaPtBr = CultureInfo.GetCultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = culturaPtBr;
+CultureInfo.DefaultThreadCurrentUICulture = culturaPtBr;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
