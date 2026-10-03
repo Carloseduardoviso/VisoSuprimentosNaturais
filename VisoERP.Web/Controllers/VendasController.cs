@@ -25,28 +25,59 @@ public sealed class VendasController(IVendaAppService vendas, IClienteAppService
         return View("Formulario", new VendaViewModel());
     }
 
+    public async Task<IActionResult> Editar(Guid id, CancellationToken ct)
+    {
+        var venda = await vendas.ObterAsync(id, ct);
+        if (venda is null || venda.Finalizada) return NotFound();
+        await PrepararOpcoes(ct);
+        return View("Formulario", new VendaViewModel
+        {
+            Id = venda.Id, ClienteId = venda.ClienteId, Desconto = venda.Desconto,
+            ValorEntrada = venda.ValorEntrada,
+            NumeroParcelas = venda.NumeroParcelas,
+            PrimeiroVencimento = venda.PrimeiroVencimento,
+            Itens = venda.Itens.Select(x => new ItemVendaViewModel
+            {
+                SuprimentoId = x.SuprimentoId, Quantidade = x.Quantidade,
+                PrecoCatalogo = x.PrecoCatalogo, PrecoUnitario = x.PrecoUnitario,
+                Promocional = x.Promocional, Data = x.Data.LocalDateTime
+            }).ToList()
+        });
+    }
+
     public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
     {
         var venda = await vendas.ObterAsync(id, ct);
         if (venda is null) return NotFound();
         ViewBag.Cliente = (await clientes.ObterAsync(venda.ClienteId, ct))?.Nome ?? venda.ClienteId.ToString();
+        ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.Nome);
         return View(venda);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Registrar(VendaViewModel model, CancellationToken ct)
+    public async Task<IActionResult> Registrar(VendaViewModel model, string acao, CancellationToken ct)
     {
         if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {
             try
             {
-                var id = await vendas.RegistrarAsync(new CriarVendaDto(model.ClienteId!.Value,
+                var dto = new CriarVendaDto(model.ClienteId!.Value,
                     model.Desconto, model.ValorEntrada, model.NumeroParcelas, model.PrimeiroVencimento,
                     model.Itens.Select(x => new CriarItemVendaDto(x.SuprimentoId!.Value, x.Quantidade,
                         x.PrecoCatalogo, x.PrecoUnitario, x.Promocional,
-                        new DateTimeOffset(x.Data))).ToList()), ct);
-                return RedirectToAction(nameof(Detalhes), new { id });
+                        new DateTimeOffset(x.Data))).ToList());
+                if (acao == "finalizar")
+                {
+                    var id = model.Id ?? await vendas.SalvarRascunhoAsync(dto, ct);
+                    if (model.Id.HasValue) await vendas.AtualizarRascunhoAsync(model.Id.Value, dto, ct);
+                    await vendas.FinalizarAsync(id, ct);
+                    return RedirectToAction(nameof(Detalhes), new { id });
+                }
+                if (model.Id.HasValue) await vendas.AtualizarRascunhoAsync(model.Id.Value, dto, ct);
+                else await vendas.SalvarRascunhoAsync(dto, ct);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or KeyNotFoundException)
             {
@@ -55,6 +86,13 @@ public sealed class VendasController(IVendaAppService vendas, IClienteAppService
         }
         await PrepararOpcoes(ct);
         return View("Formulario", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ExcluirRascunho(Guid id, CancellationToken ct)
+    {
+        await vendas.ExcluirRascunhoAsync(id, ct);
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]

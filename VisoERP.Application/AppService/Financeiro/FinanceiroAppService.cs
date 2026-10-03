@@ -76,7 +76,8 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
         var recebimentosLista = await recebimentos.ListarAsync(ct);
         var pagamentosLista = await pagamentos.ListarAsync(ct);
         bool Periodo(DateOnly data) => data >= inicio && data <= fim;
-        var vendasPeriodo = vendasLista.Where(x => Periodo(DateOnly.FromDateTime(x.Data.Date))).ToList();
+        var vendasPeriodo = vendasLista.Where(x => x.Finalizada &&
+            Periodo(DateOnly.FromDateTime(x.Data.Date))).ToList();
         var faturamento = vendasPeriodo.Sum(x => x.Total);
         var cpv = vendasPeriodo.Sum(x => x.CustoTotal);
         var despesasPeriodo = despesasLista.Where(x => Periodo(x.DataCompetencia)).Sum(x => x.Valor);
@@ -90,7 +91,8 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
             .Sum(x => x.Valor);
         var pagamentosCompras = pagamentosLista.Where(x => Periodo(DateOnly.FromDateTime(x.Data.Date)))
             .Sum(x => x.Valor);
-        var vendasAteFim = vendasLista.Where(x => DateOnly.FromDateTime(x.Data.Date) <= fim).ToList();
+        var vendasAteFim = vendasLista.Where(x => x.Finalizada &&
+            DateOnly.FromDateTime(x.Data.Date) <= fim).ToList();
         var idsVendas = vendasAteFim.Select(x => x.Id).ToHashSet();
         var recebidoAteFim = recebimentosLista.Where(x => idsVendas.Contains(x.VendaId) &&
             DateOnly.FromDateTime(x.Data.Date) <= fim).Sum(x => x.Valor);

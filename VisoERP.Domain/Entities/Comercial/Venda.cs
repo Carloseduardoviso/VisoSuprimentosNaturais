@@ -41,6 +41,25 @@ public sealed class Venda : EntidadeBase
             precoUnitario, promocional, custoUnitario, data ?? DateTimeOffset.UtcNow));
     }
 
+    public void AtualizarRascunho(Guid clienteId, decimal desconto, decimal valorEntrada,
+        int numeroParcelas, DateOnly primeiroVencimento, IEnumerable<ItemVenda> itens)
+    {
+        if (Finalizada) throw new InvalidOperationException("Venda já finalizada.");
+        if (clienteId == Guid.Empty) throw new ArgumentException("Cliente inválido.");
+        if (desconto < 0 || valorEntrada < 0) throw new ArgumentOutOfRangeException(nameof(desconto));
+        if (numeroParcelas is < 0 or > 12) throw new ArgumentOutOfRangeException(nameof(numeroParcelas));
+        ClienteId = clienteId; Desconto = desconto; ValorEntrada = valorEntrada;
+        NumeroParcelas = numeroParcelas; PrimeiroVencimento = primeiroVencimento;
+        _itens.Clear(); _parcelas.Clear(); _recebimentos.Clear();
+        _itens.AddRange(itens);
+    }
+
+    public void AplicarCustos(IEnumerable<(Guid SuprimentoId, decimal Custo)> custos)
+    {
+        foreach (var item in _itens)
+            item.AtualizarCusto(custos.Single(x => x.SuprimentoId == item.SuprimentoId).Custo);
+    }
+
     public void Finalizar()
     {
         if (Finalizada) throw new InvalidOperationException("Venda já finalizada.");

@@ -18,4 +18,5 @@ public sealed record RecebimentoVendaDto(Guid? ParcelaVendaId, decimal Valor, Da
 public sealed record VendaDto(Guid Id, Guid ClienteId, DateTimeOffset Data, decimal Subtotal,
     decimal Desconto, decimal Total, decimal ValorEntrada, decimal ValorRecebido,
     decimal CustoTotal, IReadOnlyList<ItemVendaDto> Itens, IReadOnlyList<ParcelaVendaDto> Parcelas,
-    IReadOnlyList<RecebimentoVendaDto> Recebimentos);
+    IReadOnlyList<RecebimentoVendaDto> Recebimentos, bool Finalizada = false,
+    int NumeroParcelas = 0, DateOnly PrimeiroVencimento = default);

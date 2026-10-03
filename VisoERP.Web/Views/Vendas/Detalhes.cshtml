@@ -1,4 +1,5 @@
 @model VisoERP.Application.DTOs.Comercial.VendaDto
+@using System.Globalization
 @{ ViewData["Title"] = "Venda"; }
 <h1>Venda</h1>
 <p><strong>Cliente:</strong> @ViewBag.Cliente<br /><strong>Data:</strong> @Model.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
@@ -8,17 +9,34 @@
     <div class="col"><div class="card card-body">A receber<strong>@((Model.Total - Model.ValorRecebido).ToString("C"))</strong></div></div>
 </div>
 <h2 class="h4">Suplementos alimentares</h2>
-<table class="table table-striped"><thead><tr><th>Código</th><th>Quantidade</th><th>Preço</th><th>Total</th><th>Custo histórico</th></tr></thead><tbody>
+<table class="table table-striped"><thead><tr><th>Suplemento</th><th>Quantidade</th><th>Preço</th><th>Total</th><th>Custo histórico</th></tr></thead><tbody>
 @foreach (var item in Model.Itens)
 {
-    <tr><td>@item.SuprimentoId</td><td>@item.Quantidade</td><td>@item.PrecoUnitario.ToString("C")</td>
+    var nomes = (Dictionary<Guid, string>)ViewBag.Suprimentos;
+    <tr><td>@(nomes.TryGetValue(item.SuprimentoId, out var nome) ? nome : item.SuprimentoId.ToString())</td><td>@item.Quantidade.ToString("0.###", CultureInfo.GetCultureInfo("pt-BR"))</td><td>@item.PrecoUnitario.ToString("C")</td>
         <td>@item.Total.ToString("C")</td><td>@item.CustoTotal.ToString("C")</td></tr>
 }
 </tbody></table>
 <p>Subtotal: @Model.Subtotal.ToString("C") · Desconto: @Model.Desconto.ToString("C") · Entrada recebida: @Model.ValorEntrada.ToString("C")</p>
 <h2 class="h4">Parcelas</h2>
 @if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
-<table class="table table-striped"><thead><tr><th>Nº</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>Saldo</th><th>Pagamento</th></tr></thead><tbody>
+@if (!Model.Finalizada && Model.NumeroParcelas > 0)
+{
+    var saldoRascunho = Model.Total - Model.ValorEntrada;
+    var centavosRascunho = decimal.Round(saldoRascunho * 100, 0, MidpointRounding.AwayFromZero);
+    var baseRascunho = Math.Floor(centavosRascunho / Model.NumeroParcelas);
+    var extrasRascunho = centavosRascunho - baseRascunho * Model.NumeroParcelas;
+    <p class="text-muted small">Prévia das parcelas — será registrada somente ao finalizar a venda.</p>
+    <table class="table table-striped"><thead><tr><th>Número</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+    @for (var numero = 1; numero <= Model.NumeroParcelas; numero++)
+    {
+        var valorCentavos = baseRascunho + (numero <= extrasRascunho ? 1 : 0);
+        var vencimento = Model.PrimeiroVencimento.AddMonths(numero - 1);
+        <tr><td>@numero</td><td>@vencimento.ToString("dd/MM/yyyy")</td><td>@((valorCentavos / 100).ToString("C"))</td><td>Prevista</td></tr>
+    }
+    </tbody></table>
+}
+<table class="table table-striped"><thead><tr><th>Nº</th><th>Vencimento</th><th>Valor</th><th>Pago</th><th>A pagar</th><th>Pagamento</th></tr></thead><tbody>
 @foreach (var parcela in Model.Parcelas.OrderBy(x => x.Numero))
 {
     <tr><td>@parcela.Numero</td><td>@parcela.Vencimento.ToString("dd/MM/yyyy")</td><td>@parcela.Valor.ToString("C")</td>
@@ -27,7 +45,7 @@
             {
                 <form asp-action="Pagar" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
                     <input type="hidden" name="parcelaId" value="@parcela.Id" />
-                    <input type="text" name="valor" data-money-mask value="@parcela.Saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" class="form-control form-control-sm bg-body-secondary text-muted" aria-label="Valor restante da parcela" readonly aria-readonly="true" />
+                    <input type="text" name="valor" data-money-mask value="@parcela.Saldo.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))" class="form-control form-control-sm" aria-label="Valor do pagamento" inputmode="decimal" />
                     <button type="submit" class="btn btn-sm btn-outline-primary">Pago</button>
                 </form>
             }

@@ -5,6 +5,10 @@ namespace VisoERP.Application.Interface.Comercial;
 public interface IVendaAppService
 {
     Task<Guid> RegistrarAsync(CriarVendaDto entrada, CancellationToken cancellationToken);
+    Task<Guid> SalvarRascunhoAsync(CriarVendaDto entrada, CancellationToken cancellationToken);
+    Task AtualizarRascunhoAsync(Guid id, CriarVendaDto entrada, CancellationToken cancellationToken);
+    Task FinalizarAsync(Guid id, CancellationToken cancellationToken);
+    Task ExcluirRascunhoAsync(Guid id, CancellationToken cancellationToken);
     Task RegistrarPagamentoAsync(Guid vendaId, Guid parcelaId, decimal valor,
         DateTimeOffset data, CancellationToken cancellationToken);
     Task<VendaDto?> ObterAsync(Guid id, CancellationToken cancellationToken);

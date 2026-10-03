@@ -4,6 +4,7 @@ namespace VisoERP.Web.Models.Comercial;
 
 public sealed class VendaViewModel
 {
+    public Guid? Id { get; set; }
     [Required(ErrorMessage = "Selecione o cliente.")] public Guid? ClienteId { get; set; }
     [Range(0, 999999999)] public decimal Desconto { get; set; }
     [Range(0, 999999999)] public decimal ValorEntrada { get; set; }

@@ -1,13 +1,42 @@
 @model IReadOnlyList<VisoERP.Application.DTOs.Comercial.VendaDto>
 @{ ViewData["Title"] = "Vendas"; }
 <div class="d-flex justify-content-between align-items-center mb-3"><h1>Vendas</h1><a class="btn btn-primary" asp-action="Nova">Nova venda</a></div>
-<table class="table table-striped"><thead><tr><th>Data</th><th>Cliente</th><th>Total vendido</th><th>Recebido</th><th>Ações</th></tr></thead><tbody>
+<table class="table table-striped"><thead><tr><th>Data</th><th>Cliente</th><th>Status</th><th>Total</th><th>Recebido</th><th>Ações</th></tr></thead><tbody>
 @foreach (var venda in Model)
 {
     var nomes = (Dictionary<Guid, string>)ViewBag.Clientes;
-    <tr><td data-label="Data">@venda.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-        <td data-label="Cliente">@(nomes.TryGetValue(venda.ClienteId, out var nome) ? nome : venda.ClienteId.ToString())</td>
-        <td data-label="Total vendido">@venda.Total.ToString("C")</td><td data-label="Recebido">@venda.ValorRecebido.ToString("C")</td>
-        <td data-label="Ações"><a asp-action="Detalhes" asp-route-id="@venda.Id">Detalhes</a></td></tr>
+    <tr><td>@venda.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+        <td>@(nomes.TryGetValue(venda.ClienteId, out var nome) ? nome : venda.ClienteId.ToString())</td>
+        <td>@(venda.Finalizada ? "Finalizada" : "Rascunho")</td>
+        <td>@venda.Total.ToString("C")</td><td>@venda.ValorRecebido.ToString("C")</td>
+        <td class="vendas-acoes"><a class="venda-acao venda-acao-detalhes" asp-action="Detalhes" asp-route-id="@venda.Id">Detalhes</a>
+            @if (!venda.Finalizada)
+            {
+                <a class="venda-acao venda-acao-editar" asp-action="Editar" asp-route-id="@venda.Id">Editar</a>
+                <form asp-action="ExcluirRascunho" method="post" class="d-inline js-excluir-rascunho"><input type="hidden" name="id" value="@venda.Id" /><button type="submit" class="venda-acao venda-acao-excluir">Excluir</button></form>
+            }
+        </td></tr>
 }
 </tbody></table>
+@section Scripts {
+<script>
+document.querySelectorAll('.js-excluir-rascunho').forEach(form => {
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Excluir rascunho?',
+            text: 'Esta ação removerá a venda e todos os seus dados.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, excluir',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d'
+        }).then(result => {
+            if (result.isConfirmed) form.submit();
+        });
+    });
+});
+</script>
+}

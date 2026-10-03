@@ -6,4 +6,7 @@ public interface IVendaRepository
 {
     Task<Venda?> ObterComItensEParcelasAsync(Guid id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Venda>> ListarComItensEParcelasAsync(CancellationToken cancellationToken);
+    void Excluir(Venda venda);
+    Task PrepararAtualizacaoDeRascunhoAsync(Guid vendaId, CancellationToken cancellationToken);
+    Task AtualizarRascunhoAsync(Venda venda, CancellationToken cancellationToken);
 }

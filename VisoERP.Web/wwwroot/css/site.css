@@ -204,6 +204,19 @@ a:hover { color: var(--viso-green-deep); }
 .table tbody td:last-child > .btn-success { color: #fff; background: #55ad86; border-color: #55ad86; }
 .table tbody td:last-child > .btn-success:hover { background: #3f9670; border-color: #3f9670; }
 .table tbody td:last-child > .btn:disabled { opacity: .55; box-shadow: none; transform: none; }
+.vendas-acoes { white-space: nowrap; }
+.vendas-acoes .venda-acao {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 4.6rem; margin: .15rem .12rem; padding: .38rem .7rem;
+  border: 1px solid #c7d8ca; border-radius: .5rem; background: #fff;
+  color: var(--viso-green); font-size: .78rem; font-weight: 750;
+  line-height: 1; text-decoration: none; transition: .18s ease;
+}
+.vendas-acoes .venda-acao:hover { color: #fff; background: var(--viso-green); border-color: var(--viso-green); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(20, 61, 43, .14); }
+.vendas-acoes .venda-acao-editar { color: #7a5a18; border-color: #dfc98e; background: #fffaf0; }
+.vendas-acoes .venda-acao-editar:hover { color: #fff; background: #a77b25; border-color: #a77b25; }
+.vendas-acoes .venda-acao-excluir { color: #a64e4e; border-color: #e2bcbc; background: #fff8f8; cursor: pointer; }
+.vendas-acoes .venda-acao-excluir:hover { color: #fff; background: #a64e4e; border-color: #a64e4e; }
 .table tbody td.d-flex { width: 20rem; min-width: 20rem; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; }
 .table tbody td.d-flex > .btn { flex: 0 0 auto; white-space: nowrap; }
 

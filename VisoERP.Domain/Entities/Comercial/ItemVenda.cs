@@ -14,6 +14,8 @@ public sealed class ItemVenda : EntidadeBase
     public decimal Total => Math.Round(Quantidade * PrecoUnitario, 2, MidpointRounding.AwayFromZero);
     public decimal CustoTotal => Math.Round(Quantidade * CustoUnitarioHistorico, 2, MidpointRounding.AwayFromZero);
 
+    internal void AtualizarCusto(decimal custo) => CustoUnitarioHistorico = custo;
+
     internal static ItemVenda Criar(Guid vendaId, Guid suprimentoId, decimal quantidade,
         decimal precoCatalogo, decimal precoUnitario, bool promocional, decimal custoUnitario,
         DateTimeOffset data)
