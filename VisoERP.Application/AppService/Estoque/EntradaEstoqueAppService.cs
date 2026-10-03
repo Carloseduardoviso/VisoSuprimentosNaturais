@@ -24,7 +24,8 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
             throw new ArgumentException("Informe ao menos um suplemento alimentar.");
         var entrada = EntradaEstoque.Criar(dto.PedidoFornecedorId);
         foreach (var item in dto.Itens)
-            entrada.AdicionarItem(item.SuprimentoId, item.Quantidade, item.CustoUnitario,
+            entrada.AdicionarItem(item.SuprimentoId, item.Quantidade,
+                item.Promocional ? 0 : item.CustoUnitario,
                 item.Data, item.Promocional, item.CodigoLote, item.Validade);
         entrada.Validar();
 

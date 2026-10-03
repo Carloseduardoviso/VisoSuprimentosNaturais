@@ -51,7 +51,7 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
             {
                 await entradas.ConfirmarAsync(new CriarEntradaDto(model.PedidoFornecedorId,
                     model.Itens.Select(x => new ItemEntradaDto(x.SuprimentoId!.Value, x.Quantidade,
-                        x.CustoUnitario, new DateTimeOffset(x.Data), x.Promocional,
+                        x.Promocional ? 0 : x.CustoUnitario, new DateTimeOffset(x.Data), x.Promocional,
                         null, null)).ToList()), ct);
                 return RedirectToAction(nameof(Index));
             }

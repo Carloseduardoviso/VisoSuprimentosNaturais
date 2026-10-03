@@ -20,7 +20,7 @@
         <div class="col-md-2"><label class="form-label">Quantidade</label><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
         <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="text" data-money-mask class="form-control bg-body-secondary text-muted" data-campo="CustoUnitario" readonly aria-readonly="true" required /></div>
         <div class="col-md-2"><label class="form-label">Data</label><input type="date" class="form-control" data-campo="Data" required /></div>
-        <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Náo</option><option value="true">Sim</option></select></div>
+        <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Não</option><option value="true">Sim</option></select></div>
     </div></div></div></template>
 @section Scripts {
 <script>
@@ -41,10 +41,22 @@
                 : valor;
         }
         card.querySelector('[data-campo="Data"]').value = item.Data ? item.Data.slice(0,10) : now();
+        const promocional = card.querySelector('[data-campo="Promocional"]');
+        const custo = card.querySelector('[data-campo="CustoUnitario"]');
+        const atualizarCusto = () => {
+            const e = card.querySelector('.produto');
+            const ehBrinde = promocional.value === 'true';
+            custo.value = window.VisoMoney.formatarValorServidor(ehBrinde ? 0 : e.selectedOptions[0]?.dataset.custo || 0);
+            custo.readOnly = true;
+            custo.classList.add('bg-body-secondary', 'text-muted');
+        };
         card.querySelector('.produto').addEventListener('change', e => {
             const custo = card.querySelector('[data-campo="CustoUnitario"]');
             custo.value = window.VisoMoney.formatarValorServidor(e.target.selectedOptions[0]?.dataset.custo || 0);
+            atualizarCusto();
         });
+        promocional.addEventListener('change', atualizarCusto);
+        atualizarCusto();
         card.querySelector('.remover').addEventListener('click', () => { card.remove(); reindex(); });
         reindex();
     }
