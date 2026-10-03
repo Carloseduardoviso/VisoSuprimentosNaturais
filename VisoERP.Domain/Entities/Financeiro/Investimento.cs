@@ -10,9 +10,9 @@ public sealed class Investimento : EntidadeBase
     public static Investimento Criar(string descricao, decimal valor, DateOnly data)
     {
         if (string.IsNullOrWhiteSpace(descricao) || descricao.Trim().Length > 200)
-            throw new ArgumentException("Descri��o inv�lida.");
+            throw new ArgumentException("Descrição inválida.");
         if (valor <= 0) throw new ArgumentOutOfRangeException(nameof(valor));
-        if (data == default) throw new ArgumentException("Data inv�lida.");
+        if (data == default) throw new ArgumentException("Data inválida.");
         return new Investimento { Descricao = descricao.Trim(), Valor = valor, Data = data };
     }
 }

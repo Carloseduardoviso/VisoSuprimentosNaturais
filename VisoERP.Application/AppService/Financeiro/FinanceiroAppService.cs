@@ -38,7 +38,7 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
     public async Task PagarDespesaAsync(Guid id, CancellationToken ct)
     {
         var despesa = await despesas.ObterPorIdAsync(id, ct)
-            ?? throw new KeyNotFoundException("Despesa n�o encontrada.");
+            ?? throw new KeyNotFoundException("Despesa não encontrada.");
         despesa.MarcarPaga(DateTimeOffset.UtcNow);
         await unitOfWork.SalvarAlteracoesAsync(ct);
     }
@@ -48,7 +48,7 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
         await unitOfWork.ExecutarEmTransacaoAsync(async token =>
         {
             var conta = await contas.ObterPorIdAsync(id, token)
-                ?? throw new KeyNotFoundException("Conta n�o encontrada.");
+                ?? throw new KeyNotFoundException("Conta não encontrada.");
             conta.RegistrarPagamento(valor);
             await pagamentos.AdicionarAsync(PagamentoContaPagar.Criar(id, valor,
                 DateTimeOffset.UtcNow), token);
@@ -67,7 +67,7 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
     public async Task<ResumoFinanceiroDto> ResumirAsync(DateOnly inicio, DateOnly fim, CancellationToken ct)
     {
         if (inicio == default || fim == default || inicio > fim)
-            throw new ArgumentException("Per�odo inv�lido.");
+            throw new ArgumentException("Período inválido.");
         var vendasLista = await vendas.ListarComItensEParcelasAsync(ct);
         var entradasLista = await estoque.ListarEntradasComItensAsync(ct);
         var despesasLista = await despesas.ListarAsync(ct);

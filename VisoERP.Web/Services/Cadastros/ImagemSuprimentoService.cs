@@ -11,12 +11,12 @@ public sealed class ImagemSuprimentoService(IWebHostEnvironment environment)
     {
         var extensao = Path.GetExtension(arquivo.FileName).ToLowerInvariant();
         if (!Extensoes.Contains(extensao) || arquivo.Length is <= 0 or > TamanhoMaximo)
-            throw new ArgumentException("Imagem inv�lida. Use JPG, PNG ou WebP com at� 2 MB.");
+            throw new ArgumentException("Imagem inválida. Use JPG, PNG ou WebP com até 2 MB.");
 
         await using var origem = arquivo.OpenReadStream();
         var cabecalho = new byte[12];
         if (await origem.ReadAsync(cabecalho, cancellationToken) < 12 || !AssinaturaValida(cabecalho, extensao))
-            throw new ArgumentException("O conte�do do arquivo n�o corresponde ao formato informado.");
+            throw new ArgumentException("O conteúdo do arquivo não corresponde ao formato informado.");
         origem.Position = 0;
 
         Directory.CreateDirectory(Diretorio);

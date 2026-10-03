@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "In�cio";
+    ViewData["Title"] = "Início";
 }
 
 @{
@@ -13,31 +13,31 @@
         <span class="home-eyebrow">VISO ERP</span>
         <img class="home-leaf" src="~/images/viso-leaf.svg" alt="" />
         <h1 id="home-title"><span>VISO</span><small>SUPLEMENTOS ALIMENTARES NATURAIS</small></h1>
-        <p>O melhor da natureza para voc�.</p>
+        <p>O melhor da natureza para você.</p>
         <span class="home-hero-rule" aria-hidden="true"></span>
     </div>
 </section>
 
 <section class="home-access" aria-labelledby="home-access-title">
     <div class="home-section-heading">
-        <div><span class="section-kicker">Gest�o comercial</span><h2 id="home-access-title">Acesso r�pido</h2></div>
-        <p>Escolha uma �rea para continuar o trabalho.</p>
+        <div><span class="section-kicker">Gestão comercial</span><h2 id="home-access-title">Acesso rápido</h2></div>
+        <p>Escolha uma área para continuar o trabalho.</p>
     </div>
     <div class="row g-3">
         @if (podeEstoque)
         {
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Suprimentos" asp-action="Index"><span class="module-number">01</span><strong>Suplementos alimentares</strong><span>Cat�logo e produtos naturais</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="PedidosFornecedores" asp-action="Index"><span class="module-number">02</span><strong>Pedidos</strong><span>Compras com fornecedores</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Entradas" asp-action="Index"><span class="module-number">03</span><strong>Entradas</strong><span>Recebimentos e estoque</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Suprimentos" asp-action="Index"><span class="module-number">01</span><strong>Suplementos alimentares</strong><span>Catálogo e produtos naturais</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="PedidosFornecedores" asp-action="Index"><span class="module-number">02</span><strong>Pedidos</strong><span>Compras com fornecedores</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Entradas" asp-action="Index"><span class="module-number">03</span><strong>Entradas</strong><span>Recebimentos e estoque</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
         }
         @if (podeVendas)
         {
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Clientes" asp-action="Index"><span class="module-number">04</span><strong>Clientes</strong><span>Relacionamento comercial</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Vendas" asp-action="Index"><span class="module-number">05</span><strong>Vendas</strong><span>Sa�das e parcelamentos</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Clientes" asp-action="Index"><span class="module-number">04</span><strong>Clientes</strong><span>Relacionamento comercial</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Vendas" asp-action="Index"><span class="module-number">05</span><strong>Vendas</strong><span>Saídas e parcelamentos</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
         }
         @if (podeFinanceiro)
         {
-            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Financeiro" asp-action="Index"><span class="module-number">06</span><strong>Financeiro</strong><span>Despesas e investimentos</span><span class="module-arrow" aria-hidden="true">?</span></a></div>
+            <div class="col-md-6 col-lg-4"><a class="module-card" asp-controller="Financeiro" asp-action="Index"><span class="module-number">06</span><strong>Financeiro</strong><span>Despesas e investimentos</span><span class="module-arrow" aria-hidden="true">↗</span></a></div>
         }
     </div>
 </section>

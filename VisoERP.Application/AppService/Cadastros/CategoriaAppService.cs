@@ -22,16 +22,16 @@ public sealed class CategoriaAppService(IRepository<Categoria> categorias,
     public async Task<Guid> SalvarAsync(Guid? id, SalvarCategoriaDto entrada, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(entrada.Nome))
-            throw new ArgumentException("Nome � obrigat�rio.", nameof(entrada));
+            throw new ArgumentException("Nome é obrigatório.", nameof(entrada));
         var nome = entrada.Nome.Trim();
         if (await categorias.ExisteAsync(x => x.Nome == nome && x.Id != id, cancellationToken))
-            throw new ArgumentException("Categoria j� cadastrada.", nameof(entrada));
+            throw new ArgumentException("Categoria já cadastrada.", nameof(entrada));
 
         Categoria categoria;
         if (id.HasValue)
         {
             categoria = await categorias.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Categoria n�o encontrada.");
+                ?? throw new KeyNotFoundException("Categoria não encontrada.");
             categoria.Atualizar(nome, entrada.Ativa);
         }
         else

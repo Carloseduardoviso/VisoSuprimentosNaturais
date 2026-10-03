@@ -15,25 +15,25 @@ public sealed class PedidoFornecedor : EntidadeBase
 
     public static PedidoFornecedor Criar(Guid fornecedorId)
     {
-        if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inv�lido.", nameof(fornecedorId));
+        if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inválido.", nameof(fornecedorId));
         return new PedidoFornecedor { FornecedorId = fornecedorId };
     }
 
     public void AdicionarItem(Guid suprimentoId, decimal quantidade, decimal precoCatalogo,
         decimal precoComDesconto)
     {
-        if (Situacao != SituacaoPedido.Pendente) throw new InvalidOperationException("Pedido n�o est� aberto.");
+        if (Situacao != SituacaoPedido.Pendente) throw new InvalidOperationException("Pedido não está aberto.");
         if (_itens.Any(x => x.SuprimentoId == suprimentoId))
-            throw new InvalidOperationException("Suprimento j� consta no pedido.");
+            throw new InvalidOperationException("Suprimento já consta no pedido.");
         _itens.Add(ItemPedidoFornecedor.Criar(Id, suprimentoId, quantidade, precoCatalogo, precoComDesconto));
     }
 
     public void Receber(Guid suprimentoId, decimal quantidade)
     {
         if (Situacao is SituacaoPedido.Recebido or SituacaoPedido.Cancelado)
-            throw new InvalidOperationException("Pedido n�o aceita recebimentos.");
+            throw new InvalidOperationException("Pedido não aceita recebimentos.");
         var item = _itens.SingleOrDefault(x => x.SuprimentoId == suprimentoId)
-            ?? throw new KeyNotFoundException("Item n�o encontrado no pedido.");
+            ?? throw new KeyNotFoundException("Item não encontrado no pedido.");
         item.Receber(quantidade);
         Situacao = _itens.All(x => x.QuantidadeRecebida == x.Quantidade)
             ? SituacaoPedido.Recebido : SituacaoPedido.Parcial;
@@ -45,7 +45,7 @@ public sealed class PedidoFornecedor : EntidadeBase
     public void Cancelar()
     {
         if (_itens.Any(x => x.QuantidadeRecebida > 0))
-            throw new InvalidOperationException("Pedido recebido n�o pode ser cancelado.");
+            throw new InvalidOperationException("Pedido recebido não pode ser cancelado.");
         Situacao = SituacaoPedido.Cancelado;
     }
 }

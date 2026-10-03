@@ -1,14 +1,14 @@
 @model VisoERP.Application.DTOs.Comercial.PedidoFornecedorDto
 @{ ViewData["Title"] = "Pedido"; }
 <h1>Pedido a fornecedor</h1>
-<p><strong>Situa��o:</strong> @Model.Situacao &nbsp; <strong>Total:</strong> @Model.Total.ToString("C")</p>
+<p><strong>Situação:</strong> @Model.Situacao &nbsp; <strong>Total:</strong> @Model.Total.ToString("C")</p>
 @if (TempData["Erro"] is string erro) { <div class="alert alert-danger">@erro</div> }
 <table class="table table-striped">
-    <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Recebida</th><th>Pre�o cat�logo</th><th>Pre�o com desconto</th><th>Total</th></tr></thead>
+    <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Recebida</th><th>Preço catálogo</th><th>Preço com desconto</th><th>Total</th></tr></thead>
     <tbody>
     @foreach (var item in Model.Itens)
     {
-        <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar n�o encontrado")</td><td>@item.Quantidade.ToString("0")</td><td>@item.QuantidadeRecebida.ToString("0")</td>
+        <tr><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Suplementos).TryGetValue(item.SuprimentoId, out var nome) ? nome : "Suplemento alimentar não encontrado")</td><td>@item.Quantidade.ToString("0")</td><td>@item.QuantidadeRecebida.ToString("0")</td>
             <td>@item.PrecoCatalogo.ToString("C")</td><td>@item.PrecoComDesconto.ToString("C")</td><td>@item.Total.ToString("C")</td></tr>
         @if ((Model.Situacao is "Pendente" or "Parcial") && item.QuantidadeRecebida < item.Quantidade) { <tr><td colspan="6"><div class="d-flex gap-2 align-items-center"><span>Recebido:</span><input form="recebimento-form" name="recebidos[@item.SuprimentoId]" type="number" min="0" max="@(item.Quantidade - item.QuantidadeRecebida)" step="1" class="form-control form-control-sm" style="max-width:100px" /></div></td></tr> }
     }

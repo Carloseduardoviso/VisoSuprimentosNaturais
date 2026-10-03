@@ -5,7 +5,7 @@
 <p><strong>Itens:</strong> @Model.Itens.Count <span class="mx-2">|</span> <strong>Custo total:</strong> @Model.TotalCusto.ToString("C")</p>
 <div class="table-responsive">
     <table class="table table-striped">
-        <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Custo unit�rio</th><th>Total</th><th>Data</th><th>Promocional</th></tr></thead>
+        <thead><tr><th>Suplemento alimentar</th><th>Quantidade</th><th>Custo unitário</th><th>Total</th><th>Data</th><th>Promocional</th></tr></thead>
         <tbody>
         @foreach (var item in Model.Itens)
         {
@@ -16,7 +16,7 @@
                 <td>@item.CustoUnitario.ToString("C")</td>
                 <td>@((item.Quantidade * item.CustoUnitario).ToString("C"))</td>
                 <td>@item.Data.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@(item.Promocional ? "Sim" : "N�o")</td>
+                <td>@(item.Promocional ? "Sim" : "Não")</td>
             </tr>
         }
         </tbody>
