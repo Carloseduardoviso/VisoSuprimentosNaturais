@@ -13,8 +13,26 @@ public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
     ImagemSuprimentoService imagens, ILogger<SuprimentosController> logger) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken) =>
-        View(await suprimentos.ListarAsync(cancellationToken));
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    {
+        ViewBag.Categorias = await suprimentos.ListarCategoriasAsync(cancellationToken);
+        return View(await suprimentos.ListarAsync(cancellationToken));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AplicarDesconto(Guid categoriaId, decimal percentual, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await suprimentos.AplicarDescontoCategoriaAsync(categoriaId, percentual, cancellationToken);
+            TempData["Mensagem"] = "Desconto aplicado aos suplementos da categoria.";
+        }
+        catch (Exception ex) when (ex is ArgumentOutOfRangeException or KeyNotFoundException)
+        {
+            TempData["Erro"] = ex.Message;
+        }
+        return RedirectToAction(nameof(Index));
+    }
 
     [HttpGet]
     public async Task<IActionResult> Novo(CancellationToken cancellationToken)

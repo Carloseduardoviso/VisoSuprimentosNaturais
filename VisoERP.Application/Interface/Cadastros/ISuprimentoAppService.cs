@@ -8,4 +8,5 @@ public interface ISuprimentoAppService
     Task<SuprimentoDto?> ObterAsync(Guid id, CancellationToken cancellationToken);
     Task<IReadOnlyList<CategoriaDto>> ListarCategoriasAsync(CancellationToken cancellationToken);
     Task<Guid> SalvarAsync(Guid? id, SalvarSuprimentoDto entrada, CancellationToken cancellationToken);
+    Task AplicarDescontoCategoriaAsync(Guid categoriaId, decimal percentual, CancellationToken cancellationToken);
 }

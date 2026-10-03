@@ -11,7 +11,7 @@ public sealed class SuprimentoRepository(VisoErpDbContext context) : ISuprimento
         context.Suprimentos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<Suprimento>> ListarAsync(CancellationToken cancellationToken) =>
-        await context.Suprimentos.AsNoTracking().Include(x => x.Categoria).OrderBy(x => x.Nome).ToListAsync(cancellationToken);
+        await context.Suprimentos.Include(x => x.Categoria).OrderBy(x => x.Nome).ToListAsync(cancellationToken);
 
     public Task<bool> CodigoExisteAsync(string codigoInterno, Guid? ignorarId, CancellationToken cancellationToken) =>
         context.Suprimentos.AnyAsync(x => x.CodigoInterno == codigoInterno && x.Id != ignorarId,

@@ -14,11 +14,11 @@ public sealed class ContaPagar : EntidadeBase
     public static ContaPagar Criar(Guid entradaEstoqueId, Guid? fornecedorId,
         string descricao, decimal valor, DateOnly vencimento)
     {
-        if (entradaEstoqueId == Guid.Empty) throw new ArgumentException("Entrada inválida.");
+        if (entradaEstoqueId == Guid.Empty) throw new ArgumentException("Entrada inv�lida.");
         if (string.IsNullOrWhiteSpace(descricao) || descricao.Trim().Length > 200)
-            throw new ArgumentException("Descrição inválida.");
+            throw new ArgumentException("Descri��o inv�lida.");
         if (valor <= 0) throw new ArgumentOutOfRangeException(nameof(valor));
-        if (vencimento == default) throw new ArgumentException("Vencimento inválido.");
+        if (vencimento == default) throw new ArgumentException("Vencimento inv�lido.");
         return new ContaPagar { EntradaEstoqueId = entradaEstoqueId,
             FornecedorId = fornecedorId, Descricao = descricao.Trim(),
             Valor = valor, Vencimento = vencimento };

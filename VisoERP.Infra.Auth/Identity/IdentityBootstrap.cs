@@ -15,7 +15,7 @@ public static class IdentityBootstrap
             if (await roles.RoleExistsAsync(nome)) continue;
             var result = await roles.CreateAsync(new IdentityRole(nome));
             if (!result.Succeeded)
-                throw new InvalidOperationException("Falha ao criar função: " + nome);
+                throw new InvalidOperationException("Falha ao criar fun��o: " + nome);
         }
 
         var email = configuration["AdminBootstrap:Email"];
@@ -32,9 +32,9 @@ public static class IdentityBootstrap
                 throw new InvalidOperationException("Falha ao criar administrador inicial: " +
                     string.Join("; ", result.Errors.Select(x => x.Description)));
             var roleResult = await users.AddToRoleAsync(usuario, "Administrador");
-            if (!roleResult.Succeeded) throw new InvalidOperationException("Falha ao atribuir função Administrador.");
+            if (!roleResult.Succeeded) throw new InvalidOperationException("Falha ao atribuir fun��o Administrador.");
         }
         else if (!await users.IsInRoleAsync(usuario, "Administrador"))
-            throw new InvalidOperationException("O e-mail de bootstrap já pertence a um usuário sem permissão administrativa.");
+            throw new InvalidOperationException("O e-mail de bootstrap j� pertence a um usu�rio sem permiss�o administrativa.");
     }
 }

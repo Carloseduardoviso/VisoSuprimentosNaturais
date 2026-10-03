@@ -17,7 +17,7 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         if (entrada.Itens is null || entrada.Itens.Count == 0)
             throw new ArgumentException("Informe ao menos um item.");
         if (await fornecedores.ObterPorIdAsync(entrada.FornecedorId, cancellationToken) is null)
-            throw new KeyNotFoundException("Fornecedor não encontrado.");
+            throw new KeyNotFoundException("Fornecedor n�o encontrado.");
         var pedido = PedidoFornecedor.Criar(entrada.FornecedorId);
         foreach (var item in entrada.Itens)
         {
@@ -42,7 +42,7 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
     public async Task CancelarAsync(Guid id, CancellationToken cancellationToken)
     {
         var pedido = await consulta.ObterComItensAsync(id, cancellationToken)
-            ?? throw new KeyNotFoundException("Pedido não encontrado.");
+            ?? throw new KeyNotFoundException("Pedido n�o encontrado.");
         pedido.Cancelar();
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }

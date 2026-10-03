@@ -315,7 +315,7 @@ a:hover { color: var(--viso-green-deep); }
 }
 
 @media (max-width: 767px) {
-  /* Todas as tabelas administrativas viram cartões no celular. */
+  /* Todas as tabelas administrativas viram cart�es no celular. */
   .app-content main > table.table:not(.suprimentos-table-shell .table) {
     display: block; width: 100%; min-width: 0; background: transparent; border: 0; overflow: visible;
   }
@@ -333,9 +333,9 @@ a:hover { color: var(--viso-green-deep); }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td::before {
     display: block; margin-bottom: .2rem; color: #718075; font-size: .63rem; font-weight: 750;
   }
-  .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(1)::before { content: "Informação"; }
+  .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(1)::before { content: "Informa��o"; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(2)::before { content: "Detalhe"; }
-  .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(3)::before { content: "Situação / valor"; }
+  .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:nth-child(3)::before { content: "Situa��o / valor"; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td[data-label]::before { content: attr(data-label); }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:last-child { grid-column: 1 / -1; background: transparent; padding: .35rem .1rem 0; text-align: right; border-top: 1px solid #edf2ed; }
   .app-content main > table.table:not(.suprimentos-table-shell .table) tbody td:last-child::before { display: none; }

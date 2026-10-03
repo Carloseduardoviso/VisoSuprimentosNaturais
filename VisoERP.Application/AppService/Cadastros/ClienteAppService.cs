@@ -23,13 +23,13 @@ public sealed class ClienteAppService(IRepository<Cliente> clientes,
     {
         var clienteExistente = id.HasValue
             ? await clientes.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Cliente não encontrado.")
+                ?? throw new KeyNotFoundException("Cliente n�o encontrado.")
             : null;
         var documento = entrada.Documento?.Trim() ?? clienteExistente?.Documento;
         var email = entrada.Email?.Trim() ?? clienteExistente?.Email;
         if (!string.IsNullOrWhiteSpace(documento) &&
             await clientes.ExisteAsync(x => x.Documento == documento && x.Id != id, cancellationToken))
-            throw new ArgumentException("Documento já cadastrado para outro cliente.", nameof(entrada));
+            throw new ArgumentException("Documento j� cadastrado para outro cliente.", nameof(entrada));
 
         Cliente cliente;
         if (id.HasValue)

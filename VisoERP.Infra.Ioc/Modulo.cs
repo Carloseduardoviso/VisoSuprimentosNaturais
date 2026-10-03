@@ -29,7 +29,7 @@ public static class Modulo
     {
         var connectionString = configuration.GetConnectionString(SqlServerSettings.ConnectionStringName);
         if (string.IsNullOrWhiteSpace(connectionString))
-            throw new InvalidOperationException($"ConnectionStrings:{SqlServerSettings.ConnectionStringName} não configurada.");
+            throw new InvalidOperationException($"ConnectionStrings:{SqlServerSettings.ConnectionStringName} n�o configurada.");
 
         services.AddDbContext<VisoErpDbContext>(options => options.UseSqlServer(connectionString));
         services.AddIdentity<IdentityUser, IdentityRole>(options =>

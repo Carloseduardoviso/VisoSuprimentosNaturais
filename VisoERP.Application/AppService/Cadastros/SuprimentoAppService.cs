@@ -26,16 +26,16 @@ public sealed class SuprimentoAppService(ISuprimentoRepository suprimentos,
     {
         var suprimentoExistente = id.HasValue
             ? await suprimentos.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Suplemento alimentar não encontrado.")
+                ?? throw new KeyNotFoundException("Suplemento alimentar n�o encontrado.")
             : null;
         var codigoInterno = string.IsNullOrWhiteSpace(entrada.CodigoInterno)
             ? suprimentoExistente?.CodigoInterno ?? await GerarCodigoInternoAsync(cancellationToken)
             : entrada.CodigoInterno.Trim();
         if (entrada.CategoriaId is Guid categoriaId &&
             await categorias.ObterPorIdAsync(categoriaId, cancellationToken) is null)
-            throw new ArgumentException("Categoria não encontrada.", nameof(entrada));
+            throw new ArgumentException("Categoria n�o encontrada.", nameof(entrada));
         if (await suprimentos.CodigoExisteAsync(codigoInterno, id, cancellationToken))
-            throw new ArgumentException("Código interno já cadastrado.", nameof(entrada));
+            throw new ArgumentException("C�digo interno j� cadastrado.", nameof(entrada));
 
         Suprimento suprimento;
         if (id.HasValue)
@@ -55,6 +55,20 @@ public sealed class SuprimentoAppService(ISuprimentoRepository suprimentos,
             entrada.ImagemCaminho ?? suprimento.ImagemCaminho, entrada.Ativo);
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
         return suprimento.Id;
+    }
+
+    public async Task AplicarDescontoCategoriaAsync(Guid categoriaId, decimal percentual, CancellationToken cancellationToken)
+    {
+        if (percentual is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(percentual));
+        if (await categorias.ObterPorIdAsync(categoriaId, cancellationToken) is null)
+            throw new KeyNotFoundException("Categoria n�o encontrada.");
+        var produtos = (await suprimentos.ListarAsync(cancellationToken)).Where(x => x.CategoriaId == categoriaId).ToList();
+        foreach (var produto in produtos)
+            produto.Atualizar(produto.CodigoInterno, produto.Nome, produto.PrecoCatalogo,
+                Math.Round(produto.PrecoCatalogo * (1 - percentual / 100), 2), produto.QuantidadeMinimaCompra,
+                produto.EstoqueMinimo, produto.CategoriaId, produto.Descricao, produto.FormaDeUso,
+                produto.ImagemCaminho, produto.Ativo);
+        await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }
 
     private async Task<string> GerarCodigoInternoAsync(CancellationToken cancellationToken)

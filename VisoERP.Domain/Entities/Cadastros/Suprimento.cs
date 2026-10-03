@@ -31,7 +31,7 @@ public sealed class Suprimento : EntidadeBase
         Guid? categoriaId, string? descricao, string? formaDeUso, string? imagemCaminho, bool ativo)
     {
         if (string.IsNullOrWhiteSpace(codigoInterno) || codigoInterno.Trim().Length > 50)
-            throw new ArgumentException("Código interno deve ter de 1 a 50 caracteres.", nameof(codigoInterno));
+            throw new ArgumentException("C�digo interno deve ter de 1 a 50 caracteres.", nameof(codigoInterno));
         if (string.IsNullOrWhiteSpace(nome) || nome.Trim().Length > 200)
             throw new ArgumentException("Nome deve ter de 1 a 200 caracteres.", nameof(nome));
         if (precoCatalogo < 0) throw new ArgumentOutOfRangeException(nameof(precoCatalogo));
@@ -39,7 +39,7 @@ public sealed class Suprimento : EntidadeBase
             throw new ArgumentOutOfRangeException(nameof(precoComDesconto));
         if (quantidadeMinimaCompra < 1) throw new ArgumentOutOfRangeException(nameof(quantidadeMinimaCompra));
         if (estoqueMinimo < 0) throw new ArgumentOutOfRangeException(nameof(estoqueMinimo));
-        if (descricao?.Length > 2000) throw new ArgumentException("Descrição muito longa.", nameof(descricao));
+        if (descricao?.Length > 2000) throw new ArgumentException("Descri��o muito longa.", nameof(descricao));
         if (formaDeUso?.Length > 2000) throw new ArgumentException("Forma de uso muito longa.", nameof(formaDeUso));
 
         CodigoInterno = codigoInterno.Trim();

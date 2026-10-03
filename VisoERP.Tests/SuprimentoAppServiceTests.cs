@@ -25,7 +25,7 @@ public class SuprimentoAppServiceTests
 
         var id = await service.SalvarAsync(null,
             new SalvarSuprimentoDto("CAM-001", "Camomila", 10m, 8m, 2, 3,
-                null, "Erva", "Infusão", null, true), CancellationToken.None);
+                null, "Erva", "Infus�o", null, true), CancellationToken.None);
         var produtos = await service.ListarAsync(CancellationToken.None);
 
         Assert.Equal(id, Assert.Single(produtos).Id);

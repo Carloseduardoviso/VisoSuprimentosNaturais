@@ -40,7 +40,7 @@ public sealed class VendaAppService(IRepository<Cliente> clientes,
                 var disponivel = saldo.Quantidade - lotes.Sum(x => x.Quantidade) +
                     lotesValidos.Sum(x => x.Quantidade);
                 if (item.Quantidade > disponivel)
-                    throw new InvalidOperationException($"Estoque válido insuficiente de {produto.Nome}.");
+                    throw new InvalidOperationException($"Estoque v�lido insuficiente de {produto.Nome}.");
                 var custoHistorico = saldo.RegistrarSaida(item.Quantidade);
                 venda.AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo,
                     item.PrecoUnitario, item.Promocional, custoHistorico, item.Data);
@@ -77,7 +77,7 @@ public sealed class VendaAppService(IRepository<Cliente> clientes,
         await unitOfWork.ExecutarEmTransacaoAsync(async ct =>
         {
             var venda = await consulta.ObterComItensEParcelasAsync(vendaId, ct)
-                ?? throw new KeyNotFoundException("Venda não encontrada.");
+                ?? throw new KeyNotFoundException("Venda n�o encontrada.");
             venda.RegistrarPagamento(parcelaId, valor, data);
             await recebimentos.AdicionarAsync(RecebimentoVenda.Criar(vendaId,
                 parcelaId, valor, data), ct);

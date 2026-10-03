@@ -23,13 +23,13 @@ public sealed class FornecedorAppService(IRepository<Fornecedor> fornecedores,
     {
         var fornecedorExistente = id.HasValue
             ? await fornecedores.ObterPorIdAsync(id.Value, cancellationToken)
-                ?? throw new KeyNotFoundException("Fornecedor não encontrado.")
+                ?? throw new KeyNotFoundException("Fornecedor n�o encontrado.")
             : null;
         var documento = entrada.Documento?.Trim() ?? fornecedorExistente?.Documento;
         var email = entrada.Email?.Trim() ?? fornecedorExistente?.Email;
         if (!string.IsNullOrWhiteSpace(documento) &&
             await fornecedores.ExisteAsync(x => x.Documento == documento && x.Id != id, cancellationToken))
-            throw new ArgumentException("Documento já cadastrado para outro fornecedor.", nameof(entrada));
+            throw new ArgumentException("Documento j� cadastrado para outro fornecedor.", nameof(entrada));
 
         Fornecedor fornecedor;
         if (id.HasValue)

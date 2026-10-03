@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VisoERP.Application.DTOs.Comercial;
@@ -57,9 +57,9 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         var linhas = pedido.Itens.Select(item =>
         {
             var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
-            return $"• {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+            return $"� {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Pre�o cat�logo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Pre�o com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
         });
-        var texto = $"Olá, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmação. Obrigado!";
+        var texto = $"Ol�, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirma��o. Obrigado!";
         var mensagem = Uri.EscapeDataString(texto);
         return Redirect($"https://wa.me/{numero}?text={mensagem}");
     }
@@ -74,9 +74,9 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         var linhas = pedido.Itens.Select(item =>
         {
             var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
-            return $"â€¢ {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  PreÃ§o catÃ¡logo: {item.PrecoCatalogo.ToString("C", cultura)}\n  PreÃ§o com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+            return $"• {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
         });
-        var mensagem = $"OlÃ¡, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmaÃ§Ã£o. Obrigado!";
+        var mensagem = $"Olá, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmação. Obrigado!";
         return Content(mensagem, "text/plain; charset=utf-8");
     }
 
@@ -112,7 +112,7 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         }
         catch (ArgumentOutOfRangeException)
         {
-            TempData["Erro"] = "A quantidade não recebida não pode ser maior que a quantidade pedida.";
+            TempData["Erro"] = "A quantidade n�o recebida n�o pode ser maior que a quantidade pedida.";
             return RedirectToAction(nameof(Detalhes), new { id });
         }
         var pedido = await pedidos.ObterAsync(id, ct);
@@ -121,8 +121,8 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         var telefone = fornecedor?.Telefone?.Where(char.IsDigit).ToArray() ?? [];
         if (telefone.Length is 10 or 11)
         {
-            var itens = string.Join("\n", suplementosFaltantes.Select(x => $"• {x.Suplemento?.Nome ?? "Suplemento alimentar"}: {x.Quantidade:0} unidade(s)"));
-            var texto = Uri.EscapeDataString($"Olá, {fornecedor!.Nome}!\n\nNo pedido realizado, não recebemos:\n{itens}\n\nPoderia verificar, por favor?");
+            var itens = string.Join("\n", suplementosFaltantes.Select(x => $"� {x.Suplemento?.Nome ?? "Suplemento alimentar"}: {x.Quantidade:0} unidade(s)"));
+            var texto = Uri.EscapeDataString($"Ol�, {fornecedor!.Nome}!\n\nNo pedido realizado, n�o recebemos:\n{itens}\n\nPoderia verificar, por favor?");
             return Redirect($"https://wa.me/55{new string(telefone)}?text={texto}");
         }
         return RedirectToAction(nameof(Detalhes), new { id });
@@ -167,9 +167,9 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
                 var itens = pedido!.Itens.Select(item =>
                 {
                     var nome = nomes.TryGetValue(item.SuprimentoId, out var suplemento) ? suplemento : "Suplemento alimentar";
-                    return $"â€¢ {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  PreÃ§o catÃ¡logo: {item.PrecoCatalogo.ToString("C", cultura)}\n  PreÃ§o com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
+                    return $"• {nome}\n  Quantidade: {item.Quantidade.ToString("0", cultura)}\n  Preço catálogo: {item.PrecoCatalogo.ToString("C", cultura)}\n  Preço com desconto: {item.PrecoComDesconto.ToString("C", cultura)}\n  Total: {item.Total.ToString("C", cultura)}";
                 });
-                var texto = $"OlÃ¡, {fornecedor!.Nome}!\n\nInformamos que o pedido abaixo foi cancelado:\n\n{string.Join("\n\n", itens)}\n\nTotal do pedido cancelado: {pedido.Total.ToString("C", cultura)}\n\nPedimos desculpas pelo transtorno e agradecemos a compreensÃ£o.";
+                var texto = $"Olá, {fornecedor!.Nome}!\n\nInformamos que o pedido abaixo foi cancelado:\n\n{string.Join("\n\n", itens)}\n\nTotal do pedido cancelado: {pedido.Total.ToString("C", cultura)}\n\nPedimos desculpas pelo transtorno e agradecemos a compreensão.";
                 var mensagem = Uri.EscapeDataString(texto);
                 return Redirect($"https://wa.me/{numero}?text={mensagem}");
             }

@@ -32,7 +32,7 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
         {
             var pedido = dto.PedidoFornecedorId.HasValue
                 ? await pedidos.ObterComItensAsync(dto.PedidoFornecedorId.Value, ct)
-                    ?? throw new KeyNotFoundException("Pedido não encontrado.")
+                    ?? throw new KeyNotFoundException("Pedido n�o encontrado.")
                 : null;
             foreach (var item in entrada.Itens)
             {
