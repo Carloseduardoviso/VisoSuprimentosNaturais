@@ -13,5 +13,6 @@ public sealed class SuprimentoDto
     public int QuantidadeMinimaCompra { get; init; }
     public int EstoqueMinimo { get; init; }
     public Guid? CategoriaId { get; init; }
+    public string? CategoriaNome { get; init; }
     public bool Ativo { get; init; }
 }

@@ -33,6 +33,7 @@ public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
         {
             Id = produto.Id, CodigoInterno = produto.CodigoInterno, Nome = produto.Nome,
             PrecoCatalogo = produto.PrecoCatalogo, PrecoComDesconto = produto.PrecoComDesconto,
+            PorcentagemDesconto = produto.PrecoCatalogo == 0 ? 0 : Math.Round((1 - produto.PrecoComDesconto / produto.PrecoCatalogo) * 100, 2),
             Descricao = produto.Descricao, FormaDeUso = produto.FormaDeUso,
             QuantidadeMinimaCompra = produto.QuantidadeMinimaCompra, EstoqueMinimo = produto.EstoqueMinimo,
             CategoriaId = produto.CategoriaId, Ativo = produto.Ativo

@@ -11,6 +11,8 @@ public sealed class SuprimentoViewModel
     public string Nome { get; set; } = string.Empty;
     [Range(0, 9999999999999999.99)]
     public decimal PrecoCatalogo { get; set; }
+    [Range(0, 100)]
+    public decimal PorcentagemDesconto { get; set; }
     [Range(0, 9999999999999999.99)]
     public decimal PrecoComDesconto { get; set; }
     [StringLength(2000)]

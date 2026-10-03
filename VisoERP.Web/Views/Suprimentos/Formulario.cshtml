@@ -6,9 +6,10 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-12"><label asp-for="Nome" class="form-label"></label><input asp-for="Nome" class="form-control" /><span asp-validation-for="Nome" class="text-danger"></span></div>
     <div class="col-md-4"><label asp-for="PrecoCatalogo" class="form-label">Preço de catálogo (venda)</label><input asp-for="PrecoCatalogo" type="text" inputmode="decimal" data-money-mask class="form-control" /><span asp-validation-for="PrecoCatalogo" class="text-danger"></span></div>
+    <div class="col-md-4"><label asp-for="PorcentagemDesconto" class="form-label">Porcentagem de desconto</label><input asp-for="PorcentagemDesconto" value="@(Model.Id.HasValue ? Model.PorcentagemDesconto.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) : "")" type="number" min="0" max="100" step="0.01" class="form-control no-spinner" /><span asp-validation-for="PorcentagemDesconto" class="text-danger"></span></div>
     <div class="col-md-4"><label asp-for="PrecoComDesconto" class="form-label">Preço com desconto (compra do fornecedor)</label><input asp-for="PrecoComDesconto" type="text" inputmode="decimal" data-money-mask class="form-control" /><span asp-validation-for="PrecoComDesconto" class="text-danger"></span></div>
     <div class="col-md-4"><label asp-for="CategoriaId" class="form-label">Categoria</label><select asp-for="CategoriaId" asp-items="ViewBag.Categorias" class="form-select"><option value="">Sem categoria</option></select></div>
-    <div class="col-md-6"><label asp-for="EstoqueMinimo" class="form-label">Estoque mínimo</label><input asp-for="EstoqueMinimo" class="form-control" /><span asp-validation-for="EstoqueMinimo" class="text-danger"></span></div>
+    <div class="col-md-6"><label asp-for="EstoqueMinimo" class="form-label">Estoque mínimo</label><input asp-for="EstoqueMinimo" value="@(Model.Id.HasValue ? Model.EstoqueMinimo.ToString() : "")" type="number" min="0" step="1" class="form-control no-spinner" /><span asp-validation-for="EstoqueMinimo" class="text-danger"></span></div>
     <div class="col-12"><div class="d-flex justify-content-between align-items-center"><label asp-for="Descricao" class="form-label">Descrição</label><button type="button" class="btn btn-sm btn-outline-secondary" data-copy-field="Descricao">Copiar</button></div><textarea asp-for="Descricao" class="form-control" rows="3"></textarea></div>
     <div class="col-12"><div class="d-flex justify-content-between align-items-center"><label asp-for="FormaDeUso" class="form-label">Forma de tomar ou usar</label><button type="button" class="btn btn-sm btn-outline-secondary" data-copy-field="FormaDeUso">Copiar</button></div><textarea asp-for="FormaDeUso" class="form-control" rows="3"></textarea></div>
     <div class="col-md-8"><label asp-for="Imagem" class="form-label">Imagem (JPG, PNG ou WebP até 2 MB)</label><input asp-for="Imagem" class="form-control" type="file" accept=".jpg,.jpeg,.png,.webp" /></div>
@@ -18,6 +19,18 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        const precoCatalogo = document.getElementById('PrecoCatalogo');
+        const porcentagemDesconto = document.getElementById('PorcentagemDesconto');
+        const precoComDesconto = document.getElementById('PrecoComDesconto');
+        const recalcularPrecoCompra = () => {
+            const catalogo = window.VisoMoney.numero(precoCatalogo.value) || 0;
+            const percentual = Number(porcentagemDesconto.value) || 0;
+            precoComDesconto.value = window.VisoMoney.formatarValorServidor(catalogo * (1 - percentual / 100));
+        };
+        [precoCatalogo, porcentagemDesconto].forEach(campo => campo.addEventListener('input', recalcularPrecoCompra));
+        [porcentagemDesconto, document.getElementById('EstoqueMinimo')].forEach(campo => campo.addEventListener('input', () => {
+            if (Number(campo.value) < 0) campo.value = 0;
+        }));
         document.querySelectorAll('[data-copy-field]').forEach(botao => {
             botao.addEventListener('click', async () => {
                 const campo = document.getElementById(botao.dataset.copyField);

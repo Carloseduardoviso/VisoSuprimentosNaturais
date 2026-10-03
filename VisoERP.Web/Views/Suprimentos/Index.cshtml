@@ -1,10 +1,11 @@
-@model IReadOnlyList<VisoERP.Application.DTOs.Cadastros.SuprimentoDto>
+﻿@model IReadOnlyList<VisoERP.Application.DTOs.Cadastros.SuprimentoDto>
 @{ ViewData["Title"] = "Suplementos alimentares"; }
-<div class="suprimentos-heading d-flex justify-content-between align-items-center mb-3"><div><span class="section-kicker">Catálogo</span><h1>Suplementos alimentares</h1><p>Gerencie seus produtos naturais e condições de compra.</p></div><a asp-action="Novo" class="btn btn-primary">+ Novo suplemento</a></div>
+<div class="suprimentos-heading d-flex justify-content-between align-items-center mb-3"><div><span class="section-kicker">CatÃ¡logo</span><h1>Suplementos alimentares</h1><p>Gerencie seus produtos naturais e condiÃ§Ãµes de compra.</p></div><a asp-action="Novo" class="btn btn-primary">+ Novo suplemento</a></div>
 <div class="table-shell suprimentos-table-shell">
-<table class="table table-striped align-middle"><thead><tr><th>Imagem</th><th>Código</th><th>Nome</th><th>Preço de catálogo (venda)</th><th>Preço com desconto (compra)</th><th>Compra mínima</th><th>Situação</th><th>Ações</th></tr></thead><tbody>
+<table class="table table-striped align-middle"><thead><tr><th>Imagem</th><th>CÃ³digo</th><th>Nome</th><th>Categoria</th><th>PreÃ§o de catÃ¡logo (venda)</th><th>PreÃ§o com desconto (compra)</th><th>Compra mÃ­nima</th><th>SituaÃ§Ã£o</th><th>AÃ§Ãµes</th></tr></thead><tbody>
 @foreach (var item in Model) {
-<tr class="suprimentos-row"><td data-label="Imagem">@if (item.ImagemCaminho is not null) { <img src="@Url.Action("Imagem", new { id = item.Id })" alt="@item.Nome" width="48" height="48" style="object-fit:cover" /> }</td><td data-label="Código">@item.CodigoInterno</td><td data-label="Nome">@item.Nome</td><td data-label="Preço de catálogo (venda)">@item.PrecoCatalogo.ToString("C")</td><td data-label="Preço com desconto (compra)">@item.PrecoComDesconto.ToString("C")</td><td data-label="Compra mínima">@item.QuantidadeMinimaCompra</td><td data-label="Situação">@(item.Ativo ? "Ativo" : "Inativo")</td><td data-label="Ações"><a asp-action="Editar" asp-route-id="@item.Id">Editar</a></td></tr>
+<tr class="suprimentos-row"><td data-label="Imagem">@if (item.ImagemCaminho is not null) { <img src="@Url.Action("Imagem", new { id = item.Id })" alt="@item.Nome" width="48" height="48" style="object-fit:cover" /> }</td><td data-label="CÃ³digo">@item.CodigoInterno</td><td data-label="Nome">@item.Nome</td><td data-label="Categoria">@(item.CategoriaNome ?? "Sem categoria")</td><td data-label="PreÃ§o de catÃ¡logo (venda)">@item.PrecoCatalogo.ToString("C")</td><td data-label="PreÃ§o com desconto (compra)">@item.PrecoComDesconto.ToString("C")</td><td data-label="Compra mÃ­nima">@item.QuantidadeMinimaCompra</td><td data-label="SituaÃ§Ã£o">@(item.Ativo ? "Ativo" : "Inativo")</td><td data-label="AÃ§Ãµes"><a asp-action="Editar" asp-route-id="@item.Id">Editar</a></td></tr>
 }
 </tbody></table>
 </div>
+
