@@ -21,7 +21,6 @@ public sealed class PedidoFornecedor : EntidadeBase
 
     public void Editar(Guid fornecedorId)
     {
-        if (Situacao != SituacaoPedido.Pendente) throw new InvalidOperationException("Pedido não está aberto.");
         if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inválido.", nameof(fornecedorId));
         FornecedorId = fornecedorId;
     }
@@ -37,7 +36,6 @@ public sealed class PedidoFornecedor : EntidadeBase
 
     public void SubstituirItens(IEnumerable<(Guid SuprimentoId, decimal Quantidade, decimal PrecoCatalogo, decimal PrecoComDesconto)> itens)
     {
-        if (Situacao != SituacaoPedido.Pendente || _itens.Any(x => x.QuantidadeRecebida > 0)) throw new InvalidOperationException("Pedido não pode ser editado.");
         _itens.Clear();
         foreach (var item in itens) AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
     }
