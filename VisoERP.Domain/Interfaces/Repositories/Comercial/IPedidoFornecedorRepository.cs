@@ -6,4 +6,5 @@ public interface IPedidoFornecedorRepository
 {
     Task<PedidoFornecedor?> ObterComItensAsync(Guid id, CancellationToken cancellationToken);
     Task<IReadOnlyList<PedidoFornecedor>> ListarComItensAsync(CancellationToken cancellationToken);
+    Task<bool> AtualizarDataAsync(Guid id, DateTimeOffset dataPedido, CancellationToken cancellationToken);
 }

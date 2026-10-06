@@ -54,6 +54,12 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
             x.First.Quantidade != x.Second.Quantidade ||
             x.First.PrecoCatalogo != x.Second.PrecoCatalogo ||
             x.First.PrecoComDesconto != x.Second.PrecoComDesconto);
+        if (!itensMudaram && pedido.FornecedorId == entrada.FornecedorId && entrada.DataPedido.HasValue)
+        {
+            if (!await consulta.AtualizarDataAsync(id, entrada.DataPedido.Value, cancellationToken))
+                throw new InvalidOperationException("O pedido não está mais pendente ou não foi encontrado.");
+            return;
+        }
         if (itensMudaram)
             pedido.SubstituirItens(entrada.Itens.Select(x => (x.SuprimentoId, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)));
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
