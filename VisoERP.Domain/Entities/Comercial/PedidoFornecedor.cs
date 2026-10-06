@@ -19,10 +19,12 @@ public sealed class PedidoFornecedor : EntidadeBase
         return new PedidoFornecedor { FornecedorId = fornecedorId, DataCriacao = dataPedido ?? DateTimeOffset.UtcNow };
     }
 
-    public void Editar(Guid fornecedorId)
+    public void Editar(Guid fornecedorId, DateTimeOffset? dataPedido = null)
     {
+        if (Situacao != SituacaoPedido.Pendente) throw new InvalidOperationException("Somente pedidos pendentes podem ser editados.");
         if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inválido.", nameof(fornecedorId));
         FornecedorId = fornecedorId;
+        if (dataPedido.HasValue) DataCriacao = dataPedido.Value;
     }
 
     public void AdicionarItem(Guid suprimentoId, decimal quantidade, decimal precoCatalogo,

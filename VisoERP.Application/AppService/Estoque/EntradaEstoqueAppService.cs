@@ -77,8 +77,18 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
         return entrada.Id;
     }
 
-    public async Task<IReadOnlyList<EntradaEstoqueDto>> ListarAsync(CancellationToken cancellationToken) =>
-        mapper.Map<List<EntradaEstoqueDto>>(await estoque.ListarEntradasComItensAsync(cancellationToken));
+    public async Task<IReadOnlyList<EntradaEstoqueDto>> ListarAsync(CancellationToken cancellationToken)
+    {
+        var entradasDto = mapper.Map<List<EntradaEstoqueDto>>(
+            await estoque.ListarEntradasComItensAsync(cancellationToken));
+        var precosCatalogo = (await suprimentos.ListarAsync(cancellationToken))
+            .ToDictionary(x => x.Id, x => x.PrecoCatalogo);
+        return entradasDto.Select(entrada => entrada with
+        {
+            TotalCatalogo = entrada.Itens.Sum(item => item.Quantidade *
+                (precosCatalogo.TryGetValue(item.SuprimentoId, out var preco) ? preco : item.CustoUnitario))
+        }).ToList();
+    }
 
     public async Task<IReadOnlyList<SaldoEstoqueDto>> ListarSaldosAsync(CancellationToken cancellationToken) =>
         mapper.Map<List<SaldoEstoqueDto>>(await estoque.ListarSaldosAsync(cancellationToken));

@@ -46,7 +46,7 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         if (await fornecedores.ObterPorIdAsync(entrada.FornecedorId, cancellationToken) is null) throw new KeyNotFoundException("Fornecedor não encontrado.");
         foreach (var item in entrada.Itens)
             if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, cancellationToken) is not { Ativo: true }) throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
-        pedido.Editar(entrada.FornecedorId);
+        pedido.Editar(entrada.FornecedorId, entrada.DataPedido);
         pedido.SubstituirItens(entrada.Itens.Select(x => (x.SuprimentoId, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)));
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }

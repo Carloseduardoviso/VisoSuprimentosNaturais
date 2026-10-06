@@ -44,6 +44,18 @@ public class SuprimentoTests
         Assert.Equal(22m, pedido.Total);
     }
 
+    [Fact]
+    public void PedidoPermiteEditarDataDoPedido()
+    {
+        var dataOriginal = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
+        var novaData = new DateTimeOffset(2026, 10, 5, 0, 0, 0, TimeSpan.Zero);
+        var pedido = PedidoFornecedor.Criar(Guid.NewGuid(), dataOriginal);
+
+        pedido.Editar(Guid.NewGuid(), novaData);
+
+        Assert.Equal(novaData, pedido.DataCriacao);
+    }
+
     [Theory]
     [InlineData("10,00", 10)]
     [InlineData("1.234,56", 1234.56)]

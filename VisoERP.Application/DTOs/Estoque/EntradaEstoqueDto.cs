@@ -9,4 +9,8 @@ public sealed record CriarEntradaDto(Guid? PedidoFornecedorId, IReadOnlyList<Ite
 public sealed record SaldoEstoqueDto(Guid SuprimentoId, decimal Quantidade, decimal CustoMedio);
 
 public sealed record EntradaEstoqueDto(Guid Id, Guid? PedidoFornecedorId, DateTimeOffset CriadaEm,
-    decimal TotalCusto, IReadOnlyList<ItemEntradaDto> Itens);
+    decimal TotalCusto, IReadOnlyList<ItemEntradaDto> Itens)
+{
+    public decimal TotalCatalogo { get; init; }
+    public decimal TotalDesconto => TotalCusto;
+}
