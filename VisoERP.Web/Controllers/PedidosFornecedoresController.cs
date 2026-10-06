@@ -175,6 +175,11 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
                 TempData["Erro"] = "Este pedido foi alterado ou recebido por outra operação. Atualize a página e tente novamente.";
                 return RedirectToAction(nameof(Detalhes), new { id });
             }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Erro"] = ex.Message;
+                return RedirectToAction(nameof(Detalhes), new { id });
+            }
         }
         await PrepararOpcoes(ct); return View("Formulario", model);
     }

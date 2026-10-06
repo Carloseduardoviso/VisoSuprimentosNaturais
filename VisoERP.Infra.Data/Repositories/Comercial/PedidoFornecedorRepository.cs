@@ -16,6 +16,6 @@ public sealed class PedidoFornecedorRepository(VisoErpDbContext context) : IPedi
 
     public async Task<bool> AtualizarDataAsync(Guid id, DateTimeOffset dataPedido, CancellationToken cancellationToken) =>
         await context.PedidosFornecedores
-            .Where(x => x.Id == id && x.Situacao == VisoERP.Domain.Enums.SituacaoPedido.Pendente)
+            .Where(x => x.Id == id)
             .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.DataCriacao, dataPedido), cancellationToken) == 1;
 }
