@@ -30,6 +30,7 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
         await PrepararOpcoes(ct);
         return View("Formulario", new EntradaEstoqueViewModel
         {
+            Id = entrada.Id,
             PedidoFornecedorId = entrada.PedidoFornecedorId,
             Itens = entrada.Itens.Select(x => new ItemEntradaViewModel
             {
@@ -61,6 +62,12 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
     [HttpPost]
     public async Task<IActionResult> Confirmar(EntradaEstoqueViewModel model, CancellationToken ct)
     {
+        if (model.Id.HasValue)
+        {
+            if (model.Itens.Count == 0) return RedirectToAction(nameof(Index));
+            await entradas.AtualizarDataAsync(model.Id.Value, new DateTimeOffset(model.Itens[0].Data), ct);
+            return RedirectToAction(nameof(Detalhes), new { id = model.Id.Value });
+        }
         if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {

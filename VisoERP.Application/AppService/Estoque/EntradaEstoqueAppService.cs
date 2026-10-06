@@ -92,4 +92,10 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
 
     public async Task<IReadOnlyList<SaldoEstoqueDto>> ListarSaldosAsync(CancellationToken cancellationToken) =>
         mapper.Map<List<SaldoEstoqueDto>>(await estoque.ListarSaldosAsync(cancellationToken));
+
+    public async Task AtualizarDataAsync(Guid id, DateTimeOffset data, CancellationToken cancellationToken)
+    {
+        if (!await estoque.AtualizarDataEntradaAsync(id, data, cancellationToken))
+            throw new KeyNotFoundException("Entrada não encontrada.");
+    }
 }

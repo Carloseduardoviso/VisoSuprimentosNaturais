@@ -24,4 +24,14 @@ public sealed class EstoqueRepository(VisoErpDbContext context) : IEstoqueReposi
         await context.LotesEstoque.Where(x => x.SuprimentoId == suprimentoId && x.Quantidade > 0)
             .OrderBy(x => x.Validade == null).ThenBy(x => x.Validade).ThenBy(x => x.Codigo)
             .ToListAsync(cancellationToken);
+
+    public async Task<bool> AtualizarDataEntradaAsync(Guid entradaId, DateTimeOffset data, CancellationToken cancellationToken)
+    {
+        var atualizada = await context.EntradasEstoque.Where(x => x.Id == entradaId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CriadaEm, data), cancellationToken);
+        if (atualizada == 0) return false;
+        await context.ItensEntradasEstoque.Where(x => x.EntradaEstoqueId == entradaId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Data, data), cancellationToken);
+        return true;
+    }
 }

@@ -5,6 +5,7 @@
 <h1>Entrada de estoque</h1>
 @if (Model.PedidoFornecedorId.HasValue) { <p>Recebimento do pedido @Model.PedidoFornecedorId</p> }
 <form asp-action="Confirmar" method="post">
+    <input asp-for="Id" type="hidden" />
     <input asp-for="PedidoFornecedorId" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div id="itens"></div>

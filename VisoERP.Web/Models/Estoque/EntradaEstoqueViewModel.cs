@@ -4,6 +4,7 @@ namespace VisoERP.Web.Models.Estoque;
 
 public sealed class EntradaEstoqueViewModel
 {
+    public Guid? Id { get; set; }
     public Guid? PedidoFornecedorId { get; set; }
     public List<ItemEntradaViewModel> Itens { get; set; } = [];
 }
