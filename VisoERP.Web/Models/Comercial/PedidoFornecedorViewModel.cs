@@ -4,6 +4,7 @@ namespace VisoERP.Web.Models.Comercial;
 
 public sealed class PedidoFornecedorViewModel
 {
+    [Required] public DateTime DataPedido { get; set; } = DateTime.Today;
     [Required(ErrorMessage = "Selecione o fornecedor.")]
     public Guid? FornecedorId { get; set; }
     public List<ItemPedidoViewModel> Itens { get; set; } = [];

@@ -6,7 +6,7 @@ public sealed record ItemPedidoDto(Guid SuprimentoId, decimal Quantidade, decima
 public sealed record CriarItemPedidoDto(Guid SuprimentoId, decimal Quantidade,
     decimal PrecoCatalogo, decimal PrecoComDesconto);
 
-public sealed record CriarPedidoDto(Guid FornecedorId, IReadOnlyList<CriarItemPedidoDto> Itens);
+public sealed record CriarPedidoDto(Guid FornecedorId, IReadOnlyList<CriarItemPedidoDto> Itens, DateTimeOffset? DataPedido = null);
 
 public sealed record PedidoFornecedorDto(Guid Id, Guid FornecedorId, DateTimeOffset DataCriacao,
     string Situacao, decimal Total, IReadOnlyList<ItemPedidoDto> Itens);

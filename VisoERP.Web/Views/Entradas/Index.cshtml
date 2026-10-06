@@ -6,6 +6,6 @@
 {
     <tr><td data-label="Data">@entrada.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
         <td data-label="Itens">@entrada.Itens.Count</td><td data-label="Custo total">@entrada.TotalCusto.ToString("C")</td>
-        <td data-label="Ações"><a asp-action="Detalhes" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-primary">Ver detalhes</a></td></tr>
+        <td data-label="Ações"><div class="d-flex align-items-center gap-2 flex-nowrap"><a asp-action="Detalhes" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-primary text-nowrap">Ver detalhes</a><a asp-action="Editar" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a></div></td></tr>
 }
 </tbody></table>

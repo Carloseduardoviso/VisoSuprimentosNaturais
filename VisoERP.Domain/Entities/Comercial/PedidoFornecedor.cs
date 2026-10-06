@@ -13,10 +13,17 @@ public sealed class PedidoFornecedor : EntidadeBase
     public IReadOnlyCollection<ItemPedidoFornecedor> Itens => _itens.AsReadOnly();
     public decimal Total => _itens.Sum(x => x.Total);
 
-    public static PedidoFornecedor Criar(Guid fornecedorId)
+    public static PedidoFornecedor Criar(Guid fornecedorId, DateTimeOffset? dataPedido = null)
     {
         if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inválido.", nameof(fornecedorId));
-        return new PedidoFornecedor { FornecedorId = fornecedorId };
+        return new PedidoFornecedor { FornecedorId = fornecedorId, DataCriacao = dataPedido ?? DateTimeOffset.UtcNow };
+    }
+
+    public void Editar(Guid fornecedorId)
+    {
+        if (Situacao != SituacaoPedido.Pendente) throw new InvalidOperationException("Pedido não está aberto.");
+        if (fornecedorId == Guid.Empty) throw new ArgumentException("Fornecedor inválido.", nameof(fornecedorId));
+        FornecedorId = fornecedorId;
     }
 
     public void AdicionarItem(Guid suprimentoId, decimal quantidade, decimal precoCatalogo,
@@ -26,6 +33,13 @@ public sealed class PedidoFornecedor : EntidadeBase
         if (_itens.Any(x => x.SuprimentoId == suprimentoId))
             throw new InvalidOperationException("Suprimento já consta no pedido.");
         _itens.Add(ItemPedidoFornecedor.Criar(Id, suprimentoId, quantidade, precoCatalogo, precoComDesconto));
+    }
+
+    public void SubstituirItens(IEnumerable<(Guid SuprimentoId, decimal Quantidade, decimal PrecoCatalogo, decimal PrecoComDesconto)> itens)
+    {
+        if (Situacao != SituacaoPedido.Pendente || _itens.Any(x => x.QuantidadeRecebida > 0)) throw new InvalidOperationException("Pedido não pode ser editado.");
+        _itens.Clear();
+        foreach (var item in itens) AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
     }
 
     public void Receber(Guid suprimentoId, decimal quantidade)

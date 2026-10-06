@@ -18,7 +18,7 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
             throw new ArgumentException("Informe ao menos um item.");
         if (await fornecedores.ObterPorIdAsync(entrada.FornecedorId, cancellationToken) is null)
             throw new KeyNotFoundException("Fornecedor não encontrado.");
-        var pedido = PedidoFornecedor.Criar(entrada.FornecedorId);
+        var pedido = PedidoFornecedor.Criar(entrada.FornecedorId, entrada.DataPedido);
         foreach (var item in entrada.Itens)
         {
             if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, cancellationToken) is not { Ativo: true })
@@ -37,6 +37,18 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
     {
         var pedido = await consulta.ObterComItensAsync(id, cancellationToken);
         return pedido is null ? null : mapper.Map<PedidoFornecedorDto>(pedido);
+    }
+
+    public async Task AtualizarAsync(Guid id, CriarPedidoDto entrada, CancellationToken cancellationToken)
+    {
+        var pedido = await consulta.ObterComItensAsync(id, cancellationToken) ?? throw new KeyNotFoundException("Pedido não encontrado.");
+        if (entrada.Itens.Count == 0) throw new ArgumentException("Informe ao menos um item.");
+        if (await fornecedores.ObterPorIdAsync(entrada.FornecedorId, cancellationToken) is null) throw new KeyNotFoundException("Fornecedor não encontrado.");
+        foreach (var item in entrada.Itens)
+            if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, cancellationToken) is not { Ativo: true }) throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
+        pedido.Editar(entrada.FornecedorId);
+        pedido.SubstituirItens(entrada.Itens.Select(x => (x.SuprimentoId, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)));
+        await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }
 
     public async Task CancelarAsync(Guid id, CancellationToken cancellationToken)

@@ -34,6 +34,7 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         await PrepararOpcoes(ct);
         return View("Formulario", new PedidoFornecedorViewModel
         {
+            DataPedido = pedido.DataCriacao.LocalDateTime.Date,
             FornecedorId = pedido.FornecedorId,
             Itens = pedido.Itens.Select(x => new ItemPedidoViewModel
             {
@@ -62,6 +63,14 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         var texto = $"Olá, {fornecedor?.Nome ?? "fornecedor"}!\n\nGostaria de fazer este pedido:\n\n{string.Join("\n\n", linhas)}\n\nTotal do pedido: {pedido.Total.ToString("C", cultura)}\n\nAguardo sua confirmação. Obrigado!";
         var mensagem = Uri.EscapeDataString(texto);
         return Redirect($"https://wa.me/{numero}?text={mensagem}");
+    }
+
+    public async Task<IActionResult> Editar(Guid id, CancellationToken ct)
+    {
+        var pedido = await pedidos.ObterAsync(id, ct);
+        if (pedido is null) return NotFound();
+        await PrepararOpcoes(ct);
+        return View("Formulario", new PedidoFornecedorViewModel { DataPedido = pedido.DataCriacao.LocalDateTime.Date, FornecedorId = pedido.FornecedorId, Itens = pedido.Itens.Select(x => new ItemPedidoViewModel { SuprimentoId = x.SuprimentoId, Quantidade = x.Quantidade, PrecoCatalogo = x.PrecoCatalogo, PrecoComDesconto = x.PrecoComDesconto }).ToList() });
     }
 
     public async Task<IActionResult> Mensagem(Guid id, CancellationToken ct)
@@ -138,7 +147,7 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
             {
                 var id = await pedidos.CriarAsync(new CriarPedidoDto(model.FornecedorId!.Value,
                     model.Itens.Select(x => new CriarItemPedidoDto(x.SuprimentoId!.Value, x.Quantidade,
-                        x.PrecoCatalogo, x.PrecoComDesconto)).ToList()), ct);
+                        x.PrecoCatalogo, x.PrecoComDesconto)).ToList(), model.DataPedido), ct);
                 return RedirectToAction(nameof(Detalhes), new { id });
             }
             catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or KeyNotFoundException)
@@ -148,6 +157,18 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         }
         await PrepararOpcoes(ct);
         return View("Formulario", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Atualizar(Guid id, PedidoFornecedorViewModel model, CancellationToken ct)
+    {
+        if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
+        if (ModelState.IsValid)
+        {
+            await pedidos.AtualizarAsync(id, new CriarPedidoDto(model.FornecedorId!.Value, model.Itens.Select(x => new CriarItemPedidoDto(x.SuprimentoId!.Value, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)).ToList(), model.DataPedido), ct);
+            return RedirectToAction(nameof(Detalhes), new { id });
+        }
+        await PrepararOpcoes(ct); return View("Formulario", model);
     }
 
     [HttpPost]

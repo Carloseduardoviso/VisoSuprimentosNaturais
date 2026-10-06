@@ -23,6 +23,23 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
         return View(entrada);
     }
 
+    public async Task<IActionResult> Editar(Guid id, CancellationToken ct)
+    {
+        var entrada = (await entradas.ListarAsync(ct)).SingleOrDefault(x => x.Id == id);
+        if (entrada is null) return NotFound();
+        await PrepararOpcoes(ct);
+        return View("Formulario", new EntradaEstoqueViewModel
+        {
+            PedidoFornecedorId = entrada.PedidoFornecedorId,
+            Itens = entrada.Itens.Select(x => new ItemEntradaViewModel
+            {
+                SuprimentoId = x.SuprimentoId, Quantidade = x.Quantidade,
+                CustoUnitario = x.CustoUnitario, Data = x.Data.LocalDateTime,
+                Promocional = x.Promocional
+            }).ToList()
+        });
+    }
+
     public async Task<IActionResult> Nova(Guid? pedidoFornecedorId, CancellationToken ct)
     {
         await PrepararOpcoes(ct);

@@ -3,13 +3,14 @@
 @using System.Globalization
 @{ ViewData["Title"] = "Novo pedido"; }
 <h1>Novo pedido a fornecedor</h1>
-<form asp-action="Salvar" method="post" id="pedido-form">
+<form asp-action="@(ViewContext.RouteData.Values["action"]?.ToString() == "Editar" ? "Atualizar" : "Salvar")" asp-route-id="@(ViewContext.RouteData.Values["id"] ?? "")" method="post" id="pedido-form">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3"><label asp-for="FornecedorId" class="form-label">Fornecedor</label>
         <select asp-for="FornecedorId" asp-items="ViewBag.Fornecedores" class="form-select"><option value="">Selecione</option></select></div>
+    <div class="mb-3"><label asp-for="DataPedido" class="form-label">Data do pedido</label><input asp-for="DataPedido" type="date" class="form-control" /></div>
     <div id="itens"></div>
     <button type="button" id="adicionar" class="btn btn-outline-primary mb-3">Adicionar suplemento alimentar</button>
-    <div><button type="submit" class="btn btn-primary">Criar pedido</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
+    <div><button type="submit" class="btn btn-primary">@(ViewContext.RouteData.Values["action"]?.ToString() == "Editar" ? "Salvar alterações" : "Criar pedido")</button> <a asp-action="Index" class="btn btn-link">Cancelar</a></div>
 </form>
 <template id="item-template"><div class="card mb-3 item-card"><div class="card-body">
     <div class="d-flex justify-content-between"><h2 class="h5">Suplemento alimentar</h2><button type="button" class="btn btn-sm btn-outline-danger remover">Excluir</button></div>
