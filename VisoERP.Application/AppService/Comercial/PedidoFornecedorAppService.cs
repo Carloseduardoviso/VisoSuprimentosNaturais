@@ -54,6 +54,8 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
             x.First.Quantidade != x.Second.Quantidade ||
             x.First.PrecoCatalogo != x.Second.PrecoCatalogo ||
             x.First.PrecoComDesconto != x.Second.PrecoComDesconto);
+        if (itensMudaram && pedido.Situacao != VisoERP.Domain.Enums.SituacaoPedido.Pendente)
+            throw new InvalidOperationException("Somente pedidos pendentes podem ter os itens editados.");
         if (!itensMudaram && pedido.FornecedorId == entrada.FornecedorId && entrada.DataPedido.HasValue)
         {
             if (!await consulta.AtualizarDataAsync(id, entrada.DataPedido.Value, cancellationToken))
