@@ -46,7 +46,7 @@ public static class Modulo
             options.Cookie.HttpOnly = true;
             options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             options.ExpireTimeSpan = TimeSpan.FromHours(6);
-            options.SlidingExpiration = false;
+            options.SlidingExpiration = true;
         });
         services.AddHttpContextAccessor();
         services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();

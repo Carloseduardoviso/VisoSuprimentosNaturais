@@ -23,12 +23,14 @@ public sealed class ContaController(IContaAppService conta, VisoErpDbContext db,
     public async Task<IActionResult> Entrar(LoginViewModel model, string? returnUrl,
         CancellationToken cancellationToken)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid) return View(model);
         var resultado = await conta.EntrarAsync(model.Cpf, model.Senha, model.Lembrar, cancellationToken);
         if (resultado == ResultadoLogin.Sucesso)
             return LocalRedirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : "/");
         ModelState.AddModelError(string.Empty, resultado == ResultadoLogin.Bloqueado
             ? "Conta temporariamente bloqueada." : "Credenciais inválidas.");
+        ViewData["ReturnUrl"] = returnUrl;
         return View(model);
     }
 

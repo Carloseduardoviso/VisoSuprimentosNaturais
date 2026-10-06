@@ -35,7 +35,7 @@ public sealed class AuthGateway(
             new AuthenticationProperties
             {
                 IsPersistent = lembrar,
-                AllowRefresh = false,
+                AllowRefresh = true,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(6)
             });
         return ResultadoLogin.Sucesso;
