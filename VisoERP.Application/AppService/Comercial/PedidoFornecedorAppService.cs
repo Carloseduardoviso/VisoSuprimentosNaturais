@@ -47,7 +47,15 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         foreach (var item in entrada.Itens)
             if (await suprimentos.ObterPorIdAsync(item.SuprimentoId, cancellationToken) is not { Ativo: true }) throw new ArgumentException("Suplemento alimentar inexistente ou inativo.");
         pedido.Editar(entrada.FornecedorId, entrada.DataPedido);
-        pedido.SubstituirItens(entrada.Itens.Select(x => (x.SuprimentoId, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)));
+        var itensAtuais = pedido.Itens.OrderBy(x => x.SuprimentoId).ToList();
+        var novosItens = entrada.Itens.OrderBy(x => x.SuprimentoId).ToList();
+        var itensMudaram = itensAtuais.Count != novosItens.Count || itensAtuais.Zip(novosItens).Any(x =>
+            x.First.SuprimentoId != x.Second.SuprimentoId ||
+            x.First.Quantidade != x.Second.Quantidade ||
+            x.First.PrecoCatalogo != x.Second.PrecoCatalogo ||
+            x.First.PrecoComDesconto != x.Second.PrecoComDesconto);
+        if (itensMudaram)
+            pedido.SubstituirItens(entrada.Itens.Select(x => (x.SuprimentoId, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)));
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }
 
