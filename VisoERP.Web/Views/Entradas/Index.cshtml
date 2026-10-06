@@ -4,7 +4,7 @@
 <table class="table table-striped"><thead><tr><th>Data</th><th>Itens</th><th>Total Desconto</th><th>Valor Catálogo</th><th>Ações</th></tr></thead><tbody>
 @foreach (var entrada in Model)
 {
-    <tr><td>@entrada.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td><td>@entrada.Itens.Count</td><td>@entrada.TotalDesconto.ToString("C")</td><td>@entrada.TotalCatalogo.ToString("C")</td>
+    <tr><td data-label="Data">@entrada.CriadaEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td><td data-label="Itens">@entrada.Itens.Count</td><td data-label="Total Desconto">@entrada.TotalDesconto.ToString("C")</td><td data-label="Valor Catálogo">@entrada.TotalCatalogo.ToString("C")</td>
         <td><div class="d-flex align-items-center gap-2 flex-nowrap"><a asp-action="Detalhes" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-primary text-nowrap">Ver detalhes</a><a asp-action="Editar" asp-route-id="@entrada.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a></div></td></tr>
 }
 </tbody></table>

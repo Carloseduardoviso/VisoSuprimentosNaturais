@@ -165,8 +165,16 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         if (model.Itens.Count == 0) ModelState.AddModelError(string.Empty, "Adicione ao menos um suplemento alimentar.");
         if (ModelState.IsValid)
         {
-            await pedidos.AtualizarAsync(id, new CriarPedidoDto(model.FornecedorId!.Value, model.Itens.Select(x => new CriarItemPedidoDto(x.SuprimentoId!.Value, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)).ToList(), model.DataPedido), ct);
-            return RedirectToAction(nameof(Detalhes), new { id });
+            try
+            {
+                await pedidos.AtualizarAsync(id, new CriarPedidoDto(model.FornecedorId!.Value, model.Itens.Select(x => new CriarItemPedidoDto(x.SuprimentoId!.Value, x.Quantidade, x.PrecoCatalogo, x.PrecoComDesconto)).ToList(), model.DataPedido), ct);
+                return RedirectToAction(nameof(Detalhes), new { id });
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+            {
+                TempData["Erro"] = "Este pedido foi alterado ou recebido por outra operação. Atualize a página e tente novamente.";
+                return RedirectToAction(nameof(Detalhes), new { id });
+            }
         }
         await PrepararOpcoes(ct); return View("Formulario", model);
     }

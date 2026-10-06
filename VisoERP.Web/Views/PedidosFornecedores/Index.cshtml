@@ -4,7 +4,7 @@
 <table class="table table-striped"><thead><tr><th>Data</th><th>Fornecedor</th><th>Situação</th><th>Total Desconto</th><th>Valor Catálogo</th><th>Ações</th></tr></thead><tbody>
 @foreach (var pedido in Model)
 {
-    <tr><td>@pedido.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</td><td>@(((IReadOnlyDictionary<Guid, string>)ViewBag.Fornecedores).TryGetValue(pedido.FornecedorId, out var fornecedor) ? fornecedor : "Fornecedor não encontrado")</td><td>@pedido.Situacao</td><td>@pedido.Total.ToString("C")</td><td>@pedido.Itens.Sum(x => x.Quantidade * x.PrecoCatalogo).ToString("C")</td>
+    <tr><td data-label="Data">@pedido.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy")</td><td data-label="Fornecedor">@(((IReadOnlyDictionary<Guid, string>)ViewBag.Fornecedores).TryGetValue(pedido.FornecedorId, out var fornecedor) ? fornecedor : "Fornecedor não encontrado")</td><td data-label="Situação">@pedido.Situacao</td><td data-label="Total Desconto">@pedido.Total.ToString("C")</td><td data-label="Valor Catálogo">@pedido.Itens.Sum(x => x.Quantidade * x.PrecoCatalogo).ToString("C")</td>
         <td class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" asp-action="Detalhes" asp-route-id="@pedido.Id">Ver detalhes</a><a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@pedido.Id">Editar</a></td></tr>
 }
 </tbody></table>
