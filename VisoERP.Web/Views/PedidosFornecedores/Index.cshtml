@@ -12,8 +12,18 @@
             @if (pedido.Situacao == "Pendente")
             {
                 <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@pedido.Id">Editar</a>
-                <form asp-action="Excluir" asp-route-id="@pedido.Id" method="post" class="d-inline" onsubmit="return confirm('Excluir este pedido?');"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button></form>
+                <form asp-action="Excluir" asp-route-id="@pedido.Id" method="post" class="d-inline js-excluir-pedido"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button></form>
             }
         </td></tr>
 }
 </tbody></table>
+@section Scripts {
+<script>
+document.querySelectorAll('.js-excluir-pedido').forEach(form => {
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        Swal.fire({ title: 'Excluir pedido?', text: 'Esta ação removerá o pedido e seus itens.', icon: 'warning', showCancelButton: true, confirmButtonText: 'Sim, excluir', cancelButtonText: 'Cancelar', reverseButtons: true, confirmButtonColor: '#dc3545', cancelButtonColor: '#6c757d' }).then(result => { if (result.isConfirmed) form.submit(); });
+    });
+});
+</script>
+}
