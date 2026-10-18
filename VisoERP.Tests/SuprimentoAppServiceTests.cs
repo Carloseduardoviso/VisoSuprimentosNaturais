@@ -59,6 +59,7 @@ public class SuprimentoAppServiceTests
             CancellationToken ct = default) => Task.FromResult(false);
         public Task AdicionarAsync(Categoria item, CancellationToken ct = default) => Task.CompletedTask;
         public void Atualizar(Categoria item) { }
+        public void Excluir(Categoria item) { }
     }
 
     private sealed class UnidadeDeTeste : IUnitOfWork

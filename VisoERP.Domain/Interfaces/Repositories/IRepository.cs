@@ -10,4 +10,5 @@ public interface IRepository<TEntity> where TEntity : EntidadeBase
     Task<bool> ExisteAsync(Expression<Func<TEntity, bool>> criterio, CancellationToken cancellationToken = default);
     Task AdicionarAsync(TEntity entidade, CancellationToken cancellationToken = default);
     void Atualizar(TEntity entidade);
+    void Excluir(TEntity entidade);
 }

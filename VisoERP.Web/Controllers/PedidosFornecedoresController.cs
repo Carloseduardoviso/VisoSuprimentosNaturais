@@ -18,6 +18,8 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     {
         ViewBag.Fornecedores = (await fornecedores.ListarAsync(ct))
             .ToDictionary(x => x.Id, x => x.Nome);
+        ViewBag.CategoriasSuprimentos = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.CategoriaNome ?? "Sem categoria");
         return View(await pedidos.ListarAsync(ct));
     }
 
@@ -69,6 +71,11 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
     {
         var pedido = await pedidos.ObterAsync(id, ct);
         if (pedido is null) return NotFound();
+        if (pedido.Situacao != "Pendente")
+        {
+            TempData["Erro"] = "Somente pedidos pendentes podem ter os itens editados.";
+            return RedirectToAction(nameof(Detalhes), new { id });
+        }
         await PrepararOpcoes(ct);
         return View("Formulario", new PedidoFornecedorViewModel { DataPedido = pedido.DataCriacao.LocalDateTime.Date, FornecedorId = pedido.FornecedorId, Itens = pedido.Itens.Select(x => new ItemPedidoViewModel { SuprimentoId = x.SuprimentoId, Quantidade = x.Quantidade, PrecoCatalogo = x.PrecoCatalogo, PrecoComDesconto = x.PrecoComDesconto }).ToList() });
     }
@@ -215,12 +222,39 @@ public sealed class PedidosFornecedoresController(IPedidoFornecedorAppService pe
         return RedirectToAction(nameof(Detalhes), new { id });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Excluir(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            await pedidos.ExcluirAsync(id, ct);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or KeyNotFoundException)
+        {
+            TempData["Erro"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
     private async Task PrepararOpcoes(CancellationToken ct)
     {
         ViewBag.Fornecedores = (await fornecedores.ListarAsync(ct))
             .Select(x => new SelectListItem(x.Nome, x.Id.ToString())).ToList();
-        ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo)
-            .Select(x => new { x.Id, x.Nome, x.PrecoCatalogo, x.PrecoComDesconto }).ToList();
+        var produtos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo).ToList();
+        var saldos = (await entradas.ListarSaldosAsync(ct)).ToDictionary(x => x.SuprimentoId, x => x.Quantidade);
+        ViewBag.Suprimentos = produtos
+            .Select(x => new { x.Id, x.Nome, x.PrecoCatalogo, x.PrecoComDesconto, Estoque = saldos.TryGetValue(x.Id, out var quantidade) ? quantidade : 0m }).ToList();
+        ViewBag.DescontosCategorias = produtos
+            .Where(x => !string.IsNullOrWhiteSpace(x.CategoriaNome) && x.PrecoCatalogo > 0)
+            .GroupBy(x => x.CategoriaNome!)
+            .Select(grupo => new
+            {
+                Categoria = grupo.Key,
+                Percentual = Math.Round(grupo.Average(x => (1 - x.PrecoComDesconto / x.PrecoCatalogo) * 100), 2)
+            })
+            .OrderBy(x => x.Categoria)
+            .ToList();
     }
 }
 

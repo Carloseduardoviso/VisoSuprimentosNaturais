@@ -16,8 +16,9 @@
 </table>
 <div class="d-flex flex-wrap align-items-center gap-2">
 @if (Model.Situacao is "Pendente" or "Parcial") { <form id="recebimento-form" asp-action="RegistrarRecebimento" method="post"><input type="hidden" name="id" value="@Model.Id" /><button class="btn btn-outline-primary">Salvar recebimento</button></form> }
-@if (Model.Situacao is "Pendente" or "Parcial")
+@if (Model.Situacao == "Pendente")
 {
+    <a class="btn btn-outline-success" asp-action="WhatsApp" asp-route-id="@Model.Id" target="_blank">Enviar pedido ao fornecedor</a>
 }
 @if (Model.Situacao == "Pendente")
 {

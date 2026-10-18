@@ -104,9 +104,14 @@ public sealed class FinanceiroAppService(IRepository<Investimento> investimentos
         var pagoAteFim = pagamentosLista.Where(x => idsContas.Contains(x.ContaPagarId) &&
             DateOnly.FromDateTime(x.Data.Date) <= fim).Sum(x => x.Valor);
         var contasPagar = contasAteFim.Sum(x => x.Valor) - pagoAteFim;
+        var saldos = await estoque.ListarSaldosAsync(ct);
+        var saldoEstoque = saldos.Sum(x => x.Quantidade * x.CustoMedio);
         return new ResumoFinanceiroDto(inicio, fim, faturamento, recebido, compras, cpv,
             lucroBruto, despesasPeriodo, lucroLiquido, investimentosPeriodo, capitalInvestido,
             contasReceber, contasPagar, pagamentosCompras,
-            capitalInvestido > 0 ? Math.Round(lucroLiquido / capitalInvestido * 100, 2) : null);
+            capitalInvestido > 0 ? Math.Round(lucroLiquido / capitalInvestido * 100, 2) : null)
+        {
+            SaldoEstoque = saldoEstoque
+        };
     }
 }

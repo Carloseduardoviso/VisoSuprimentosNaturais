@@ -45,6 +45,20 @@ public class SuprimentoTests
     }
 
     [Fact]
+    public void PedidoAtualizaQuantidadeDoItemSemPerderItemExistente()
+    {
+        var suplementoId = Guid.NewGuid();
+        var pedido = PedidoFornecedor.Criar(Guid.NewGuid());
+        pedido.AdicionarItem(suplementoId, 1m, 200m, 90m);
+
+        pedido.SubstituirItens([(suplementoId, 2m, 200m, 90m)]);
+
+        var item = Assert.Single(pedido.Itens);
+        Assert.Equal(2m, item.Quantidade);
+        Assert.Equal(180m, pedido.Total);
+    }
+
+    [Fact]
     public void PedidoPermiteEditarDataDoPedido()
     {
         var dataOriginal = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
@@ -71,5 +85,13 @@ public class SuprimentoTests
     public void ValorDecimalRejeitaAgrupamentoBrasileiroInvalido()
     {
         Assert.False(DecimalPtBrParser.TryParse("12.3,45", out _));
+    }
+
+    [Fact]
+    public void PercentualCalculadoAPartirDePrecoArredondadoReconhece55PorCento()
+    {
+        var percentual = PercentualDesconto.Exibir(69.90m, 31.46m);
+
+        Assert.Equal(55m, percentual);
     }
 }

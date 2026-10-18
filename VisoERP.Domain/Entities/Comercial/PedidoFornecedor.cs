@@ -37,8 +37,18 @@ public sealed class PedidoFornecedor : EntidadeBase
 
     public void SubstituirItens(IEnumerable<(Guid SuprimentoId, decimal Quantidade, decimal PrecoCatalogo, decimal PrecoComDesconto)> itens)
     {
-        _itens.Clear();
-        foreach (var item in itens) AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
+        var novosItens = itens.ToList();
+        var ids = novosItens.Select(x => x.SuprimentoId).ToHashSet();
+        _itens.RemoveAll(x => !ids.Contains(x.SuprimentoId));
+
+        foreach (var item in novosItens)
+        {
+            var existente = _itens.SingleOrDefault(x => x.SuprimentoId == item.SuprimentoId);
+            if (existente is null)
+                AdicionarItem(item.SuprimentoId, item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
+            else
+                existente.Atualizar(item.Quantidade, item.PrecoCatalogo, item.PrecoComDesconto);
+        }
     }
 
     public void Receber(Guid suprimentoId, decimal quantidade)
@@ -54,6 +64,16 @@ public sealed class PedidoFornecedor : EntidadeBase
 
     public void RegistrarFalta(Guid suprimentoId, decimal quantidade) =>
         (_itens.SingleOrDefault(x => x.SuprimentoId == suprimentoId) ?? throw new KeyNotFoundException()).RegistrarFalta(quantidade);
+
+    public void EstornarRecebimento(Guid suprimentoId, decimal quantidade)
+    {
+        if (Situacao == SituacaoPedido.Cancelado)
+            throw new InvalidOperationException("Pedido cancelado não aceita estorno de recebimento.");
+        (_itens.SingleOrDefault(x => x.SuprimentoId == suprimentoId) ?? throw new KeyNotFoundException("Item não encontrado no pedido.")).EstornarRecebimento(quantidade);
+        Situacao = _itens.All(x => x.QuantidadeRecebida == 0)
+            ? SituacaoPedido.Pendente
+            : SituacaoPedido.Parcial;
+    }
 
     public void Cancelar()
     {

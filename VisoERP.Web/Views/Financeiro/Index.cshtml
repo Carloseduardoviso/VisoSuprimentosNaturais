@@ -19,7 +19,7 @@
     <div class="col-12 col-sm-6 col-xl-3"><article class="kpi-card kpi-investment"><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c0-1-1.3-1.7-3-1.7s-3 .7-3 1.7 1.3 1.7 3 1.7 3 .7 3 1.7-1.3 1.7-3 1.7-3-.7-3-1.7"/></svg></span><span class="kpi-copy"><span>Investido no período</span><strong>@resumo.InvestimentoPeriodo.ToString("C")</strong></span></article></div>
     <div class="col-12 col-sm-6 col-xl-3"><article class="kpi-card kpi-capital"><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-8h6v8M9 9h.01M15 9h.01"/></svg></span><span class="kpi-copy"><span>Capital investido até o fim</span><strong>@resumo.CapitalInvestidoAteFim.ToString("C")</strong></span></article></div>
     <div class="col-12 col-sm-6 col-xl-3"><article class="kpi-card kpi-receivable"><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M7 3 4 6M17 3l3 3"/></svg></span><span class="kpi-copy"><span>Contas a receber</span><strong>@resumo.ContasReceber.ToString("C")</strong></span></article></div>
-    <div class="col-12 col-sm-6 col-xl-3"><article class="kpi-card kpi-payable"><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="kpi-copy"><span>Contas a pagar</span><strong>@resumo.ContasPagar.ToString("C")</strong></span></article></div>
+    <div class="col-12 col-sm-6 col-xl-3"><article class="kpi-card kpi-stock"><span class="kpi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="M3 8v9l9 5 9-5V8M12 13v9"/></svg></span><span class="kpi-copy"><span>Saldo de estoque</span><strong>@resumo.SaldoEstoque.ToString("C")</strong></span></article></div>
 </div>
 <p class="text-muted">Lucro líquido estimado = vendas − custo histórico dos produtos vendidos − despesas por competência. Compras de estoque e investimentos são apresentados separadamente.</p>
 <div class="row g-4 mb-4">
@@ -54,7 +54,7 @@
         'kpi-investment': 'Soma dos investimentos registrados dentro do período selecionado.',
         'kpi-capital': 'Total acumulado de investimentos registrados até o fim do período.',
         'kpi-receivable': 'Saldo das vendas realizadas até o fim do período que ainda não foi recebido.',
-        'kpi-payable': 'Saldo das compras de estoque realizadas até o fim do período que ainda não foi pago.'
+        'kpi-stock': 'Valor atual do estoque, calculado pela quantidade disponível multiplicada pelo custo médio de cada suplemento.'
     };
     document.querySelectorAll('.kpi-card').forEach(card => {
         const classe = [...card.classList].find(nome => explicacoes[nome]);

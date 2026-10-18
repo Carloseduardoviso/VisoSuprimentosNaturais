@@ -8,4 +8,5 @@ public interface IEntradaEstoqueAppService
     Task<IReadOnlyList<EntradaEstoqueDto>> ListarAsync(CancellationToken cancellationToken);
     Task<IReadOnlyList<SaldoEstoqueDto>> ListarSaldosAsync(CancellationToken cancellationToken);
     Task AtualizarDataAsync(Guid id, DateTimeOffset data, CancellationToken cancellationToken);
+    Task ExcluirAsync(Guid id, CancellationToken cancellationToken);
 }

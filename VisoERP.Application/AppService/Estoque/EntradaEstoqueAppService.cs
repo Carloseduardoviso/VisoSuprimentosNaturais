@@ -98,4 +98,39 @@ public sealed class EntradaEstoqueAppService(IRepository<Suprimento> suprimentos
         if (!await estoque.AtualizarDataEntradaAsync(id, data, cancellationToken))
             throw new KeyNotFoundException("Entrada não encontrada.");
     }
+
+    public async Task ExcluirAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var entrada = (await estoque.ListarEntradasComItensAsync(cancellationToken)).SingleOrDefault(x => x.Id == id)
+            ?? throw new KeyNotFoundException("Entrada não encontrada.");
+        var conta = (await contasPagar.ListarAsync(cancellationToken)).SingleOrDefault(x => x.EntradaEstoqueId == id);
+        if (conta?.ValorPago > 0)
+            throw new InvalidOperationException("A entrada não pode ser excluída porque a conta a pagar já possui pagamento.");
+        var movimentos = (await movimentacoes.ListarAsync(cancellationToken)).Where(x => x.ReferenciaId == id).ToList();
+        await unitOfWork.ExecutarEmTransacaoAsync(async ct =>
+        {
+            foreach (var item in entrada.Itens)
+            {
+                var saldo = await estoque.ObterSaldoAsync(item.SuprimentoId, ct)
+                    ?? throw new InvalidOperationException("Saldo de estoque não encontrado.");
+                saldo.RegistrarSaida(item.Quantidade);
+                if (!string.IsNullOrWhiteSpace(item.CodigoLote))
+                {
+                    var lote = await estoque.ObterLoteAsync(item.SuprimentoId, item.CodigoLote, ct)
+                        ?? throw new InvalidOperationException("Lote de estoque não encontrado.");
+                    lote.RegistrarSaida(item.Quantidade);
+                }
+                if (entrada.PedidoFornecedorId.HasValue)
+                {
+                    var pedido = await pedidos.ObterComItensAsync(entrada.PedidoFornecedorId.Value, ct)
+                        ?? throw new KeyNotFoundException("Pedido não encontrado.");
+                    pedido.EstornarRecebimento(item.SuprimentoId, item.Quantidade);
+                }
+            }
+            foreach (var movimento in movimentos) movimentacoes.Excluir(movimento);
+            if (conta is not null) contasPagar.Excluir(conta);
+            entradas.Excluir(entrada);
+            await unitOfWork.SalvarAlteracoesAsync(ct);
+        }, cancellationToken);
+    }
 }

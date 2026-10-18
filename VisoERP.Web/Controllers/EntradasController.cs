@@ -12,7 +12,14 @@ namespace VisoERP.Web.Controllers;
 public sealed class EntradasController(IEntradaEstoqueAppService entradas,
     IPedidoFornecedorAppService pedidos, ISuprimentoAppService suprimentos) : Controller
 {
-    public async Task<IActionResult> Index(CancellationToken ct) => View(await entradas.ListarAsync(ct));
+    public async Task<IActionResult> Index(CancellationToken ct)
+    {
+        ViewBag.CategoriasSuprimentos = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.CategoriaNome ?? "Sem categoria");
+        ViewBag.PrecosCatalogo = (await suprimentos.ListarAsync(ct))
+            .ToDictionary(x => x.Id, x => x.PrecoCatalogo);
+        return View(await entradas.ListarAsync(ct));
+    }
 
     public async Task<IActionResult> Detalhes(Guid id, CancellationToken ct)
     {
@@ -88,10 +95,26 @@ public sealed class EntradasController(IEntradaEstoqueAppService entradas,
         return View("Formulario", model);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Excluir(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            await entradas.ExcluirAsync(id, ct);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or KeyNotFoundException)
+        {
+            TempData["Erro"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
     private async Task PrepararOpcoes(CancellationToken ct)
     {
+        var saldos = (await entradas.ListarSaldosAsync(ct)).ToDictionary(x => x.SuprimentoId, x => x.Quantidade);
         ViewBag.Suprimentos = (await suprimentos.ListarAsync(ct)).Where(x => x.Ativo)
-            .Select(x => new { x.Id, x.Nome, Custo = x.PrecoComDesconto })
+            .Select(x => new { x.Id, x.Nome, Custo = x.PrecoComDesconto, Estoque = saldos.TryGetValue(x.Id, out var quantidade) ? quantidade : 0m })
             .ToList();
     }
 }

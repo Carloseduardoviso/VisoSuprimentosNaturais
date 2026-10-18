@@ -16,9 +16,9 @@
     <div class="d-flex justify-content-between"><h2 class="h5">Suplemento alimentar</h2><button type="button" class="btn btn-sm btn-outline-danger remover">Excluir</button></div>
     <div class="row g-2">
         <div class="col-md-4"><label class="form-label">Suplemento alimentar</label><select class="form-select produto" data-campo="SuprimentoId" required><option value="">Selecione</option>
-        @foreach (var produto in ViewBag.Suprimentos) { <option value="@produto.Id" data-custo="@produto.Custo.ToString(CultureInfo.InvariantCulture)">@produto.Nome</option> }
+        @foreach (var produto in ViewBag.Suprimentos) { <option value="@produto.Id" data-custo="@produto.Custo.ToString(CultureInfo.InvariantCulture)" data-estoque="@produto.Estoque.ToString(CultureInfo.InvariantCulture)">@produto.Nome</option> }
         </select></div>
-        <div class="col-md-2"><label class="form-label">Quantidade</label><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
+        <div class="col-md-2"><label class="form-label mb-0">Quantidade</label><small class="text-muted d-block estoque-disponivel"></small><input type="number" min="0.001" step="0.001" class="form-control" data-campo="Quantidade" required /></div>
         <div class="col-md-2"><label class="form-label">Custo unitário</label><input type="text" data-money-mask class="form-control bg-body-secondary text-muted" data-campo="CustoUnitario" readonly aria-readonly="true" required /></div>
         <div class="col-md-2"><label class="form-label">Data</label><input type="date" class="form-control" data-campo="Data" required /></div>
         <div class="col-md-2"><label class="form-label">Promocional</label><select class="form-select" data-campo="Promocional"><option value="false">Não</option><option value="true">Sim</option></select></div>
@@ -42,6 +42,9 @@
                 : valor;
         }
         card.querySelector('[data-campo="Data"]').value = item.Data ? item.Data.slice(0,10) : now();
+        const optionInicial = card.querySelector('.produto').selectedOptions[0];
+        const formatarEstoque = valor => new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 }).format(Number(valor || 0));
+        card.querySelector('.estoque-disponivel').textContent = optionInicial?.value ? `Estoque disponível: ${formatarEstoque(optionInicial.dataset.estoque)}` : '';
         const promocional = card.querySelector('[data-campo="Promocional"]');
         const custo = card.querySelector('[data-campo="CustoUnitario"]');
         const atualizarCusto = () => {
@@ -54,6 +57,7 @@
         card.querySelector('.produto').addEventListener('change', e => {
             const custo = card.querySelector('[data-campo="CustoUnitario"]');
             custo.value = window.VisoMoney.formatarValorServidor(e.target.selectedOptions[0]?.dataset.custo || 0);
+            card.querySelector('.estoque-disponivel').textContent = e.target.value ? `Estoque disponível: ${formatarEstoque(e.target.selectedOptions[0]?.dataset.estoque)}` : '';
             atualizarCusto();
         });
         promocional.addEventListener('change', atualizarCusto);

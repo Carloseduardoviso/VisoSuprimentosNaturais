@@ -75,6 +75,16 @@ public sealed class PedidoFornecedorAppService(IRepository<Fornecedor> fornecedo
         await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
     }
 
+    public async Task ExcluirAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var pedido = await consulta.ObterComItensAsync(id, cancellationToken)
+            ?? throw new KeyNotFoundException("Pedido não encontrado.");
+        if (pedido.Situacao != VisoERP.Domain.Enums.SituacaoPedido.Pendente)
+            throw new InvalidOperationException("Somente pedidos pendentes podem ser excluídos.");
+        pedidos.Excluir(pedido);
+        await unitOfWork.SalvarAlteracoesAsync(cancellationToken);
+    }
+
     public async Task RegistrarFaltaAsync(Guid id, Guid suplementoId, decimal quantidade, CancellationToken cancellationToken)
     {
         var pedido = await consulta.ObterComItensAsync(id, cancellationToken) ?? throw new KeyNotFoundException();

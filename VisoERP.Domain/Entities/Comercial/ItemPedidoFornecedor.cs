@@ -42,4 +42,24 @@ public sealed class ItemPedidoFornecedor : EntidadeBase
             throw new ArgumentOutOfRangeException(nameof(quantidade));
         QuantidadeNaoRecebida = quantidade;
     }
+
+    internal void EstornarRecebimento(decimal quantidade)
+    {
+        if (quantidade <= 0 || quantidade > QuantidadeRecebida)
+            throw new ArgumentOutOfRangeException(nameof(quantidade));
+        QuantidadeRecebida -= quantidade;
+    }
+
+    internal void Atualizar(decimal quantidade, decimal precoCatalogo, decimal precoComDesconto)
+    {
+        if (quantidade < QuantidadeRecebida)
+            throw new InvalidOperationException("A quantidade não pode ser menor que a quantidade já recebida.");
+        if (quantidade <= 0) throw new ArgumentOutOfRangeException(nameof(quantidade));
+        if (precoCatalogo < 0) throw new ArgumentOutOfRangeException(nameof(precoCatalogo));
+        if (precoComDesconto < 0) throw new ArgumentOutOfRangeException(nameof(precoComDesconto));
+
+        Quantidade = quantidade;
+        PrecoCatalogo = precoCatalogo;
+        PrecoComDesconto = precoComDesconto;
+    }
 }

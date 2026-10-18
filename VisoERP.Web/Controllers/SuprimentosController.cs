@@ -5,17 +5,22 @@ using VisoERP.Application.DTOs.Cadastros;
 using VisoERP.Application.Interface.Cadastros;
 using VisoERP.Web.Models.Cadastros;
 using VisoERP.Web.Services.Cadastros;
+using VisoERP.Infra.Helper;
+using VisoERP.Application.Interface.Estoque;
 
 namespace VisoERP.Web.Controllers;
 
 [Authorize(Policy = "GerenciarSuprimentos")]
 public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
-    ImagemSuprimentoService imagens, ILogger<SuprimentosController> logger) : Controller
+    ImagemSuprimentoService imagens, IEntradaEstoqueAppService entradas,
+    ILogger<SuprimentosController> logger) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         ViewBag.Categorias = await suprimentos.ListarCategoriasAsync(cancellationToken);
+        ViewBag.Saldos = (await entradas.ListarSaldosAsync(cancellationToken))
+            .ToDictionary(x => x.SuprimentoId, x => x.Quantidade);
         return View(await suprimentos.ListarAsync(cancellationToken));
     }
 
@@ -51,7 +56,7 @@ public sealed class SuprimentosController(ISuprimentoAppService suprimentos,
         {
             Id = produto.Id, CodigoInterno = produto.CodigoInterno, Nome = produto.Nome,
             PrecoCatalogo = produto.PrecoCatalogo, PrecoComDesconto = produto.PrecoComDesconto,
-            PorcentagemDesconto = produto.PrecoCatalogo == 0 ? 0 : Math.Round((1 - produto.PrecoComDesconto / produto.PrecoCatalogo) * 100, 2),
+            PorcentagemDesconto = PercentualDesconto.Exibir(produto.PrecoCatalogo, produto.PrecoComDesconto),
             Descricao = produto.Descricao, FormaDeUso = produto.FormaDeUso,
             QuantidadeMinimaCompra = produto.QuantidadeMinimaCompra, EstoqueMinimo = produto.EstoqueMinimo,
             CategoriaId = produto.CategoriaId, Ativo = produto.Ativo

@@ -11,4 +11,7 @@ public sealed record ResumoFinanceiroDto(DateOnly Inicio, DateOnly Fim,
     decimal LucroBruto, decimal Despesas, decimal LucroLiquido,
     decimal InvestimentoPeriodo, decimal CapitalInvestidoAteFim,
     decimal ContasReceber, decimal ContasPagar, decimal PagamentosCompras,
-    decimal? RetornoSobreInvestimentoPercentual);
+    decimal? RetornoSobreInvestimentoPercentual)
+{
+    public decimal SaldoEstoque { get; init; }
+}

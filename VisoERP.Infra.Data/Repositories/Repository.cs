@@ -22,4 +22,6 @@ public sealed class Repository<TEntity>(VisoErpDbContext context) : IRepository<
         context.Set<TEntity>().AddAsync(entidade, cancellationToken).AsTask();
 
     public void Atualizar(TEntity entidade) => context.Set<TEntity>().Update(entidade);
+
+    public void Excluir(TEntity entidade) => context.Set<TEntity>().Remove(entidade);
 }
